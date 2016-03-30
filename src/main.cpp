@@ -16,13 +16,6 @@
 #define SUCCESS             1
 #define ERROR               -1
 
-#include <windows.h>
-std::string getexepath()
-{
-    char result[ MAX_PATH ];
-    return std::string( result, GetModuleFileName( NULL, result, MAX_PATH ) );
-}
-
 int initGLFW(int openGLMajor, int openGLMinor);
 
 int openWindow(int windowWidth, int windowHeight, const char *windowTitle);
@@ -44,7 +37,6 @@ using namespace glm;
 using namespace entities;
 
 int main(void) {
-    cout << getexepath() << endl;
     assert (initGLFW(OPENGL_MAJOR, OPENGL_MINOR) == SUCCESS);
     assert (openWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE) == SUCCESS);
     assert (initGLEW() == SUCCESS);
