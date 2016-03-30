@@ -55,7 +55,7 @@ target_link_libraries(GLEW_1130
 		${EXTRA_LIBS}
 		)
 #### SOIL ###
-add_subdirectory(soil)
+add_subdirectory(SOIL_)
 
 ### ANTTWEAKBAR ###
 #
