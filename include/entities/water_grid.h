@@ -34,7 +34,7 @@ namespace entities {
     private:
         CWavesDeformer _wavesDeformer;
         GLfloat _currentTime;
-        CTexture2D* _textures[1];
+//        CTexture2D* _textures[1];
         void _initShader();
     };
 }

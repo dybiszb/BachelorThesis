@@ -12,16 +12,24 @@
 #include <GL/glew.h>
 #include "buffers/frame_buffer.h"
 #include "textures/texture2D.h"
+#include "glsl_shader.h"
+#include "vertex_array.h"
+#include "vertex.h"
+#include "quad.h"
+#include "error_handling.h"
 
 using namespace rendering;
+using namespace geometry;
+using namespace util;
 
-class CWavesDeformer {
+class CWavesDeformer{
 
 public:
+    // input # vertices in row & column !!!
     CWavesDeformer(int width, int height);
 
     ~CWavesDeformer();
-
+    void renderStep();
 private:
     GLsizei _width;
     GLsizei _height;
@@ -29,6 +37,11 @@ private:
     CFrameBuffer *_fbo2;
     CTexture2D *_tex1;
     CTexture2D *_tex2;
+    GLSLShader _shader;
+    CVertexArray _vao;
+    CQuad _quad;
+
+    void _initShaders();
 };
 
 

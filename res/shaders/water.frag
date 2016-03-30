@@ -3,7 +3,7 @@
 //precision mediump float;
 //in vec4 vSmoothColor;  	//interpolated colour to fragment shader
 uniform sampler2D myFloatTex;
-out vec2 vTex;
+in vec2 vTex;
 
 void main()
 {

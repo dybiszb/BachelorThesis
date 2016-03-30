@@ -137,7 +137,7 @@ int runSimulationLoop() {
         mat4 vp = fpsCamera.getViewProjectionMatrix();
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
         skybox.render(&vp[0][0]);
-        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+//        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
         water.render(&vp[0][0]);
 
         glfwSwapBuffers(window);

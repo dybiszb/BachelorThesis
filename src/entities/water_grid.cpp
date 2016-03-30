@@ -15,7 +15,7 @@ CWaterGrid::CWaterGrid(
 
     _initShader();
 
-    _textures[0] = new CTexture2D(quadsPerX+1, quadsPerZ+1);
+//    _textures[0] = new CTexture2D(quadsPerX+1, quadsPerZ+1);
 
     Vertex *vertices = CGrid::generateVertices();
     GLuint *indices =  CGrid::generateIndices();
@@ -39,21 +39,25 @@ CWaterGrid::CWaterGrid(
 }
 
 CWaterGrid::~CWaterGrid() {
-    delete _textures[0];
+//    delete _textures[0];
 }
 
 void CWaterGrid::render(const float *MVP) {
+    // bind deformer
+    _wavesDeformer.renderStep();
+
+    glViewport(0, 0, 800, 600);
     _shader.Use();
     _vao.bind();
-    _textures[0]->bind();
+//    _textures[0]->bind();
 
-    glUniform1iARB(_shader("myFloatTex"),0);
+//    glUniform1iARB(_shader("myFloatTex"),0);
     glUniform1f(_shader("waveTime"),_currentTime);
     glUniformMatrix4fv(_shader("MVP"), 1, GL_FALSE, MVP);
     glDrawElements(GL_TRIANGLES, CGrid::getTotalIndices(), GL_UNSIGNED_INT, 0);
     checkErrorOpenGL("CWaterGrid::render");
 
-    _textures[0]->unbind();
+//    _textures[0]->unbind();
     _vao.unbind();
     _shader.UnUse();
 }
