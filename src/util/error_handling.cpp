@@ -24,3 +24,9 @@ void util::checkErrorFrameBuffer(string errorSource) {
                 std::endl;
     }
 }
+
+void util::checkErrorCubemapId(string errorSource, int cubemapId) {
+    if(cubemapId == -1) {
+        cout << errorSource << " || Cubemap's id not set."<< std::endl;
+    }
+}

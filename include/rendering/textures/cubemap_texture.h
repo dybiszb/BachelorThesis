@@ -52,6 +52,11 @@ namespace rendering {
          */
         void unbind();
 
+        /**
+         * Returns id of the texture withing OpenGL context.
+         */
+        GLuint getId();
+
     private:
         GLuint _id;
     };

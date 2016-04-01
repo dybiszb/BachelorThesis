@@ -1,9 +1,11 @@
 #include <GL/glew.h>
 #include <glfw3.h>
 #include <glm/glm.hpp>
+#include "glm/ext.hpp"
 #include <stdio.h>
 #include <glsl_shader.h>
 #include <fps_camera.h>
+#include "custom_camera.h"
 #include <vector>
 #include <skybox.h>
 #include "water_grid.h"
@@ -32,6 +34,7 @@ void centerTheWindow();
 
 GLFWwindow *window;
 FPSCamera fpsCamera;
+CCustomCamera camera;
 
 using namespace glm;
 using namespace entities;
@@ -98,8 +101,7 @@ int setupScene() {
 }
 
 int runSimulationLoop() {
-
-    CWaterGrid water(32, 32,32, glm::vec2(-16,-16));
+    int scenceSize = 128;
 
     std::vector<const GLchar*> facesNames({
     "./res/textures"
@@ -115,7 +117,10 @@ int runSimulationLoop() {
             "./res/textures"
                     "/skybox/sor_sea/left.jpg"});
 
-    CSkybox skybox(32, &facesNames);
+    CSkybox skybox(scenceSize, &facesNames);
+    CWaterGrid water(scenceSize, scenceSize,scenceSize, glm::vec2
+            (-scenceSize/2,-scenceSize/2));
+    water.setSkyboxCubemapId(skybox.getCubemapId());
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -134,10 +139,18 @@ int runSimulationLoop() {
         lastTime = thisTime;
 
         // Draw scene
-        mat4 vp = fpsCamera.getViewProjectionMatrix();
+        mat4 projection = camera.getProjectionMatrix();
+        mat4 view = camera.getViewMatrix();
+        mat4 vp = projection * view;
+
+//        std::cout << glm::to_string(camera.getPosition()) << std::endl;
+
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+        skybox.setCameraPosition(camera.getPosition());
         skybox.render(&vp[0][0]);
+
 //        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+        water.setCameraPosition(camera.getPosition());;
         water.render(&vp[0][0]);
 
         glfwSwapBuffers(window);
@@ -156,30 +169,34 @@ void updateScene(float timeElapsed) {
     const float mouseSensitivity = 0.1f;
     double mouseX, mouseY;
     glfwGetCursorPos(window, &mouseX, &mouseY);
-    fpsCamera.changeAzimuth(mouseSensitivity * (float) mouseY,
-                            mouseSensitivity * (float) mouseX);
+//    fpsCamera.changeAzimuth(mouseSensitivity * (float) mouseY,
+//                            mouseSensitivity * (float) mouseX);
+    camera.updateViewingAngles(mouseX, mouseY, timeElapsed);
     glfwSetCursorPos(window, 0, 0);
 
     const float moveSpeed = 10.0;
 
     if (glfwGetKey(window, 'W')) {
-        fpsCamera.moveForward(timeElapsed * moveSpeed);
+//        fpsCamera.moveForward(timeElapsed * moveSpeed);
+        camera.moveForward(timeElapsed);
     } else if (glfwGetKey(window, 'S')) {
-        fpsCamera.moveBackward(timeElapsed * moveSpeed);
+//        fpsCamera.moveBackward(timeElapsed * moveSpeed);
+        camera.moveBackward(timeElapsed);
     }
 
     if (glfwGetKey(window, 'A')) {
-        fpsCamera.moveLeft(timeElapsed * moveSpeed);
+//        fpsCamera.moveLeft(timeElapsed * moveSpeed);
+        camera.moveLeft(timeElapsed);
     } else if (glfwGetKey(window, 'D')) {
-        fpsCamera.moveRight(timeElapsed * moveSpeed);
+//        fpsCamera.moveRight(timeElapsed * moveSpeed);
+        camera.moveRight(timeElapsed);
     }
 
     if (glfwGetKey(window, 'Z')) {
-        fpsCamera.moveUp(timeElapsed * moveSpeed);
+//        fpsCamera.moveUp(timeElapsed * moveSpeed);
     } else if (glfwGetKey(window, 'X')) {
-        fpsCamera.moveDown(timeElapsed * moveSpeed);
+//        fpsCamera.moveDown(timeElapsed * moveSpeed);
     }
-
 }
 
 void centerTheWindow() {

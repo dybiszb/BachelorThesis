@@ -30,6 +30,14 @@ glm::mat4 FPSCamera::getViewProjectionMatrix() {
     return getProjectionMatrix() * getViewMatrix();
 }
 
+glm::vec3 FPSCamera::getPosition() {
+    glm::vec3 temp;
+    temp.x = _position.x;
+    temp.y = -_position.y;
+    temp.z = -_position.z;
+    return temp;
+}
+
 /* -------------------- */
 /* ----- Movement ----- */
 /* -------------------- */

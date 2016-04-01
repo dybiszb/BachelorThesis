@@ -38,6 +38,11 @@ namespace util {
      * TODO
      */
     void checkErrorFrameBuffer(string errorSource);
+
+    /**
+     * TODO
+     */
+    void checkErrorCubemapId(string errorSource, int cubemapId);
 }
 
 #endif

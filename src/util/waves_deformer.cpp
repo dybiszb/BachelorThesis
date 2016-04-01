@@ -1,7 +1,7 @@
 // author: dybisz
 
 #include "waves_deformer.h"
-
+// TODO wdth and height change to side length
 CWavesDeformer::CWavesDeformer(int width, int height) : _width(width),
                                                         _height(height) {
     _fbo1 = new CFrameBuffer();
@@ -18,22 +18,7 @@ CWavesDeformer::CWavesDeformer(int width, int height) : _width(width),
     _fbo2->unbind();
 
     _initShaders();
-
-    // pin attributes in vbo
-    Vertex *vertices = _quad.generateVertices();
-    GLuint *indices = _quad.generateIndices();
-    GLsizei stride = sizeof(Vertex);
-
-    _vao.bind();
-    _vao.setVertices(_quad.getTotalVertices() * sizeof(Vertex), &vertices[0]);
-    _vao.assignFloatAttribute(_shader["vVertex"], 3, stride, 0);
-    _vao.assignFloatAttribute(_shader["texCoords"], 2, stride,
-                              (const GLvoid *) offsetof(Vertex, texCoord));
-    _vao.setIndices(_quad.getTotalIndices() * sizeof(GLuint), &indices[0]);
-    _vao.unbind();
-
-    delete[] vertices;
-    delete[] indices;
+    _initVao();
 }
 
 CWavesDeformer::~CWavesDeformer() {
@@ -45,21 +30,18 @@ CWavesDeformer::~CWavesDeformer() {
     _shader.DeleteShaderProgram();
 }
 
-void CWavesDeformer::renderStep() {
+void CWavesDeformer::bindTextureOfNextAnimationStep() {
     glViewport(0, 0, _width, _height);
+
     _shader.Use();
     _vao.bind();
 
-    // FIRST PASS
     _tex1->bind();
     _fbo2->bind();
-
-//    glUniform1iARB(_shader("sampler"), 0);
     glUniform1f(_shader("sideSize"),_width);
     glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
     checkErrorOpenGL("CWavesDeformer::renderStep");
 
-    // SECOND PASS
     _tex2->bind();
     _fbo1->bind();
     glUniform1f(_shader("sideSize"),_width);
@@ -69,7 +51,6 @@ void CWavesDeformer::renderStep() {
     _fbo1->unbind();
     _vao.unbind();
     _shader.UnUse();
-
 }
 
 void CWavesDeformer::_initShaders() {
@@ -84,4 +65,21 @@ void CWavesDeformer::_initShaders() {
     _shader.AddUniform("sampler");
     _shader.AddUniform("sideSize");
     _shader.UnUse();
+}
+
+void CWavesDeformer::_initVao() {
+    Vertex *vertices = _quad.generateVertices();
+    GLuint *indices = _quad.generateIndices();
+    GLsizei stride = sizeof(Vertex);
+
+    _vao.bind();
+    _vao.setVertices(_quad.getTotalVertices() * sizeof(Vertex), &vertices[0]);
+    _vao.assignFloatAttribute(_shader["vVertex"], 3, stride, 0);
+    _vao.assignFloatAttribute(_shader["texCoords"], 2, stride,
+                              (const GLvoid *) offsetof(Vertex, texCoord));
+    _vao.setIndices(_quad.getTotalIndices() * sizeof(GLuint), &indices[0]);
+    _vao.unbind();
+
+    delete[] vertices;
+    delete[] indices;
 }

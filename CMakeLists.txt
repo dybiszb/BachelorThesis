@@ -71,7 +71,8 @@ set(SOURCE_FILES
         src/rendering/textures/texture2D.cpp
         src/rendering/buffers/frame_buffer.cpp
         src/util/waves_deformer.cpp
-        src/geometry/quad.cpp include/geometry/quad.h)
+        src/geometry/quad.cpp
+        src/camera/custom_camera.cpp)
 
 ## "sample" is the name of the executable
 add_executable(bachelor_water ${SOURCE_FILES})

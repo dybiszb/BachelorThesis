@@ -27,6 +27,7 @@ public:
     glm::mat4 getProjectionMatrix();
     glm::mat4 getViewMatrix();
     glm::mat4 getViewProjectionMatrix();
+    glm::vec3 getPosition();
     void changeAzimuth(float upAngle, float rightAngle);
     void moveForward(float amount);
     void moveBackward(float amount);

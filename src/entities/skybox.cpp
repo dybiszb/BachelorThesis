@@ -33,18 +33,23 @@ void CSkybox::render(const float *MVP) {
     glUniform1iARB(_shader("SkyBoxTexture"),0);
     glDrawElements(GL_TRIANGLES, CCube::getTotalIndices(), GL_UNSIGNED_INT, 0);
 
-/////////////////////////////////////////////////
-//    GLenum err = GL_NO_ERROR;
-//    while((err = glGetError()) != GL_NO_ERROR)
-//    {
-//        //Process/log the error.
-//        std::cout << "shit happenend " << err << std::endl;
-////        std::cout << _shader("SkyBoxTexture") << std::endl;
-//    }
     _texture.unbind();
     _vao.unbind();
     _shader.UnUse();
 }
+
+// TODO check assignment operator for vec3
+
+void CSkybox::setCameraPosition(vec3 cameraPosition) {
+    _cameraPosition.x = cameraPosition.x;
+    _cameraPosition.y = cameraPosition.y;
+    _cameraPosition.z = cameraPosition.z;
+}
+
+GLuint CSkybox::getCubemapId() {
+    return _texture.getId();
+}
+
 
 void CSkybox::_initShader() {
     _shader.LoadFromFile(GL_VERTEX_SHADER, "res/shaders/skybox.vert");

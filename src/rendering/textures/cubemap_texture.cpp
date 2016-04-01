@@ -44,3 +44,7 @@ void CCubemapTexture::bind(){
 void CCubemapTexture::unbind() {
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
+
+GLuint CCubemapTexture::getId() {
+    return _id;
+}

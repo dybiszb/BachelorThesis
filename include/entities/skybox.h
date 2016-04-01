@@ -14,12 +14,14 @@
 #define SKYBOX_H
 
 #include <vector>
+#include <glm/glm.hpp>
 #include "renderable_object.h"
 #include "cube.h"
 #include "textures/cubemap_texture.h"
 
 using namespace rendering;
 using namespace geometry;
+using namespace glm;
 
 namespace entities {
     class CSkybox : public CRenderableObject,
@@ -42,9 +44,22 @@ namespace entities {
          */
         virtual void render(const float *MVP);
 
+        /**
+         * Updates current camera position for correct drawing of the skybox.
+         *
+         * @param cameraPosition Current camera position.
+         */
+        void setCameraPosition(vec3 cameraPosition);
+
+        /**
+         * @return Id of the cube map. Can be used to address it in e.g.
+         * another shader.
+         */
+        GLuint getCubemapId();
+
     private:
         CCubemapTexture _texture;
-
+        vec3 _cameraPosition;
         void _initShader();
     };
 }
