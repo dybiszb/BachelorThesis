@@ -92,7 +92,7 @@ int initGLEW() {
         return ERROR;
     }
 
-    if(!GLEW_VERSION_3_3) {
+    if(GLEW_VERSION_3_3) {
         gModernShaders = true;
         cout << "Loading modern shaders: version 330 core.\n";
     }
