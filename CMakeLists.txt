@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.4)
 project(BachelorWater)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=gnu++0x")
 #
 #if (NOT WIN32)
 #    set(CMAKE_MODULE_PATH /usr/local/lib/cmake /usr/local/lib/x86_64-linux-gnu/cmake)
@@ -78,19 +78,6 @@ set(SOURCE_FILES
 add_executable(bachelor_water ${SOURCE_FILES})
 target_link_libraries (bachelor_water
         ${EXTERNAL_LIBS})
-
-if (WIN32)
-    target_link_libraries (bachelor_water
-            ${EXTERNAL_LIBS})
-endif (WIN32)
-
-if (UNIX)
-    target_link_libraries (bachelor_water
-            ${OPENGL_LIBRARIES}
-            ${GLFW3_LIBRARY}
-            ${GLEW_LIBRARY}
-            Xxf86vm pthread Xrandr Xinerama Xi Xcursor)
-endif (UNIX)
 
 # Copy resources
 add_custom_command(TARGET bachelor_water PRE_BUILD

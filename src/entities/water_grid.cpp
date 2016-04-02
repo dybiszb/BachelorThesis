@@ -14,9 +14,9 @@ CWaterGrid::CWaterGrid(
         _cubemapId(-1),
         _sideSize(sideSize)
         {
-
+    cout << "11\n";
     _initShader(modernShaders);
-
+            cout << "12\n";
     Vertex *vertices = CGrid::generateVertices();
     GLuint *indices =  CGrid::generateIndices();
     GLsizei stride = sizeof(Vertex);

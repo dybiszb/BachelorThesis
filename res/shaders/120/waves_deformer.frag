@@ -1,6 +1,5 @@
 #version 120
 
-//precision mediump float;
 uniform sampler2D sampler;
 uniform float sideSize;
 varying vec2 texUV;

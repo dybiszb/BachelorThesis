@@ -24,6 +24,7 @@ namespace rendering {
         void bind();
         void unbind();
     private:
+        bool _modernShaders;
         GLuint _id;
     };
 }

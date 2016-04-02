@@ -10,6 +10,7 @@
 #define WAVES_DEFORMER_H
 
 #include <GL/glew.h>
+#include <iostream>
 #include "buffers/frame_buffer.h"
 #include "textures/texture2D.h"
 #include "glsl_shader.h"
@@ -21,6 +22,7 @@
 using namespace rendering;
 using namespace geometry;
 using namespace util;
+using namespace std;
 
 class CWavesDeformer{
 

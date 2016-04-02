@@ -43,13 +43,17 @@ using namespace entities;
 using namespace std;
 
 int main(void) {
+    cout << "1\n";
     assert (initGLFW(OPENGL_MAJOR, OPENGL_MINOR) == SUCCESS);
+    cout << "2\n";
     assert (openWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE) == SUCCESS);
+    cout << "3\n";
     assert (initGLEW() == SUCCESS);
+    cout << "4\n";
     assert (setupScene() == SUCCESS);
-
+    cout << "5\n";
     runSimulationLoop();
-
+	cout << "runSimulationLoopEnded\n";
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
@@ -100,6 +104,16 @@ int initGLEW() {
         cout << "Loading old shaders: version 120.\n";
     }
 
+    if(!GL_ARB_depth_texture)
+    {
+        cout << "GL_ARB_depth_texture not supported!\n";
+    }
+
+    if(!GL_FRAMEBUFFER_EXT)
+    {
+        cout <<"GL_EXT_framebuffer_object not supported!\r\n";
+    }
+
     return SUCCESS;
 }
 
@@ -114,7 +128,7 @@ int setupScene() {
 
 int runSimulationLoop() {
     int sceneSize = 32;
-
+	cout << "6\n";
     std::vector<const GLchar *> facesNames({
                                                    "./res/textures"
                                                            "/skybox/sor_sea/front.jpg",
@@ -128,12 +142,14 @@ int runSimulationLoop() {
                                                            "/skybox/sor_sea/right.jpg",
                                                    "./res/textures"
                                                            "/skybox/sor_sea/left.jpg"});
-
+cout << "7\n";
     CSkybox skybox(sceneSize, &facesNames, gModernShaders);
+cout << "8\n";
     CWaterGrid water(sceneSize, sceneSize, sceneSize, glm::vec2
             (-sceneSize / 2, -sceneSize / 2), gModernShaders);
+cout << "9\n";
     water.setSkyboxCubemapId(skybox.getCubemapId());
-
+cout << "10\n";
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 

@@ -5,18 +5,29 @@
 CWavesDeformer::CWavesDeformer(int width, int height, bool modernShaders)
         : _width(width),
           _height(height) {
+    cout << "deformer1\n";
     _fbo1 = new CFrameBuffer();
+    cout << "deformer2\n";
     _fbo2 = new CFrameBuffer();
+    cout << "deformer3\n";
     _tex1 = new CTexture2D(width, height);
+    cout << "deformer4\n";
     _tex2 = new CTexture2D(width, height);
+    cout << "deformer5\n";
 
     _fbo1->bind();
+    cout << "deformer6\n";
     _fbo1->setColorAttachement(*_tex1);
+    cout << "deformer7\n";
     _fbo1->unbind();
+    cout << "deformer8\n";
 
     _fbo2->bind();
+    cout << "deformer9\n";
     _fbo2->setColorAttachement(*_tex2);
+    cout << "deformer10\n";
     _fbo2->unbind();
+    cout << "deformer11\n";
 
     _initShaders(modernShaders);
     _initVao();

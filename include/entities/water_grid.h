@@ -9,19 +9,19 @@
 #ifndef WATER_GRID_H
 #define WATER_GRID_H
 
-//#include <glm/glm.hpp>
+#include <iostream>
 #include "renderable_object.h"
 #include "grid.h"
 #include "vertex.h"
 #include "error_handling.h"
 #include "textures/texture2D.h"
 #include "waves_deformer.h"
-//#include <glm/gtc/type_ptr.hpp>
 
 using namespace rendering;
 using namespace geometry;
 using namespace util;
 using namespace glm;
+using namespace std;
 
 namespace entities {
     class CWaterGrid : public CRenderableObject,
