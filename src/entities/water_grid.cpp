@@ -39,6 +39,10 @@ CWaterGrid::~CWaterGrid() {
 }
 
 void CWaterGrid::render(const float *MVP) {
+    // Old hardware does not allow to bind two types of textures/ two
+    // samplers to one texture unit. Hence one needs to swap it between
+    // animation texture and cubemap texture
+    glActiveTexture(GL_TEXTURE0);
     _wavesDeformer.bindTextureOfNextAnimationStep();
     glViewport(0, 0, 800, 600);
 
@@ -46,10 +50,11 @@ void CWaterGrid::render(const float *MVP) {
     _vao.bind();
 
     glUniform1iARB(_shader("heightFieldTex"),0);
-    glUniform1iARB(_shader("skyBoxTex"),0);
+    glUniform1iARB(_shader("skyBoxTex"),1);
 
     // Sampler of cubemap
     checkErrorCubemapId("CWaterGrid::render", _cubemapId);
+    glActiveTexture(GL_TEXTURE0+1);
     glBindTexture(GL_TEXTURE_CUBE_MAP, _cubemapId);
     checkErrorOpenGL("CWaterGrid::render");
 

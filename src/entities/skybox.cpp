@@ -29,6 +29,7 @@ CSkybox::CSkybox(int sideSize,
 void CSkybox::render(const float *MVP) {
     _shader.Use();
     _vao.bind();
+    glActiveTexture(GL_TEXTURE0);
     _texture.bind();
 
     glUniformMatrix4fv(_shader("MVP"), 1, GL_FALSE, MVP);

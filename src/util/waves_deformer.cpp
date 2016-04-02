@@ -27,7 +27,6 @@ CWavesDeformer::CWavesDeformer(int width, int height, bool modernShaders)
     _fbo2->setColorAttachement(*_tex2);
     cout << "deformer10\n";
     _fbo2->unbind();
-    cout << "deformer11\n";
 
     _initShaders(modernShaders);
     _initVao();

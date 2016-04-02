@@ -43,4 +43,5 @@ void main()
     vec4 colorRefraction = textureCube(skyBoxTex,refractionTex);
 
     gl_FragColor = mix(colorReflection, colorRefraction, 0.5);
+//gl_FragColor = texture2D(heightFieldTex, vTexCoords);
 }
