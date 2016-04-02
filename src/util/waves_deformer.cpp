@@ -2,8 +2,9 @@
 
 #include "waves_deformer.h"
 // TODO wdth and height change to side length
-CWavesDeformer::CWavesDeformer(int width, int height) : _width(width),
-                                                        _height(height) {
+CWavesDeformer::CWavesDeformer(int width, int height, bool modernShaders)
+        : _width(width),
+          _height(height) {
     _fbo1 = new CFrameBuffer();
     _fbo2 = new CFrameBuffer();
     _tex1 = new CTexture2D(width, height);
@@ -17,7 +18,7 @@ CWavesDeformer::CWavesDeformer(int width, int height) : _width(width),
     _fbo2->setColorAttachement(*_tex2);
     _fbo2->unbind();
 
-    _initShaders();
+    _initShaders(modernShaders);
     _initVao();
 }
 
@@ -53,10 +54,19 @@ void CWavesDeformer::bindTextureOfNextAnimationStep() {
     _shader.UnUse();
 }
 
-void CWavesDeformer::_initShaders() {
-    _shader.LoadFromFile(GL_VERTEX_SHADER, "res/shaders/waves_deformer.vert");
-    _shader.LoadFromFile(GL_FRAGMENT_SHADER, "res/shaders/waves_deformer.frag");
+void CWavesDeformer::_initShaders(bool modernShaders) {
+    if(modernShaders) {
+        _shader.LoadFromFile
+                (GL_VERTEX_SHADER, "res/shaders/330/waves_deformer.vert");
+        _shader.LoadFromFile
+                (GL_FRAGMENT_SHADER, "res/shaders/330/waves_deformer.frag");
+    } else {
+        _shader.LoadFromFile
+                (GL_VERTEX_SHADER, "res/shaders/120/waves_deformer.vert");
+        _shader.LoadFromFile
+                (GL_FRAGMENT_SHADER, "res/shaders/120/waves_deformer.frag");
 
+    }
     _shader.CreateAndLinkProgram();
 
     _shader.Use();

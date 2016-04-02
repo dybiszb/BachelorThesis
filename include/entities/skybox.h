@@ -33,8 +33,10 @@ namespace entities {
          *
          * @param sideSize   How long should be cube's edge?
          * @param facesNames Pointer to vector with faces paths.
+         * @param TODO
          */
-        CSkybox(int sideSize, vector<const GLchar *> *facesNames);
+        CSkybox(int sideSize, vector<const GLchar *> *facesNames,
+                bool modernShaders);
 
         /**
          * Renders textured cube (skybox) in the center of world's space
@@ -60,7 +62,7 @@ namespace entities {
     private:
         CCubemapTexture _texture;
         vec3 _cameraPosition;
-        void _initShader();
+        void _initShader(bool modernShaders);
     };
 }
 

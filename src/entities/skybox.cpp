@@ -4,11 +4,13 @@
 
 using namespace entities;
 
-CSkybox::CSkybox(int sideSize, vector<const GLchar *> *facesNames) :
+CSkybox::CSkybox(int sideSize,
+                 vector<const GLchar *> *facesNames,
+                 bool modernShaders) :
         CCube(sideSize),
         _texture(facesNames) {
 
-    _initShader();
+    _initShader(modernShaders);
 
     Vertex *vertices = CCube::generateVertices();
     GLuint *indices = CCube::generateIndices();
@@ -51,9 +53,15 @@ GLuint CSkybox::getCubemapId() {
 }
 
 
-void CSkybox::_initShader() {
-    _shader.LoadFromFile(GL_VERTEX_SHADER, "res/shaders/skybox.vert");
-    _shader.LoadFromFile(GL_FRAGMENT_SHADER, "res/shaders/skybox.frag");
+void CSkybox::_initShader(bool modernShaders) {
+    if(modernShaders) {
+        _shader.LoadFromFile(GL_VERTEX_SHADER, "res/shaders/330/skybox.vert");
+        _shader.LoadFromFile(GL_FRAGMENT_SHADER, "res/shaders/330/skybox.frag");
+    } else {
+        _shader.LoadFromFile(GL_VERTEX_SHADER, "res/shaders/120/skybox.vert");
+        _shader.LoadFromFile(GL_FRAGMENT_SHADER, "res/shaders/120/skybox.frag");
+    }
+
 
     _shader.CreateAndLinkProgram();
 

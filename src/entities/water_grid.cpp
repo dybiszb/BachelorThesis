@@ -8,13 +8,14 @@ CWaterGrid::CWaterGrid(
         int quadsPerX,
         int quadsPerZ,
         float sideSize,
-        glm::vec2 bottomCorner) :
+        glm::vec2 bottomCorner, bool modernShaders) :
         CGrid(quadsPerX, quadsPerZ, sideSize, sideSize,bottomCorner),
-        _wavesDeformer(quadsPerX+1, quadsPerZ+1),
-        _cubemapId(-1)
+        _wavesDeformer(quadsPerX+1, quadsPerZ+1, modernShaders),
+        _cubemapId(-1),
+        _sideSize(sideSize)
         {
 
-    _initShader();
+    _initShader(modernShaders);
 
     Vertex *vertices = CGrid::generateVertices();
     GLuint *indices =  CGrid::generateIndices();
@@ -52,6 +53,7 @@ void CWaterGrid::render(const float *MVP) {
     glBindTexture(GL_TEXTURE_CUBE_MAP, _cubemapId);
     checkErrorOpenGL("CWaterGrid::render");
 
+    glUniform1f(_shader("sideSize"),_sideSize);
     glUniform3fv(_shader("cameraPos"), 1, &_cameraPosition[0]);
     glUniform1f(_shader("waveTime"),_currentTime);
     glUniformMatrix4fv(_shader("MVP"), 1, GL_FALSE, MVP);
@@ -76,10 +78,14 @@ void CWaterGrid::setSkyboxCubemapId(GLuint cubemapId){
     _cubemapId = cubemapId;
 }
 
-void CWaterGrid::_initShader() {
-    _shader.LoadFromFile(GL_VERTEX_SHADER, "res/shaders/water.vert");
-    _shader.LoadFromFile(GL_FRAGMENT_SHADER, "res/shaders/water.frag");
-
+void CWaterGrid::_initShader(bool modernShaders) {
+    if(modernShaders) {
+        _shader.LoadFromFile(GL_VERTEX_SHADER, "res/shaders/330/water.vert");
+        _shader.LoadFromFile(GL_FRAGMENT_SHADER, "res/shaders/330/water.frag");
+    }else {
+        _shader.LoadFromFile(GL_VERTEX_SHADER, "res/shaders/120/water.vert");
+        _shader.LoadFromFile(GL_FRAGMENT_SHADER, "res/shaders/120/water.frag");
+    }
     _shader.CreateAndLinkProgram();
 
     _shader.Use();
@@ -91,5 +97,6 @@ void CWaterGrid::_initShader() {
     _shader.AddUniform("heightFieldTex");
     _shader.AddUniform("skyBoxTex");
     _shader.AddUniform("cameraPos");
+    _shader.AddUniform("sideSize");
     _shader.UnUse();
 }

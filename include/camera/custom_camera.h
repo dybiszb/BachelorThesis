@@ -23,6 +23,10 @@ public:
 
     void moveRight(float deltaTime);
 
+    void moveUp(float deltaTime);
+
+    void moveDown(float deltaTime);
+
     mat4 getProjectionMatrix();
 
     mat4 getViewMatrix();
@@ -36,7 +40,7 @@ public:
     vec3 getPosition();
 
 private:
-    vec3 _position = glm::vec3(0, 5, 10);
+    vec3 _position = glm::vec3(0, 10, 20);
     float _horizontalAngle = 3.14f;
     float _verticalAngle = 0.0f;
     float _initialFoV = 45.0f;

@@ -28,7 +28,7 @@ namespace entities {
                        public CGrid {
     public:
         CWaterGrid(int verticesOnWidth, int verticesOnHeight, float sideSize,
-                   glm::vec2 bottomCorner);
+                   glm::vec2 bottomCorner, bool modernShaders);
         ~CWaterGrid();
         virtual void render(const float *MVP);
 
@@ -48,7 +48,8 @@ namespace entities {
         GLfloat _currentTime;
         vec3 _cameraPosition;
         GLuint _cubemapId;
-        void _initShader();
+        GLfloat _sideSize;
+        void _initShader(bool modernShaders);
     };
 }
 

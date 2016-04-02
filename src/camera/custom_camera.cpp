@@ -24,6 +24,14 @@ void CCustomCamera::moveRight(float deltaTime) {
     _position += getRightVector() * deltaTime * _speed;
 }
 
+void CCustomCamera::moveUp(float deltaTime) {
+    _position.y += deltaTime * _speed;
+}
+
+void CCustomCamera::moveDown(float deltaTime) {
+    _position.y -= deltaTime * _speed;
+}
+
 mat4 CCustomCamera::getProjectionMatrix() {
     return perspective(_initialFoV, 4.0f / 3.0f, 0.1f, 1000.0f);
 }

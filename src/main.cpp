@@ -18,6 +18,8 @@
 #define SUCCESS             1
 #define ERROR               -1
 
+bool gModernShaders = false;
+
 int initGLFW(int openGLMajor, int openGLMinor);
 
 int openWindow(int windowWidth, int windowHeight, const char *windowTitle);
@@ -38,6 +40,7 @@ CCustomCamera camera;
 
 using namespace glm;
 using namespace entities;
+using namespace std;
 
 int main(void) {
     assert (initGLFW(OPENGL_MAJOR, OPENGL_MINOR) == SUCCESS);
@@ -88,6 +91,15 @@ int initGLEW() {
         glfwTerminate();
         return ERROR;
     }
+
+    if(!GLEW_VERSION_3_3) {
+        gModernShaders = true;
+        cout << "Loading modern shaders: version 330 core.\n";
+    }
+    else {
+        cout << "Loading old shaders: version 120.\n";
+    }
+
     return SUCCESS;
 }
 
@@ -101,25 +113,25 @@ int setupScene() {
 }
 
 int runSimulationLoop() {
-    int scenceSize = 128;
+    int sceneSize = 32;
 
-    std::vector<const GLchar*> facesNames({
-    "./res/textures"
-            "/skybox/sor_sea/front.jpg",
-            "./res/textures"
-                    "/skybox/sor_sea/back.jpg",
-            "./res/textures"
-                    "/skybox/sor_sea/top.jpg",
-            "./res/textures"
-                    "/skybox/sor_sea/bottom.jpg",
-            "./res/textures"
-                    "/skybox/sor_sea/right.jpg",
-            "./res/textures"
-                    "/skybox/sor_sea/left.jpg"});
+    std::vector<const GLchar *> facesNames({
+                                                   "./res/textures"
+                                                           "/skybox/sor_sea/front.jpg",
+                                                   "./res/textures"
+                                                           "/skybox/sor_sea/back.jpg",
+                                                   "./res/textures"
+                                                           "/skybox/sor_sea/top.jpg",
+                                                   "./res/textures"
+                                                           "/skybox/sor_sea/bottom.jpg",
+                                                   "./res/textures"
+                                                           "/skybox/sor_sea/right.jpg",
+                                                   "./res/textures"
+                                                           "/skybox/sor_sea/left.jpg"});
 
-    CSkybox skybox(scenceSize, &facesNames);
-    CWaterGrid water(scenceSize, scenceSize,scenceSize, glm::vec2
-            (-scenceSize/2,-scenceSize/2));
+    CSkybox skybox(sceneSize, &facesNames, gModernShaders);
+    CWaterGrid water(sceneSize, sceneSize, sceneSize, glm::vec2
+            (-sceneSize / 2, -sceneSize / 2), gModernShaders);
     water.setSkyboxCubemapId(skybox.getCubemapId());
 
     glEnable(GL_DEPTH_TEST);
@@ -128,7 +140,7 @@ int runSimulationLoop() {
     double lastTime = glfwGetTime();
 
     do {
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Update scene
         double thisTime = glfwGetTime();
@@ -145,7 +157,7 @@ int runSimulationLoop() {
 
 //        std::cout << glm::to_string(camera.getPosition()) << std::endl;
 
-        glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         skybox.setCameraPosition(camera.getPosition());
         skybox.render(&vp[0][0]);
 
@@ -194,8 +206,10 @@ void updateScene(float timeElapsed) {
 
     if (glfwGetKey(window, 'Z')) {
 //        fpsCamera.moveUp(timeElapsed * moveSpeed);
+        camera.moveUp(timeElapsed);
     } else if (glfwGetKey(window, 'X')) {
 //        fpsCamera.moveDown(timeElapsed * moveSpeed);
+        camera.moveDown(timeElapsed);
     }
 }
 

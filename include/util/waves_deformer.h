@@ -26,7 +26,7 @@ class CWavesDeformer{
 
 public:
     // input # vertices in row & column !!!
-    CWavesDeformer(int width, int height);
+    CWavesDeformer(int width, int height, bool modernShaders);
 
     ~CWavesDeformer();
     /**
@@ -51,7 +51,7 @@ private:
     CVertexArray _vao;
     CQuad _quad;
 
-    void _initShaders();
+    void _initShaders(bool modernShaders);
     void _initVao();
 };
 
