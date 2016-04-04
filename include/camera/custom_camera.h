@@ -40,9 +40,9 @@ public:
     vec3 getPosition();
 
 private:
-    vec3 _position = glm::vec3(0, 10, 20);
-    float _horizontalAngle = 3.14f;
-    float _verticalAngle = 0.0f;
+    vec3 _position = glm::vec3(30,15, 0);
+    float _horizontalAngle =  3.14f * 1.5 ;
+    float _verticalAngle = -3.14f/ 8.0f;
     float _initialFoV = 45.0f;
     float _speed = 15.0f;
     float _mouseSpeed = 0.050f;

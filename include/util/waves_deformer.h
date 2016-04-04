@@ -49,10 +49,11 @@ private:
     CFrameBuffer *_fbo2;
     CTexture2D *_tex1;
     CTexture2D *_tex2;
+    CTexture2D *_tex3;
     GLSLShader _shader;
     CVertexArray _vao;
     CQuad _quad;
-
+    bool _oddPassage;
     void _initShaders(bool modernShaders);
     void _initVao();
 };

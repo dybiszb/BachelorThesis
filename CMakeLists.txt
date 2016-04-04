@@ -1,25 +1,20 @@
-cmake_minimum_required(VERSION 2.8.4)
-project(BachelorWater)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=gnu++0x")
-#
-#if (NOT WIN32)
-#    set(CMAKE_MODULE_PATH /usr/local/lib/cmake /usr/local/lib/x86_64-linux-gnu/cmake)
-#    set(CMAKE_PREFIX_PATH /usr/local/lib/cmake/glfw)
-#endif (NOT WIN32)
-#
-#find_package (OpenGL REQUIRED)
-#if (WIN32)
-#include_directories("D:/Libs/GLFW/include" "D:/Libs/GLM" "D:/Libs/GLEW/include")
-#link_directories("D:/Libs/GLEW/lib/Release/x64" "D:/Libs/GLFW/lib-mingw" )
-#else (WIN32)
-#    find_package (glfw3 REQUIRED)
-#    find_package (GLM REQUIRED)
-#    find_package (GLEW REQUIRED STATIC)
-#endif (WIN32)
+#===============================================================================
+# File assures cross-platform compilation. All external libraries are compiled
+# in the process. Resources folder is copied to the output directory.
+#==============================================================================
+# author: dybisz
+#-------------------------------------------------------------------------------
 
-###################################################
-#                EXTERNAL LIBS                    #
-###################################################
+#===============================================================================
+# General Settings
+#-------------------------------------------------------------------------------
+cmake_minimum_required(VERSION 2.8.4)
+project(BachelorThesis)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=gnu++0x")
+
+#===============================================================================
+# External Libraries
+#-------------------------------------------------------------------------------
 add_subdirectory (external)
 
 include_directories(
@@ -36,6 +31,57 @@ set(EXTERNAL_LIBS
         GLEW_1130
 )
 
+#===============================================================================
+# Project's Includes
+#-------------------------------------------------------------------------------
+include_directories(
+        include/camera
+        include/entities
+        include/geometry
+        include/rendering/buffers
+        include/rendering/textures
+        include/rendering
+        include/util
+        res/
+)
+
+#===============================================================================
+# Project's Sources
+#-------------------------------------------------------------------------------
+set(
+        SOURCE_FILES
+        src/camera/custom_camera.cpp
+        src/camera/fps_camera.cpp
+        src/entities/skybox.cpp
+        src/entities/water_grid.cpp
+        src/geometry/cube.cpp
+        src/geometry/grid.cpp
+        src/geometry/quad.cpp
+        src/rendering/buffers/buffer.cpp
+        src/rendering/buffers/frame_buffer.cpp
+        src/rendering/buffers/vertex_array.cpp
+        src/rendering/textures/cubemap_texture.cpp
+        src/rendering/textures/texture2D.cpp
+        src/rendering/glsl_shader.cpp
+        src/rendering/renderable_object.cpp
+        src/util/error_handling.cpp
+        src/util/waves_deformer.cpp
+        src/main.cpp
+)
+
+#===============================================================================
+# Executable
+#-------------------------------------------------------------------------------
+add_executable(bachelor_water ${SOURCE_FILES})
+
+#===============================================================================
+# Linking
+#-------------------------------------------------------------------------------
+target_link_libraries (bachelor_water ${EXTERNAL_LIBS})
+
+#===============================================================================
+# Definitions
+#-------------------------------------------------------------------------------
 add_definitions(
         -DTW_STATIC
         -DTW_NO_LIB_PRAGMA
@@ -44,42 +90,11 @@ add_definitions(
         -D_CRT_SECURE_NO_WARNINGS
 )
 
-include_directories(
-        include/util
-        include/entities
-        include/rendering
-        include/rendering/buffers
-        include/rendering/textures
-        include/geometry
-        include/camera
-        res/
+#===============================================================================
+# Custom Commands
+#-------------------------------------------------------------------------------
+add_custom_command(
+        TARGET bachelor_water PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory   # Copy resources
+        ${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:bachelor_water>/res
 )
-
-set(SOURCE_FILES
-        src/main.cpp
-        src/util/error_handling.cpp                 #done
-        src/rendering/renderable_object.cpp         #done
-        src/rendering/buffers/vertex_array.cpp              #done
-        src/rendering/buffers/buffer.cpp                    #done
-        src/rendering/textures/cubemap_texture.cpp           #done
-        src/rendering/glsl_shader.cpp
-        src/camera/fps_camera.cpp
-        src/entities/water_grid.cpp
-        src/entities/skybox.cpp                     #done
-        src/geometry/grid.cpp                       #done
-        src/geometry/cube.cpp
-        src/rendering/textures/texture2D.cpp
-        src/rendering/buffers/frame_buffer.cpp
-        src/util/waves_deformer.cpp
-        src/geometry/quad.cpp
-        src/camera/custom_camera.cpp)
-
-## "sample" is the name of the executable
-add_executable(bachelor_water ${SOURCE_FILES})
-target_link_libraries (bachelor_water
-        ${EXTERNAL_LIBS})
-
-# Copy resources
-add_custom_command(TARGET bachelor_water PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:bachelor_water>/res)

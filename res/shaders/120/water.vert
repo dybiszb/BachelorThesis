@@ -16,6 +16,8 @@ void main()
 
     vec3 vertex = vVertex;
     vertex.y = texture2D(heightFieldTex, texCoords).r;
+//    vertex.y = sin(0.7 * vVertex.x + waveTime) * cos(0.7 * vVertex.z +
+//              waveTime) * 0.5;
     gl_Position = MVP*vec4(vertex,1);
 
     vPosition = vVertex;

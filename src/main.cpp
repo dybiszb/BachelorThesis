@@ -118,7 +118,7 @@ int setupScene() {
 }
 
 int runSimulationLoop() {
-    int sceneSize = 32;
+    int sceneSize = 256;
 
     std::vector<const GLchar *> facesNames({
                                                    "./res/textures"
@@ -134,9 +134,9 @@ int runSimulationLoop() {
                                                    "./res/textures"
                                                            "/skybox/sor_sea/left.jpg"});
 
-    CSkybox skybox(sceneSize, &facesNames, gModernShaders);
-    CWaterGrid water(sceneSize, sceneSize, sceneSize, glm::vec2
-            (-sceneSize / 2, -sceneSize / 2), gModernShaders);
+    CSkybox skybox(32, &facesNames, gModernShaders);
+    CWaterGrid water(sceneSize, sceneSize, 32, glm::vec2
+            (-32 / 2, -32 / 2), gModernShaders);
     water.setSkyboxCubemapId(skybox.getCubemapId());
 
     glEnable(GL_DEPTH_TEST);
