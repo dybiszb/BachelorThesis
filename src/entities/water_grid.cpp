@@ -39,8 +39,8 @@ CWaterGrid::~CWaterGrid() {
 }
 
 void CWaterGrid::render(const float *MVP) {
-    // Old hardware does not allow to bind two types of textures/ two
-    // samplers to one texture unit. Hence one needs to swap it between
+    // Old hardware does not allow to bind two types of textures (two
+    // samplers) to one texture unit. Hence one needs to swap it between
     // animation texture and cubemap texture
     glActiveTexture(GL_TEXTURE0);
     _wavesDeformer.bindTextureOfNextAnimationStep();
@@ -60,6 +60,7 @@ void CWaterGrid::render(const float *MVP) {
 
     glUniform1f(_shader("sideSize"),_sideSize);
     glUniform3fv(_shader("cameraPos"), 1, &_cameraPosition[0]);
+    glUniform3fv(_shader("lightPos"), 1, &_lightPosition[0]);
     glUniform1f(_shader("waveTime"),_currentTime);
     glUniformMatrix4fv(_shader("MVP"), 1, GL_FALSE, MVP);
     glDrawElements(GL_TRIANGLES, CGrid::getTotalIndices(), GL_UNSIGNED_INT, 0);
@@ -77,6 +78,16 @@ void CWaterGrid::setCameraPosition(vec3 cameraPosition) {
     _cameraPosition.x = cameraPosition.x;
     _cameraPosition.y = cameraPosition.y;
     _cameraPosition.z = cameraPosition.z;
+}
+
+void CWaterGrid::setCameraAngle(float angle) {
+    _cameraAngle = angle;
+}
+
+void CWaterGrid::setLightPosition(vec3& lightPosition) {
+    _lightPosition.x = lightPosition.x;
+    _lightPosition.y = lightPosition.y;
+    _lightPosition.z = lightPosition.z;
 }
 
 void CWaterGrid::setSkyboxCubemapId(GLuint cubemapId){
@@ -103,5 +114,6 @@ void CWaterGrid::_initShader(bool modernShaders) {
     _shader.AddUniform("skyBoxTex");
     _shader.AddUniform("cameraPos");
     _shader.AddUniform("sideSize");
+    _shader.AddUniform("lightPos");
     _shader.UnUse();
 }

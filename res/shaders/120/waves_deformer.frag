@@ -9,7 +9,7 @@ float calculateDamping(vec2 position, float sideSize) {
     float distShoreY = min(position.y, 1- position.y);
     float distShore = min(distShoreX, distShoreY);
     distShore = sideSize * distShore;
-    return 0.99 * min(1, distShore);
+    return 0.99 * min(1, distShore/0.5);
 }
 
 void main()
@@ -31,7 +31,7 @@ void main()
   float current = texture2D(oldvalues, vec2(texUV.x, texUV.y)).r;
   float old     = texture2D(oldvalues, texUV).g;
   float d       = calculateDamping(texUV, sideSize);
+
   float height = d*(A * (up + down + left + right) + B * current - old);
   gl_FragColor = vec4(height, current,0.0,0.0);
-
 }

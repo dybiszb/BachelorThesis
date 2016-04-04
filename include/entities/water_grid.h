@@ -41,12 +41,17 @@ namespace entities {
          * @param cameraPosition Current camera position.
          */
         void setCameraPosition(vec3 cameraPosition);
-
+        void setCameraAngle(float angle);
+        void setLightPosition(vec3& lightPosition);
         void setSkyboxCubemapId(GLuint cubemapId);
+
+        void pointDisturb(int x, int y, float force);
     private:
         CWavesDeformer _wavesDeformer;
         GLfloat _currentTime;
         vec3 _cameraPosition;
+        vec3 _lightPosition;
+        float _cameraAngle;
         GLuint _cubemapId;
         GLfloat _sideSize;
         void _initShader(bool modernShaders);

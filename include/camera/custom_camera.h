@@ -39,9 +39,11 @@ public:
 
     vec3 getPosition();
 
+    float getVerticalAngle();
+
 private:
-    vec3 _position = glm::vec3(30,15, 0);
-    float _horizontalAngle =  3.14f * 1.5 ;
+    vec3 _position = glm::vec3(2.08,4.523, 19.48);
+    float _horizontalAngle =  3.14f;
     float _verticalAngle = -3.14f/ 8.0f;
     float _initialFoV = 45.0f;
     float _speed = 15.0f;

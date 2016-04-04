@@ -21,6 +21,7 @@
 
 using namespace rendering;
 using namespace geometry;
+using namespace glm;
 using namespace util;
 using namespace std;
 
@@ -45,15 +46,13 @@ public:
 private:
     GLsizei _width;
     GLsizei _height;
+    CFrameBuffer *_fbo0;
     CFrameBuffer *_fbo1;
-    CFrameBuffer *_fbo2;
+    CTexture2D *_tex0;
     CTexture2D *_tex1;
-    CTexture2D *_tex2;
-    CTexture2D *_tex3;
     GLSLShader _shader;
     CVertexArray _vao;
     CQuad _quad;
-    bool _oddPassage;
     void _initShaders(bool modernShaders);
     void _initVao();
 };

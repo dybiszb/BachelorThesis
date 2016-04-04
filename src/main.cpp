@@ -6,6 +6,7 @@
 #include "custom_camera.h"
 #include <vector>
 #include <skybox.h>
+#include <random>
 #include "water_grid.h"
 
 #define OPENGL_MAJOR        2
@@ -44,6 +45,8 @@ int main(void) {
     assert (openWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE) == SUCCESS);
     assert (initGLEW() == SUCCESS);
     assert (setupScene() == SUCCESS);
+
+
     runSimulationLoop();
     glfwTerminate();
     exit(EXIT_SUCCESS);
@@ -87,7 +90,7 @@ int initGLEW() {
         return ERROR;
     }
 
-    if(GLEW_VERSION_3_3) {
+    if (GLEW_VERSION_3_3) {
         gModernShaders = true;
         cout << "Loading modern shaders: version 330 core.\n";
     }
@@ -95,14 +98,12 @@ int initGLEW() {
         cout << "Loading old shaders: version 120.\n";
     }
 
-    if(!GL_ARB_depth_texture)
-    {
+    if (!GL_ARB_depth_texture) {
         cout << "GL_ARB_depth_texture not supported!\n";
     }
 
-    if(!GL_FRAMEBUFFER_EXT)
-    {
-        cout <<"GL_EXT_framebuffer_object not supported!\r\n";
+    if (!GL_FRAMEBUFFER_EXT) {
+        cout << "GL_EXT_framebuffer_object not supported!\r\n";
     }
 
     return SUCCESS;
@@ -118,27 +119,67 @@ int setupScene() {
 }
 
 int runSimulationLoop() {
-    int sceneSize = 256;
-
+    int quads = 256;
+    int sceneSize = 32;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(1, quads);
+//    std::vector<const GLchar *> facesNames({
+//                                                   "./res/textures"
+//                                                           "/skybox/sor_sea/front.jpg",
+//                                                   "./res/textures"
+//                                                           "/skybox/sor_sea/back.jpg",
+//                                                   "./res/textures"
+//                                                           "/skybox/sor_sea/top.jpg",
+//                                                   "./res/textures"
+//                                                           "/skybox/sor_sea/bottom.jpg",
+//                                                   "./res/textures"
+//                                                           "/skybox/sor_sea/right.jpg",
+//                                                   "./res/textures"
+//                                                           "/skybox/sor_sea/left.jpg"});
+//
     std::vector<const GLchar *> facesNames({
                                                    "./res/textures"
-                                                           "/skybox/sor_sea/front.jpg",
+                                                           "/skybox/alt2/front"
+                                                           ".tga",
                                                    "./res/textures"
-                                                           "/skybox/sor_sea/back.jpg",
+                                                           "/skybox/alt2/back.tga",
                                                    "./res/textures"
-                                                           "/skybox/sor_sea/top.jpg",
+                                                           "/skybox/alt2/up"
+                                                           ".tga",
                                                    "./res/textures"
-                                                           "/skybox/sor_sea/bottom.jpg",
+                                                           "/skybox/alt2/down"
+                                                           ".tga",
                                                    "./res/textures"
-                                                           "/skybox/sor_sea/right.jpg",
+                                                           "/skybox/alt2/right.tga",
                                                    "./res/textures"
-                                                           "/skybox/sor_sea/left.jpg"});
+                                                           "/skybox/alt2/left.tga"});
 
-    CSkybox skybox(32, &facesNames, gModernShaders);
-    CWaterGrid water(sceneSize, sceneSize, 32, glm::vec2
-            (-32 / 2, -32 / 2), gModernShaders);
+
+//        std::vector<const GLchar *> facesNames({
+//                                                   "./res/textures"
+//                                                           "/skybox/alt4/front"
+//                                                           ".tga",
+//                                                   "./res/textures"
+//                                                           "/skybox/alt4/back.tga",
+//                                                   "./res/textures"
+//                                                           "/skybox/alt4/up"
+//                                                           ".tga",
+//                                                   "./res/textures"
+//                                                           "/skybox/alt4/down"
+//                                                           ".tga",
+//                                                   "./res/textures"
+//                                                           "/skybox/alt4/right.tga",
+//                                                   "./res/textures"
+//                                                           "/skybox/alt4/left.tga"});
+
+
+    CSkybox skybox(sceneSize, &facesNames, gModernShaders);
+    CWaterGrid water(quads, quads, sceneSize, glm::vec2
+            (-sceneSize / 2, -sceneSize / 2), gModernShaders);
+    vec3 light(sceneSize/2, sceneSize/2, sceneSize/2);
     water.setSkyboxCubemapId(skybox.getCubemapId());
-
+    water.setLightPosition(light);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
@@ -153,6 +194,7 @@ int runSimulationLoop() {
 
         updateScene(timeLapsed);
         water.updateTime(thisTime);
+
         lastTime = thisTime;
 
         // Draw scene
@@ -161,11 +203,12 @@ int runSimulationLoop() {
         mat4 vp = projection * view;
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
         skybox.setCameraPosition(camera.getPosition());
         skybox.render(&vp[0][0]);
 
-//        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-        water.setCameraPosition(camera.getPosition());;
+        water.setCameraPosition(camera.getPosition());
+        water.setCameraAngle(camera.getVerticalAngle());
         water.render(&vp[0][0]);
 
         glfwSwapBuffers(window);
@@ -178,6 +221,11 @@ int runSimulationLoop() {
     return SUCCESS;
 }
 
+void yieldCameraPos() {
+//    cout << "CAMERA_POS: " << camera.getPosition().x << " " <<
+//    camera.getPosition().y << " " << camera.getPosition().z << endl;
+}
+
 void updateScene(float timeElapsed) {
 
     // Mouse
@@ -188,20 +236,26 @@ void updateScene(float timeElapsed) {
 
     if (glfwGetKey(window, 'W')) {
         camera.moveForward(timeElapsed);
+        yieldCameraPos();
     } else if (glfwGetKey(window, 'S')) {
         camera.moveBackward(timeElapsed);
+        yieldCameraPos();
     }
 
     if (glfwGetKey(window, 'A')) {
         camera.moveLeft(timeElapsed);
+        yieldCameraPos();
     } else if (glfwGetKey(window, 'D')) {
         camera.moveRight(timeElapsed);
+        yieldCameraPos();
     }
 
     if (glfwGetKey(window, 'Z')) {
         camera.moveUp(timeElapsed);
+        yieldCameraPos();
     } else if (glfwGetKey(window, 'X')) {
         camera.moveDown(timeElapsed);
+        yieldCameraPos();
     }
 }
 

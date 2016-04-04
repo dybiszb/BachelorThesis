@@ -62,3 +62,7 @@ vec3 CCustomCamera::getUpVector() {
 vec3 CCustomCamera::getPosition() {
     return _position;
 }
+
+float CCustomCamera::getVerticalAngle() {
+    return _verticalAngle;
+}
