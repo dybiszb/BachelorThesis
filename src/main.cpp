@@ -90,13 +90,13 @@ int initGLEW() {
         return ERROR;
     }
 
-    if (GLEW_VERSION_3_3) {
-        gModernShaders = true;
-        cout << "Loading modern shaders: version 330 core.\n";
-    }
-    else {
-        cout << "Loading old shaders: version 120.\n";
-    }
+//    if (GLEW_VERSION_3_3) {
+//        gModernShaders = true;
+//        cout << "Loading modern shaders: version 330 core.\n";
+//    }
+//    else {
+//        cout << "Loading old shaders: version 120.\n";
+//    }
 
     if (!GL_ARB_depth_texture) {
         cout << "GL_ARB_depth_texture not supported!\n";
@@ -124,20 +124,6 @@ int runSimulationLoop() {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(1, quads);
-//    std::vector<const GLchar *> facesNames({
-//                                                   "./res/textures"
-//                                                           "/skybox/sor_sea/front.jpg",
-//                                                   "./res/textures"
-//                                                           "/skybox/sor_sea/back.jpg",
-//                                                   "./res/textures"
-//                                                           "/skybox/sor_sea/top.jpg",
-//                                                   "./res/textures"
-//                                                           "/skybox/sor_sea/bottom.jpg",
-//                                                   "./res/textures"
-//                                                           "/skybox/sor_sea/right.jpg",
-//                                                   "./res/textures"
-//                                                           "/skybox/sor_sea/left.jpg"});
-//
     std::vector<const GLchar *> facesNames({
                                                    "./res/textures"
                                                            "/skybox/alt2/front"
@@ -155,29 +141,12 @@ int runSimulationLoop() {
                                                    "./res/textures"
                                                            "/skybox/alt2/left.tga"});
 
-
-//        std::vector<const GLchar *> facesNames({
-//                                                   "./res/textures"
-//                                                           "/skybox/alt4/front"
-//                                                           ".tga",
-//                                                   "./res/textures"
-//                                                           "/skybox/alt4/back.tga",
-//                                                   "./res/textures"
-//                                                           "/skybox/alt4/up"
-//                                                           ".tga",
-//                                                   "./res/textures"
-//                                                           "/skybox/alt4/down"
-//                                                           ".tga",
-//                                                   "./res/textures"
-//                                                           "/skybox/alt4/right.tga",
-//                                                   "./res/textures"
-//                                                           "/skybox/alt4/left.tga"});
-
-
     CSkybox skybox(sceneSize, &facesNames, gModernShaders);
     CWaterGrid water(quads, quads, sceneSize, glm::vec2
             (-sceneSize / 2, -sceneSize / 2), gModernShaders);
-    vec3 light(sceneSize/2, sceneSize/2, sceneSize/2);
+
+    vec3 light(sceneSize/2, sceneSize/2, -sceneSize/2);
+
     water.setSkyboxCubemapId(skybox.getCubemapId());
     water.setLightPosition(light);
     glEnable(GL_DEPTH_TEST);
@@ -197,19 +166,16 @@ int runSimulationLoop() {
 
         lastTime = thisTime;
 
-        // Draw scene
-        mat4 projection = camera.getProjectionMatrix();
-        mat4 view = camera.getViewMatrix();
-        mat4 vp = projection * view;
-
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         skybox.setCameraPosition(camera.getPosition());
-        skybox.render(&vp[0][0]);
+        skybox.render(&camera.getViewMatrix()[0][0],
+                      &camera.getProjectionMatrix()[0][0]);
 
         water.setCameraPosition(camera.getPosition());
         water.setCameraAngle(camera.getVerticalAngle());
-        water.render(&vp[0][0]);
+        water.render(&camera.getViewMatrix()[0][0],
+                     &camera.getProjectionMatrix()[0][0]);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

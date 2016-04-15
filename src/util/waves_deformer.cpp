@@ -23,6 +23,10 @@ CWavesDeformer::CWavesDeformer(int width, int height, bool modernShaders)
     _initVao();
 }
 
+void CWavesDeformer::setVerticesPerSide(int verticesPerSide) {
+    _verticesPerSide = verticesPerSide;
+}
+
 CWavesDeformer::~CWavesDeformer() {
     delete _fbo0;
     delete _fbo1;
@@ -39,6 +43,7 @@ void CWavesDeformer::bindTextureOfNextAnimationStep() {
     _vao.bind();
     glUniform1iARB(_shader("oldvalues"),0);
     glUniform1f(_shader("sideSize"),_width);
+    glUniform1i(_shader("verticesPerSide"),_verticesPerSide);
 
     _tex0->bind();
     _fbo1->bind();
@@ -77,6 +82,7 @@ void CWavesDeformer::_initShaders(bool modernShaders) {
     _shader.AddUniform("newvalues");
     _shader.AddUniform("sideSize");
     _shader.AddUniform("disturbance");
+    _shader.AddUniform("verticesPerSide");
     _shader.UnUse();
 }
 

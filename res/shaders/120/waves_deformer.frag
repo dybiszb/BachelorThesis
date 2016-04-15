@@ -2,6 +2,7 @@
 
 uniform sampler2D oldvalues;
 uniform float sideSize;
+uniform int verticesPerSide;
 varying vec2 texUV;
 
 float calculateDamping(vec2 position, float sideSize) {
@@ -15,7 +16,7 @@ float calculateDamping(vec2 position, float sideSize) {
 void main()
 {
   // Constants (Temporary)
-  float N = sideSize;
+  float N = float(verticesPerSide);
   float h = 2. / (N - 1.);
   float c = 1.;
   float d_t = 1./(N);

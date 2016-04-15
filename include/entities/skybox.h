@@ -44,7 +44,8 @@ namespace entities {
          *
          * @param MVP Model-View-Projection matrix of the active camera.
          */
-        virtual void render(const float *MVP);
+        virtual void render(const float *view,
+                            const float *projection);
 
         /**
          * Updates current camera position for correct drawing of the skybox.

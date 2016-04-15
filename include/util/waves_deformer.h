@@ -43,9 +43,11 @@ public:
      *
      */
     void bindTextureOfNextAnimationStep();
+    void setVerticesPerSide(int verticesPerSide);
 private:
     GLsizei _width;
     GLsizei _height;
+    GLuint _verticesPerSide;
     CFrameBuffer *_fbo0;
     CFrameBuffer *_fbo1;
     CTexture2D *_tex0;

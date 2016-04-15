@@ -12,10 +12,12 @@ CWaterGrid::CWaterGrid(
         CGrid(quadsPerX, quadsPerZ, sideSize, sideSize,bottomCorner),
         _wavesDeformer(quadsPerX+1, quadsPerZ+1, modernShaders),
         _cubemapId(-1),
-        _sideSize(sideSize)
+        _sideSize(sideSize),
+        _verticesPerSide(quadsPerX + 1)
         {
 
     _initShader(modernShaders);
+    _wavesDeformer.setVerticesPerSide(_verticesPerSide);
 
     Vertex *vertices = CGrid::generateVertices();
     GLuint *indices =  CGrid::generateIndices();
@@ -38,7 +40,8 @@ CWaterGrid::~CWaterGrid() {
 
 }
 
-void CWaterGrid::render(const float *MVP) {
+void CWaterGrid::render(const float *view,
+                        const float *projection) {
     // Old hardware does not allow to bind two types of textures (two
     // samplers) to one texture unit. Hence one needs to swap it between
     // animation texture and cubemap texture
@@ -59,10 +62,13 @@ void CWaterGrid::render(const float *MVP) {
     checkErrorOpenGL("CWaterGrid::render");
 
     glUniform1f(_shader("sideSize"),_sideSize);
+    glUniform1i(_shader("verticesPerSide"),_verticesPerSide);
     glUniform3fv(_shader("cameraPos"), 1, &_cameraPosition[0]);
     glUniform3fv(_shader("lightPos"), 1, &_lightPosition[0]);
     glUniform1f(_shader("waveTime"),_currentTime);
-    glUniformMatrix4fv(_shader("MVP"), 1, GL_FALSE, MVP);
+    glUniformMatrix4fv(_shader("uModel"), 1, GL_FALSE, &mat4(1.0)[0][0]);
+    glUniformMatrix4fv(_shader("uView"), 1, GL_FALSE, view);
+    glUniformMatrix4fv(_shader("uProjection"), 1, GL_FALSE, projection);
     glDrawElements(GL_TRIANGLES, CGrid::getTotalIndices(), GL_UNSIGNED_INT, 0);
     checkErrorOpenGL("CWaterGrid::render");
 
@@ -108,12 +114,15 @@ void CWaterGrid::_initShader(bool modernShaders) {
     _shader.AddAttribute("vVertex");
     _shader.AddAttribute("vColor");
     _shader.AddAttribute("texCoords");
-    _shader.AddUniform("MVP");
+    _shader.AddUniform("uModel");
+    _shader.AddUniform("uView");
+    _shader.AddUniform("uProjection");
     _shader.AddUniform("waveTime");
     _shader.AddUniform("heightFieldTex");
     _shader.AddUniform("skyBoxTex");
     _shader.AddUniform("cameraPos");
     _shader.AddUniform("sideSize");
     _shader.AddUniform("lightPos");
+    _shader.AddUniform("verticesPerSide");
     _shader.UnUse();
 }

@@ -24,8 +24,13 @@ namespace rendering {
          * Must be implemented in order to specify how object should be
          * render. Normally one wants to inherit after the class and provide
          * OpenGL methods inside the function.
+         *
+         * @param model
+         * @param view
+         * @param projection
          */
-        virtual void render(const float *MVP) = 0;
+        virtual void render(const float *view,
+                            const float *projection) = 0;
 
         /**
          * Manages deleting shader program from OpenGL context. In contrary,
