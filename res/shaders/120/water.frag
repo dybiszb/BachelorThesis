@@ -18,6 +18,8 @@ uniform mat4 uModel;
 uniform mat4 uView;
 uniform mat4 uProjection;
 
+
+
 vec3 inter(vec3 orig, vec3 dir, vec3 box_max, vec3 box_min) {
    vec3 tmin = (box_min - orig)/dir;
    vec3 tmax = (box_max - orig)/dir;
@@ -28,8 +30,15 @@ vec3 inter(vec3 orig, vec3 dir, vec3 box_max, vec3 box_min) {
    float minmax = min( min(real_max.x, real_max.y), real_max.z);
    float maxmin = max( max(real_min.x, real_min.y), real_min.z);
 
-   vec3 intersection = orig + (maxmin * dir);
+   vec3 intersection = orig + (minmax * dir);
    return intersection;
+}
+
+const float rzero = pow((1.33 - 1.0)/(1.33 + 1.0), 2.0);
+// Schlicks aproximation
+float fresnel(float cosfi)
+{
+    return rzero + (1.0-rzero) * pow(1.0-cosfi, 5.0);
 }
 
 void main()
@@ -41,16 +50,21 @@ void main()
     box[1] = vec3(halfSide,halfSide,halfSide);
 
     // Color calculation
-//    vec3 n = normalize(vNormal);
     vec3 n = vec3(0.0, 1.0, 0.0);
     vec3 l = normalize(vLightDirection);
-    vec3 reflected = reflect(vPosition - cameraPos, n);
+    vec3 reflectedVector = reflect(vPosition - cameraPos, vNormal);
+    vec3 refractedVector = refract(vPosition - cameraPos, vNormal, 1.0 / 1.53);
 
-    vec3 colorCubeUV = inter(vPosition, reflected, box[1], box[0]);
-    vec4 colorNormal = textureCube(skyBoxTex,colorCubeUV);
+    vec3 reflectedIntersection = inter(vPosition, reflectedVector, box[1], box[0]);
+    vec3 refractedIntersection = inter(vPosition, refractedVector, box[1], box[0]);
 
+    vec4 reflectedColor = textureCube(skyBoxTex, reflectedIntersection);
+    vec4 refractedColor =  textureCube(skyBoxTex, refractedIntersection);
 
     float cosTheta = clamp(dot(n,l), 0.0, 1.0);
 
-     gl_FragColor = colorNormal * cosTheta;
+
+    //float cosPhi = doat(normalize(cameraPos - vPosition), );
+    float w = fresnel(abs(normalize(vPosition - cameraPos).y));
+     gl_FragColor = mix(reflectedColor, refractedColor, 0.3);
 }

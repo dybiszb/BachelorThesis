@@ -7,9 +7,12 @@ using namespace rendering;
 
 CTexture2D::CTexture2D(int width, int height) {
     std::vector<GLfloat> data(4 * width * height, 0);
-    data[4* (width - 1) * (width/2)] = 35;
+    data[4* (width - 1) * (width/2)] = 5;
 //    data[4* (width - 1) + 128] = 60;
-    data[4 * (width -1) * 50 + 36] = 20;
+    data[4 * (width -1) * 50 + 36] = 10;
+    data[2 * (width -1) * 50 + 36] = 10;
+    data[3 * (width -1) * 50 + 36] = 10;
+    data[5 * (width -1) * 50 + 36] = 10;
 
     glGenTextures(1, &_id);
     checkErrorOpenGL("CTexture2D::CTexture2D::glGenTextures");

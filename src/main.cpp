@@ -119,7 +119,7 @@ int setupScene() {
 }
 
 int runSimulationLoop() {
-    int quads = 256;
+    int quads = 512;
     int sceneSize = 32;
     std::random_device rd;
     std::mt19937 gen(rd());

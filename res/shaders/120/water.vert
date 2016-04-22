@@ -21,7 +21,7 @@ uniform vec3 cameraPos;
 
 vec3 calculateNormal() {
   float current = texture2D(heightFieldTex, vec2(texCoords.x, texCoords.y)).r;
-  if(current < 0.01) {
+  if(current < 0.005) {
     return vec3(0.0,1.0,0.0);
   }
   float step    = 1. / float(verticesPerSide);
@@ -30,8 +30,8 @@ vec3 calculateNormal() {
   float right   = texture2D(heightFieldTex, vec2(texCoords.x + step,texCoords.y)).r;
   float left    = texture2D(heightFieldTex, vec2(texCoords.x - step, texCoords.y)).r;
 
-  vec3 d_x = vec3(2.0 * step, right - left, 0.0);
-  vec3 d_z = vec3(0.0, up - down, 2.0 * step);
+  vec3 d_x = vec3(32.0 * 2.0 * step, right - left, 0.0);
+  vec3 d_z = vec3(0.0, up - down, 32.0 *  2.0 * step);
   vec3 normal = normalize(cross(d_z, d_x));
   return normal;
 }
@@ -51,4 +51,6 @@ void main()
 
     vLightDirection = lightPos - vertex;
     vNormal = calculateNormal();
+
+    //earthworm jimm
 }
