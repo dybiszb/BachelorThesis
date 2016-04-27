@@ -1,11 +1,11 @@
 // author: dybisz
 
-#include "custom_camera.h"
+#include "camera.h"
 
 void CCustomCamera::updateViewingAngles(double mouseX, double mouseY,
                                         float deltaTime) {
-    _horizontalAngle -= _mouseSpeed * deltaTime * mouseX;
-    _verticalAngle -= _mouseSpeed * deltaTime * mouseY;
+    _horizontalAngle += _mouseSpeed * mouseX;
+    _verticalAngle   += _mouseSpeed * mouseY;
 }
 
 void CCustomCamera::moveForward(float deltaTime) {

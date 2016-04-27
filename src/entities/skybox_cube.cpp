@@ -1,6 +1,6 @@
 // author: dybisz
 
-#include "skybox.h"
+#include "skybox_cube.h"
 
 using namespace entities;
 

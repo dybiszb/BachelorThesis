@@ -17,6 +17,7 @@
 #include "textures/texture2D.h"
 #include "waves_deformer.h"
 
+
 using namespace rendering;
 using namespace geometry;
 using namespace util;
@@ -27,9 +28,13 @@ namespace entities {
     class CWaterGrid : public CRenderableObject,
                        public CGrid {
     public:
-        CWaterGrid(int verticesOnWidth, int verticesOnHeight, float sideSize,
-                   glm::vec2 bottomCorner, bool modernShaders);
+        class CWaterBuilder;
+
+        CWaterGrid(int quadsPerSide, float sideSize,
+                   vec2 bottomCorner, GLuint cubemapId, bool modernShaders);
+
         ~CWaterGrid();
+
         virtual void render(const float *view,
                             const float *projection);
 
@@ -42,11 +47,15 @@ namespace entities {
          * @param cameraPosition Current camera position.
          */
         void setCameraPosition(vec3 cameraPosition);
+
         void setCameraAngle(float angle);
-        void setLightPosition(vec3& lightPosition);
+
+        void setLightPosition(vec3 &lightPosition);
+
         void setSkyboxCubemapId(GLuint cubemapId);
 
         void pointDisturb(int x, int y, float force);
+
     private:
         CWavesDeformer _wavesDeformer;
         GLfloat _currentTime;
@@ -56,8 +65,12 @@ namespace entities {
         GLuint _cubemapId;
         GLfloat _sideSize;
         GLuint _verticesPerSide;
+
         void _initShader(bool modernShaders);
     };
+
 }
+
+#include "water_builder.h"
 
 #endif

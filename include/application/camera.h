@@ -42,12 +42,12 @@ public:
     float getVerticalAngle();
 
 private:
-    vec3 _position = glm::vec3(2.08,4.523, 19.48);
+    vec3 _position = glm::vec3(2.5,0,5);
     float _horizontalAngle =  3.14f;
-    float _verticalAngle = -3.14f/ 8.0f;
+    float _verticalAngle = 0.0f;
     float _initialFoV = 45.0f;
-    float _speed = 15.0f;
-    float _mouseSpeed = 0.050f;
+    float _speed = 10.0f;
+    float _mouseSpeed = 0.0050f;
 };
 
 

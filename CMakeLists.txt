@@ -10,7 +10,7 @@
 #-------------------------------------------------------------------------------
 cmake_minimum_required(VERSION 2.8.4)
 project(BachelorThesis)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=gnu++0x")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -std=gnu++0x")
 
 #===============================================================================
 # External Libraries
@@ -18,6 +18,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=gnu++0x")
 add_subdirectory (external)
 
 include_directories(
+        external/AntTweakBar-1.16/include/
         external/glew-1.13.0/include/
         external/glfw-3.1.2/include/GLFW/
         external/glm-0.9.7.1/
@@ -29,14 +30,16 @@ set(EXTERNAL_LIBS
         SOIL
         glfw
         GLEW_1130
+        ANTTWEAKBAR_116_OGLCORE_GLFW
 )
 
 #===============================================================================
 # Project's Includes
 #-------------------------------------------------------------------------------
 include_directories(
-        include/camera
+        include/application
         include/entities
+        include/entities/builders
         include/geometry
         include/rendering/buffers
         include/rendering/textures
@@ -50,9 +53,12 @@ include_directories(
 #-------------------------------------------------------------------------------
 set(
         SOURCE_FILES
-        src/camera/custom_camera.cpp
-        src/camera/fps_camera.cpp
-        src/entities/skybox.cpp
+        src/application/camera.cpp
+        src/application/glfw_io.cpp
+        src/application/glfw_renderer.cpp
+        src/entities/builders/water_builder.cpp
+        src/entities/builders/skybox_builder.cpp
+        src/entities/skybox_cube.cpp
         src/entities/water_grid.cpp
         src/geometry/cube.cpp
         src/geometry/grid.cpp
@@ -65,6 +71,7 @@ set(
         src/rendering/glsl_shader.cpp
         src/rendering/renderable_object.cpp
         src/util/error_handling.cpp
+        src/util/rand_functions.cpp
         src/util/waves_deformer.cpp
         src/main.cpp
 )

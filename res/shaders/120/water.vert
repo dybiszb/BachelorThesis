@@ -21,9 +21,9 @@ uniform vec3 cameraPos;
 
 vec3 calculateNormal() {
   float current = texture2D(heightFieldTex, vec2(texCoords.x, texCoords.y)).r;
-  if(current < 0.005) {
-    return vec3(0.0,1.0,0.0);
-  }
+//  if(current < 0.005) {
+//    return vec3(0.0,1.0,0.0);
+//  }
   float step    = 1. / float(verticesPerSide);
   float up      = texture2D(heightFieldTex, vec2(texCoords.x, texCoords.y +step)).r;
   float down    = texture2D(heightFieldTex, vec2(texCoords.x, texCoords.y -step)).r;
