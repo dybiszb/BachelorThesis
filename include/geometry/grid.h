@@ -70,7 +70,7 @@ namespace geometry {
          */
         virtual int getTotalIndices();
 
-    private:
+    protected:
         int _totalIndices;
         int _totalVertices;
         int _quadsOnX;

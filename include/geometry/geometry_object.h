@@ -15,7 +15,7 @@
 namespace geometry {
 
     class IGeometryObject {
-    public:
+    protected:
         /**
          * One should implement method, which produces an array filled with
          * Vertex type objects. Vertices produced must be suitable for passing

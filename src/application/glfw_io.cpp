@@ -1,12 +1,15 @@
 // author: dybisz
 
-#include "GLFW_io.h"
+#include "glfw_io.h"
 
 bool    CGLFWInputOutput::_rightButtonPressed = false;
-double  CGLFWInputOutput::_mouseX             = 0;
-double  CGLFWInputOutput::_mouseY             = 0;
+double  CGLFWInputOutput::_mouseX = 0;
+double  CGLFWInputOutput::_mouseY = 0;
+vec2    CGLFWInputOutput::_intersectionCoordinates(-1.0, -1.0);
+bool    CGLFWInputOutput::_intersectionRequested = false;
 
-CGLFWInputOutput::CGLFWInputOutput(GLFWwindow *window) : _window(window) {
+CGLFWInputOutput::CGLFWInputOutput(GLFWwindow *window)
+        : _window(window){
 
 }
 
@@ -32,23 +35,45 @@ void CGLFWInputOutput::updateCamera(float deltaTime) {
     _handleKeyboard(deltaTime);
 }
 
-void CGLFWInputOutput::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
-{
-    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS){
+void CGLFWInputOutput::mouse_button_callback(GLFWwindow *window, int button,
+                                             int action, int mods) {
+    if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS) {
         glfwGetCursorPos(window, &_mouseX, &_mouseY);
         _rightButtonPressed = true;
-    } else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE){
+    } else if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE) {
         _rightButtonPressed = false;
     }
 
-    TwEventMouseButtonGLFW(window,button, action, mods);
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+        double x;
+        double y;
+        glfwGetCursorPos(window, &x, &y);
+        _intersectionCoordinates.x = x;
+        _intersectionCoordinates.y = y;
+        _intersectionRequested = true;
+    }
+
+    TwEventMouseButtonGLFW(window, button, action, mods);
+}
+
+void CGLFWInputOutput::setIntersectionRequested(bool intersectionRequested) {
+    _intersectionRequested = intersectionRequested;
+}
+
+bool CGLFWInputOutput::isIntersectionRequested() {
+    return _intersectionRequested;
+}
+
+vec2 CGLFWInputOutput::getIntersectionCoordinates() {
+    return _intersectionCoordinates;
 }
 
 void CGLFWInputOutput::_handleMouse(double deltaTime) {
-    if(_rightButtonPressed) {
+    if (_rightButtonPressed) {
         double mouseX, mouseY;
         glfwGetCursorPos(_window, &mouseX, &mouseY);
-        _camera->updateViewingAngles(_mouseX - mouseX, _mouseY - mouseY, deltaTime);
+        _camera->updateViewingAngles(_mouseX - mouseX, _mouseY - mouseY,
+                                     deltaTime);
         _mouseX = mouseX;
         _mouseY = mouseY;
     }

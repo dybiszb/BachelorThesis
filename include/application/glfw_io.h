@@ -10,6 +10,7 @@
 #include <AntTweakBar.h>
 #include <glfw3.h>
 #include <iostream>
+#include <glm/glm.hpp>
 #include "camera.h"
 
 using namespace std;
@@ -39,12 +40,18 @@ public:
     static void mouse_button_callback(GLFWwindow *window, int button,
                                       int action, int mods);
 
+    static void setIntersectionRequested(bool intersectionRequested);
+    static bool isIntersectionRequested();
+    vec2 getIntersectionCoordinates();
+
 private:
     GLFWwindow*    _window;
     CCustomCamera* _camera;
     static bool    _rightButtonPressed;
     static double  _mouseX;
     static double  _mouseY;
+    static bool    _intersectionRequested;
+    static vec2    _intersectionCoordinates;
 
     /**
      * Updates the camera according to the mouse parameters.

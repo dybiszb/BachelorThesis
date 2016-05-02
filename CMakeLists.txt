@@ -56,6 +56,7 @@ set(
         src/application/camera.cpp
         src/application/glfw_io.cpp
         src/application/glfw_renderer.cpp
+        src/application/glfw_timer.cpp
         src/entities/builders/water_builder.cpp
         src/entities/builders/skybox_builder.cpp
         src/entities/skybox_cube.cpp
@@ -72,6 +73,7 @@ set(
         src/rendering/renderable_object.cpp
         src/util/error_handling.cpp
         src/util/rand_functions.cpp
+        src/util/rays_functions.cpp
         src/util/waves_deformer.cpp
         src/main.cpp
 )

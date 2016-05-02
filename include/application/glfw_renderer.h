@@ -14,7 +14,8 @@
 #include <GL/glew.h>
 #include <glfw3.h>
 #include <AntTweakBar.h>
-#include "GLFW_io.h"
+#include "glfw_io.h"
+#include "glfw_timer.h"
 #include "skybox_cube.h"
 #include "water_grid.h"
 #include "water_builder.h"
@@ -51,6 +52,7 @@ private:
     int                 _windowWidth;
     int                 _windowHeight;
     CGLFWInputOutput*   _inputOutput;
+    CTimer              _timer;
     GLFWwindow*         _window;
     CCustomCamera       _camera;
     TwBar*              _waterBar;

@@ -6,11 +6,9 @@ attribute vec2 texCoords;
 varying vec2 vTexCoords;
 varying vec3 vPosition;
 varying vec4 vColor;
-varying vec3 vLightDirection;
 varying vec3 vNormal;
 varying vec3 vVertexCameraspace;
 
-uniform vec3 lightPos;
 uniform mat4 uModel;
 uniform mat4 uView;
 uniform mat4 uProjection;
@@ -21,9 +19,7 @@ uniform vec3 cameraPos;
 
 vec3 calculateNormal() {
   float current = texture2D(heightFieldTex, vec2(texCoords.x, texCoords.y)).r;
-//  if(current < 0.005) {
-//    return vec3(0.0,1.0,0.0);
-//  }
+
   float step    = 1. / float(verticesPerSide);
   float up      = texture2D(heightFieldTex, vec2(texCoords.x, texCoords.y +step)).r;
   float down    = texture2D(heightFieldTex, vec2(texCoords.x, texCoords.y -step)).r;
@@ -36,11 +32,6 @@ vec3 calculateNormal() {
   return normal;
 }
 
-float phongShading(vec3 normal, vec3 lightPos, vec3 cameraPos) {
-    vec3 L = normalize(lightPos - vPosition);
-    return  clamp(max(dot(normal,L),0.0) ,0.0, 1.0);
-}
-
 void main()
 {
     vTexCoords = texCoords;
@@ -49,8 +40,5 @@ void main()
     vPosition = vertex;
     gl_Position = uProjection * uView * uModel * vec4(vertex,1.0);
 
-    vLightDirection = lightPos - vertex;
     vNormal = calculateNormal();
-
-    //earthworm jimm
 }

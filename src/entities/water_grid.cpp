@@ -5,11 +5,13 @@
 using namespace entities;
 
 CWaterGrid::CWaterGrid(int quadsPerSide, float sideSize, glm::vec2
-bottomCorner, GLuint cubemapId, bool modernShaders)
+bottomCorner, GLuint cubemapId, bool modernShaders, int viewportWidth,
+                       int viewportHeight)
         : CGrid(quadsPerSide, quadsPerSide, sideSize, sideSize, bottomCorner),
           _wavesDeformer(quadsPerSide + 1, quadsPerSide + 1, modernShaders),
           _cubemapId(cubemapId), _sideSize(sideSize),
-          _verticesPerSide(quadsPerSide + 1) {
+          _verticesPerSide(quadsPerSide + 1), _viewportWidth(viewportWidth),
+          _viewportHeight(viewportHeight) {
 
     _initShader(modernShaders);
     _wavesDeformer.setVerticesPerSide(_verticesPerSide);
@@ -42,7 +44,7 @@ void CWaterGrid::render(const float *view,
     // animation texture and cubemap texture
     glActiveTexture(GL_TEXTURE0);
     _wavesDeformer.bindTextureOfNextAnimationStep();
-    glViewport(0, 0, 800, 600);
+    glViewport(0, 0, _viewportWidth, _viewportHeight);
 
     _shader.Use();
     _vao.bind();
@@ -59,7 +61,6 @@ void CWaterGrid::render(const float *view,
     glUniform1f(_shader("sideSize"), _sideSize);
     glUniform1i(_shader("verticesPerSide"), _verticesPerSide);
     glUniform3fv(_shader("cameraPos"), 1, &_cameraPosition[0]);
-    glUniform3fv(_shader("lightPos"), 1, &_lightPosition[0]);
     glUniform1f(_shader("waveTime"), _currentTime);
     glUniformMatrix4fv(_shader("uModel"), 1, GL_FALSE, &mat4(1.0)[0][0]);
     glUniformMatrix4fv(_shader("uView"), 1, GL_FALSE, view);
@@ -81,18 +82,51 @@ void CWaterGrid::setCameraPosition(vec3 cameraPosition) {
     _cameraPosition.z = cameraPosition.z;
 }
 
-void CWaterGrid::setCameraAngle(float angle) {
-    _cameraAngle = angle;
-}
+void CWaterGrid::intersect(vec2 &viewportCoordinates, CCustomCamera &camera) {
 
-void CWaterGrid::setLightPosition(vec3 &lightPosition) {
-    _lightPosition.x = lightPosition.x;
-    _lightPosition.y = lightPosition.y;
-    _lightPosition.z = lightPosition.z;
-}
+    /* ----- Clip Coordinates ----- */
+    vec3 rayNormalizedDeviceSpace = toNormalizedDeviceCoordinates(
+            viewportCoordinates, _viewportWidth, _viewportHeight);
+    vec4 rayClipSpace = vec4(rayNormalizedDeviceSpace.x,
+                             rayNormalizedDeviceSpace.y, -1.0, 1.0);
 
-void CWaterGrid::setSkyboxCubemapId(GLuint cubemapId) {
-    _cubemapId = cubemapId;
+    /* ----- Camera Coordinates ----- */
+    mat4 projectionMatrix = camera.getProjectionMatrix();
+    vec4 rayCameraSpace = toCameraCoordinates(rayClipSpace, projectionMatrix);
+
+    /* ----- World Coordinates ----- */
+    mat4 viewMatrix = camera.getViewMatrix();
+    vec3 rayWorldSpace = toWorldCoordinates(rayCameraSpace, viewMatrix);
+
+
+    /* -----Intersection Point ----- */
+    vec3 planeNormal = vec3(0.0, 1.0, 0.0);
+    vec3 cameraPosition = camera.getPosition();
+    vec3 intersectionPoint = vec3(-1.0, -1.0, -1.0);
+
+    if (rayIntersectsPlane(rayWorldSpace, planeNormal, cameraPosition,
+                           intersectionPoint)) {
+
+        vec2 quad = vec2(intersectionPoint.x, intersectionPoint.z);
+        quad = quad - _bottomCorner;
+
+        /* ----- Inside Water Surface ----- */
+        if (quad.x > 0 && quad.x <= _gridSizeOnX &&
+            quad.y > 0 && quad.y <= _gridSizeOnZ) {
+
+            /* ----- Which Quad ----- */
+            float spaceBetweenQuads = _gridSizeOnX / (float)_quadsOnX;
+            quad.x = (int)(quad.x / spaceBetweenQuads);
+            quad.y = (int)(quad.y / spaceBetweenQuads);
+            _wavesDeformer.disturbSurface(quad, 1.0f);
+            cout << quad.x << " " << quad.y << endl;
+        }
+
+
+    } else {
+        cout << "miss!" << endl;
+    }
+
 }
 
 void CWaterGrid::_initShader(bool modernShaders) {
@@ -117,7 +151,6 @@ void CWaterGrid::_initShader(bool modernShaders) {
     _shader.AddUniform("skyBoxTex");
     _shader.AddUniform("cameraPos");
     _shader.AddUniform("sideSize");
-    _shader.AddUniform("lightPos");
     _shader.AddUniform("verticesPerSide");
     _shader.UnUse();
 }

@@ -13,6 +13,8 @@ CCubemapTexture::~CCubemapTexture() {
 }
 
 void CCubemapTexture::loadTexture(vector<const GLchar *> *facesNames) {
+
+
     _id = SOIL_load_OGL_cubemap
             (
                     (*facesNames)[0],

@@ -15,15 +15,9 @@ using namespace std;
 namespace entities {
 
     class CSkyboxBuilder {
-
-    private:
-        float _sideSize;
-        vector<const GLchar *> *_faces;
-        bool _modernShaders;
-
     public:
         static const float defaultSideSize;
-        static vector<const GLchar *>* defaultFaces;
+        static vector<const GLchar *> *defaultFaces;
         static const bool defaultModernShaders;
 
         /**
@@ -63,6 +57,12 @@ namespace entities {
          *                      Otherwise version 120 will be loaded.
          */
         CSkyboxBuilder &setModernShaders(const bool modernShaders);
+
+
+    private:
+        float _sideSize;
+        vector<const GLchar *> *_faces;
+        bool _modernShaders;
     };
 }
 

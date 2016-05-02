@@ -44,6 +44,7 @@ public:
      */
     void bindTextureOfNextAnimationStep();
     void setVerticesPerSide(int verticesPerSide);
+    void disturbSurface(vec2& quad, float amount);
 private:
     GLsizei _width;
     GLsizei _height;

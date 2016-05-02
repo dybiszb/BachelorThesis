@@ -1,10 +1,11 @@
 // author: dybisz
 
 #include "waves_deformer.h"
+
 // TODO wdth and height change to side length
 CWavesDeformer::CWavesDeformer(int width, int height, bool modernShaders)
         : _width(width),
-          _height(height){
+          _height(height) {
 
     _fbo0 = new CFrameBuffer();
     _fbo1 = new CFrameBuffer();
@@ -27,6 +28,21 @@ void CWavesDeformer::setVerticesPerSide(int verticesPerSide) {
     _verticesPerSide = verticesPerSide;
 }
 
+void CWavesDeformer::disturbSurface(vec2 &quad, float amount) {
+    _tex0->bind();
+    GLfloat data[4] = {amount, 0, 0, 0};
+    glTexSubImage2D(GL_TEXTURE_2D,
+                    0,
+                    quad.x,
+                    quad.y,
+                    1,
+                    1,
+                    GL_RGBA,
+                    GL_FLOAT,
+                    data);
+    _tex0->unbind();
+}
+
 CWavesDeformer::~CWavesDeformer() {
     delete _fbo0;
     delete _fbo1;
@@ -41,9 +57,9 @@ void CWavesDeformer::bindTextureOfNextAnimationStep() {
 
     _shader.Use();
     _vao.bind();
-    glUniform1iARB(_shader("oldvalues"),0);
-    glUniform1f(_shader("sideSize"),_width);
-    glUniform1i(_shader("verticesPerSide"),_verticesPerSide);
+    glUniform1iARB(_shader("oldvalues"), 0);
+    glUniform1f(_shader("sideSize"), _width);
+    glUniform1i(_shader("verticesPerSide"), _verticesPerSide);
 
     _tex0->bind();
     _fbo1->bind();
@@ -61,7 +77,7 @@ void CWavesDeformer::bindTextureOfNextAnimationStep() {
 }
 
 void CWavesDeformer::_initShaders(bool modernShaders) {
-    if(modernShaders) {
+    if (modernShaders) {
         _shader.LoadFromFile
                 (GL_VERTEX_SHADER, "res/shaders/330/waves_deformer.vert");
         _shader.LoadFromFile

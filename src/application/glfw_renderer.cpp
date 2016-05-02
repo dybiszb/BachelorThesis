@@ -1,6 +1,6 @@
 // author: dybisz
 
-#include "GLFW_renderer.h"
+#include "glfw_renderer.h"
 
 CGLFWRenderer::CGLFWRenderer(int windowWidth, int windowHeight) :
         _windowWidth(windowWidth),
@@ -9,8 +9,8 @@ CGLFWRenderer::CGLFWRenderer(int windowWidth, int windowHeight) :
     _initWindow();
     _initInputOutput();
     _initGLEW();
-    _initATWBar();
-    _initCallbacks();
+//    _initATWBar();
+//    _initCallbacks();
     _initRenderableObjects();
     _initGLGlobalSettings();
 }
@@ -24,8 +24,37 @@ CGLFWRenderer::~CGLFWRenderer() {
 }
 
 void CGLFWRenderer::runMainLoop() {
+    _initATWBar();
+    _initCallbacks();
     do {
+        /* ----- Calculate Time ----- */
+        float deltaTime = _timer.tick();
+
+
+        /* ----- Update Time ----- */
+        _water->updateTime(deltaTime);
+        _inputOutput->updateCamera(deltaTime);
+
+        /* ----- Camera Position ----- */
+        _skybox->setCameraPosition(_camera.getPosition());
+        _water->setCameraPosition(_camera.getPosition());
+
+        /* ----- Check Disturbance ----- */
+        if (_inputOutput->isIntersectionRequested()) {
+            vec2 viewportCoordinates =
+                    _inputOutput->getIntersectionCoordinates();
+            _water->intersect(viewportCoordinates, _camera);
+            _inputOutput->setIntersectionRequested(false);
+        }
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        /* ----- Render Scene ----- */
+        _skybox->render(&_camera.getViewMatrix()[0][0],
+                        &_camera.getProjectionMatrix()[0][0]);
+        _water->render(&_camera.getViewMatrix()[0][0],
+                       &_camera.getProjectionMatrix()[0][0]);
+
         TwDraw();
         glfwSwapBuffers(_window);
         glfwPollEvents();
@@ -46,8 +75,9 @@ void CGLFWRenderer::_initGLFW() {
 }
 
 void CGLFWRenderer::_initWindow() {
-    _window = glfwCreateWindow(_windowWidth, _windowHeight, "Smoke Trails "
-            "Editor", NULL /*glfwGetPrimaryMonitor()*/, NULL);
+    _window = glfwCreateWindow(_windowWidth, _windowHeight,
+                               "Bachelor Thesis - Bartlomiej Dybisz",
+                               NULL /*glfwGetPrimaryMonitor()*/, NULL);
     if (_window == NULL) {
         fprintf(stderr, "Failed to open GLFW window.\n");
         getchar();
@@ -58,17 +88,12 @@ void CGLFWRenderer::_initWindow() {
 }
 
 void CGLFWRenderer::_initInputOutput() {
-    if (_window == NULL) {
-        fprintf(stderr, "Initiaqlize _window in CGLFWRenderer first.\n");
-        getchar();
-        glfwTerminate();
-    }
     _inputOutput = new CGLFWInputOutput(_window);
     _inputOutput->setCamera(&_camera);
 }
 
 void CGLFWRenderer::_initGLEW() {
-    glewExperimental = true;
+//    glewExperimental = true;
     if (glewInit() != GLEW_OK) {
         fprintf(stderr, "Failed to initialize GLEW\n");
         getchar();
@@ -79,13 +104,12 @@ void CGLFWRenderer::_initGLEW() {
 void CGLFWRenderer::_initATWBar() {
     TwInit(TW_OPENGL, NULL);
     TwWindowSize(_windowWidth, _windowHeight);
-    _waterBar = TwNewBar("Smoke Emitter Settings");
-    TwDefine(" 'Smoke Emitter Settings' size='240 500' ");
+    _waterBar = TwNewBar("Water");
+//    TwDefine(" 'Smoke Emitter Settings' size='240 500' ");
     TwSetParam(_waterBar, NULL, "refresh", TW_PARAM_CSTRING, 1, "0.1");
-
-    TwAddSeparator(_waterBar, "", NULL);
-    TwAddButton(_waterBar, "Particle", NULL, NULL, "");
-    TwAddSeparator(_waterBar, "", NULL);
+    TwAddVarRO(_waterBar, "Direction", TW_TYPE_DIR3F,
+               &_camera.getPosition()[0], " axisz=-z"
+                       " ");
 
 //    TwAddVarRW(_waterBar, "lifetime", TW_TYPE_FLOAT, &_particleLifetime,
 //               "step=0.1");
@@ -122,20 +146,22 @@ void CGLFWRenderer::_initATWBar() {
 }
 
 void CGLFWRenderer::_initCallbacks() {
-    glfwSetMouseButtonCallback(_window, CGLFWInputOutput::mouse_button_callback);
-    glfwSetCursorPosCallback(_window, (GLFWcursorposfun)TwEventMousePosGLFW);
-    glfwSetScrollCallback(_window, (GLFWscrollfun)TwEventMouseWheelGLFW);
-    glfwSetKeyCallback(_window, (GLFWkeyfun)TwEventKeyGLFW);
-//    glfwSetKeyCallback(_window, CGLFWInputOutput::key_callback);
+    glfwSetMouseButtonCallback(_window,
+                               CGLFWInputOutput::mouse_button_callback);
+    glfwSetCursorPosCallback(_window, (GLFWcursorposfun) TwEventMousePosGLFW);
+    glfwSetScrollCallback(_window, (GLFWscrollfun) TwEventMouseWheelGLFW);
+    glfwSetKeyCallback(_window, (GLFWkeyfun) TwEventKeyGLFW);
+    glfwSetKeyCallback(_window, CGLFWInputOutput::key_callback);
 
-    glfwSetCharCallback(_window, (GLFWcharfun)TwEventCharGLFW);
+    glfwSetCharCallback(_window, (GLFWcharfun) TwEventCharGLFW);
 }
 
 void CGLFWRenderer::_initRenderableObjects() {
-//    _skybox = CSkyboxBuilder().setSideSize(32).setModernShaders(false).build();
-    _water = CWaterBuilder().setQuadsPerSide(256).setSideSize(32)
-            .setBottomCorner(vec2(-16,-16)).setModernShaders(false)
-            .setSkyboxId(_skybox->getCubemapId()).build();
+    _skybox = CSkyboxBuilder().setSideSize(32).setModernShaders(false).build();
+    _water = CWaterBuilder().setQuadsPerSide(512).setSideSize(32)
+            .setBottomCorner(vec2(-16, -16)).setModernShaders(false)
+            .setSkyboxId(_skybox->getCubemapId())
+            .setViewport(_windowWidth, _windowHeight).build();
 }
 
 void CGLFWRenderer::_initGLGlobalSettings() {

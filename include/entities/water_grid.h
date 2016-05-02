@@ -16,7 +16,8 @@
 #include "error_handling.h"
 #include "textures/texture2D.h"
 #include "waves_deformer.h"
-
+#include "camera.h"
+#include "rays_functions.h"
 
 using namespace rendering;
 using namespace geometry;
@@ -31,7 +32,9 @@ namespace entities {
         class CWaterBuilder;
 
         CWaterGrid(int quadsPerSide, float sideSize,
-                   vec2 bottomCorner, GLuint cubemapId, bool modernShaders);
+                   vec2 bottomCorner,  GLuint cubemapId,
+                   bool modernShaders, int viewportWidth,
+                   int viewportHeight);
 
         ~CWaterGrid();
 
@@ -48,23 +51,18 @@ namespace entities {
          */
         void setCameraPosition(vec3 cameraPosition);
 
-        void setCameraAngle(float angle);
-
-        void setLightPosition(vec3 &lightPosition);
-
-        void setSkyboxCubemapId(GLuint cubemapId);
-
-        void pointDisturb(int x, int y, float force);
+        void intersect(vec2& viewportCoordinates, CCustomCamera& camera);
 
     private:
         CWavesDeformer _wavesDeformer;
-        GLfloat _currentTime;
-        vec3 _cameraPosition;
-        vec3 _lightPosition;
-        float _cameraAngle;
-        GLuint _cubemapId;
-        GLfloat _sideSize;
-        GLuint _verticesPerSide;
+        GLfloat        _currentTime;
+        vec3           _cameraPosition;
+        float          _cameraAngle;
+        GLuint         _cubemapId;
+        GLfloat        _sideSize;
+        GLuint         _verticesPerSide;
+        int            _viewportWidth;
+        int            _viewportHeight;
 
         void _initShader(bool modernShaders);
     };

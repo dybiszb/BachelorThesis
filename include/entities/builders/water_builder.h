@@ -24,6 +24,8 @@ namespace entities {
         vec2  _bottomCorner;
         int   _skyboxId;
         bool  _modernShaders;
+        int   _viewportWidth;
+        int   _viewportHeight;
 
     public:
     //==========================================================================
@@ -34,6 +36,8 @@ namespace entities {
         static const vec2  defaultBottomCorner;
         static const int   defaultSkyboxId;
         static const bool  defaultModernShaders;
+        static const int   defaultViewportWidth;
+        static const int   defaultViewportHeight;
 
         /**
          * Basically initializes all internal values with default quantities.
@@ -82,6 +86,15 @@ namespace entities {
          *        120 will be loaded.
          */
         CWaterBuilder& setModernShaders(const bool modernShaders);
+
+        /**
+         * Set viewport resolution.
+         *
+         * @param viewportWidth
+         * @param viewportHeight
+         */
+        CWaterBuilder& setViewport(const int viewportWidth,
+                                   const int viewportHeight);
     };
 }
 

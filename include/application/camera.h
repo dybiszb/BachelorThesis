@@ -42,7 +42,7 @@ public:
     float getVerticalAngle();
 
 private:
-    vec3 _position = glm::vec3(2.5,0,5);
+    vec3 _position = glm::vec3(0,0,8);
     float _horizontalAngle =  3.14f;
     float _verticalAngle = 0.0f;
     float _initialFoV = 45.0f;

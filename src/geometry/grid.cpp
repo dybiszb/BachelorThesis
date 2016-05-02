@@ -36,7 +36,7 @@ Vertex *CGrid::generateVertices() {
             vertices[vertIndex].color = glm::vec3(0,
                                                   0,
                                                   1.0f);
-            /* ----- Texure Coordinates ----- */
+            /* ----- Texture Coordinates ----- */
             vertices[vertIndex].texCoord = glm::vec2(stepOnX, stepOnZ);
 
             vertIndex++;

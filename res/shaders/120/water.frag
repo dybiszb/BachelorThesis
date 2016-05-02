@@ -3,7 +3,6 @@
 varying vec2 vTexCoords;
 varying vec3 vPosition;
 varying vec4 vColor;
-varying vec3 vLightDirection;
 varying vec3 vNormal;
 varying vec3 vVertexCameraspace;
 
@@ -51,7 +50,6 @@ void main()
 
     // Color calculation
     vec3 n = vec3(0.0, 1.0, 0.0);
-    vec3 l = normalize(vLightDirection);
     vec3 reflectedVector = reflect(vPosition - cameraPos, vNormal);
     vec3 refractedVector = refract(vPosition - cameraPos, vNormal, 1.0 / 1.53);
 
@@ -59,12 +57,8 @@ void main()
     vec3 refractedIntersection = inter(vPosition, refractedVector, box[1], box[0]);
 
     vec4 reflectedColor = textureCube(skyBoxTex, reflectedIntersection);
-    vec4 refractedColor =  textureCube(skyBoxTex, refractedIntersection);
+    vec4 refractedColor = textureCube(skyBoxTex, refractedIntersection);
 
-    float cosTheta = clamp(dot(n,l), 0.0, 1.0);
-
-
-    //float cosPhi = doat(normalize(cameraPos - vPosition), );
     float w = fresnel(abs(normalize(vPosition - cameraPos).y));
-     gl_FragColor = mix(reflectedColor, refractedColor, 0.3);
+     gl_FragColor = mix(reflectedColor, refractedColor, 0.0);
 }
