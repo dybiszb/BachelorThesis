@@ -32,8 +32,9 @@ public:
      *
      * @param windowWidth   How wide should be the window?
      * @param windowHeight  How high should be the window?
+     * @param fullscreen    Fullscreen on or off?
      */
-    CGLFWRenderer(int windowWidth, int windowHeight);
+    CGLFWRenderer(int windowWidth, int windowHeight, bool fullscreen);
 
     /**
      * Besides ordinary dispose calls, both GLFW and AntTweakBar must be
@@ -53,6 +54,7 @@ private:
 //------------------------------------------------------------------------------
     int                 _windowWidth;
     int                 _windowHeight;
+    bool                _fullscreen;
     CGLFWInputOutput*   _inputOutput;
     CTimer              _timer;
     GLFWwindow*         _window;

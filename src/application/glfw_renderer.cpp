@@ -2,9 +2,11 @@
 
 #include "glfw_renderer.h"
 
-CGLFWRenderer::CGLFWRenderer(int windowWidth, int windowHeight) :
+CGLFWRenderer::CGLFWRenderer(int windowWidth, int windowHeight,
+                             bool fullscreen) :
         _windowWidth(windowWidth),
-        _windowHeight(windowHeight) {
+        _windowHeight(windowHeight),
+        _fullscreen(fullscreen) {
     _initGLFW();
     _initWindow();
     _initInputOutput();
@@ -111,15 +113,15 @@ void CGLFWRenderer::_initWaterProperties() {
     _rainDropSize      = 1.0;
     _waves             = false;
     _wavesIntensity    = 0.01;
-    _lightDirection.x     = 1.0;
-    _lightDirection.y     = 1.0;
-    _lightDirection.z     = 1.0;
+    _lightDirection.x  = 1.0;
+    _lightDirection.y  = 1.0;
+    _lightDirection.z  = 1.0;
 }
 
 void CGLFWRenderer::_initWindow() {
     _window = glfwCreateWindow(_windowWidth, _windowHeight,
                                "Bachelor Thesis - Bartlomiej Dybisz",
-            NULL /*glfwGetPrimaryMonitor()*/, NULL);
+            _fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
     if (_window == NULL) {
         fprintf(stderr, "Failed to open GLFW window.\n");
         getchar();
