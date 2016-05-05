@@ -1,44 +1,117 @@
+//==============================================================================
+// Shader in charge of calculating normal for a given vertex based on supplied
+// height map texture. The texture must contain current values for shallow
+// water equations calculations. What is more, the vertex position is updated
+// according to the heightmap. Both, position and normal are sent to the
+// fragment shader for further processing.
+//==============================================================================
+// author: dybisz
+//------------------------------------------------------------------------------
 #version 120
 
-attribute vec3 vVertex;
-attribute vec2 texCoords;
+//==============================================================================
+// In
+//------------------------------------------------------------------------------
+attribute vec3    a_position;
+attribute vec2    a_heightFieldTexCoords;
 
-varying vec2 vTexCoords;
-varying vec3 vPosition;
-varying vec4 vColor;
-varying vec3 vNormal;
-varying vec3 vVertexCameraspace;
+//==============================================================================
+// Out
+//------------------------------------------------------------------------------
+varying vec3      v_position;
+varying vec3      v_normal;
 
-uniform mat4 uModel;
-uniform mat4 uView;
-uniform mat4 uProjection;
-uniform float waveTime;
-uniform sampler2D heightFieldTex;
-uniform int verticesPerSide;
-uniform vec3 cameraPos;
+//==============================================================================
+// Uniforms
+//------------------------------------------------------------------------------
+uniform sampler2D u_heightFieldTexture;
+uniform mat4      u_modelMatrix;
+uniform mat4      u_viewMatrix;
+uniform mat4      u_projectionMatrix;
+uniform vec3      u_cameraPosition;
+uniform int       u_verticesPerSide;
+uniform float     u_sideSize;
 
+/**
+ * For considered vertex procedure reads height of its neighbors. Based on them
+ * two vectors are calculated: right to left and up to down. Their normalized
+ *  cross product is interpreted as the normal.
+ *
+ * @return Normal to the current vertex.
+ */
 vec3 calculateNormal() {
-  float current = texture2D(heightFieldTex, vec2(texCoords.x, texCoords.y)).r;
+  float step    = 1. / float(u_verticesPerSide);
 
-  float step    = 1. / float(verticesPerSide);
-  float up      = texture2D(heightFieldTex, vec2(texCoords.x, texCoords.y +step)).r;
-  float down    = texture2D(heightFieldTex, vec2(texCoords.x, texCoords.y -step)).r;
-  float right   = texture2D(heightFieldTex, vec2(texCoords.x + step,texCoords.y)).r;
-  float left    = texture2D(heightFieldTex, vec2(texCoords.x - step, texCoords.y)).r;
+  float current = texture2D
+                  (
+                      u_heightFieldTexture,
+                      vec2
+                      (
+                          a_heightFieldTexCoords.x,
+                          a_heightFieldTexCoords.y
+                      )
+                  ).r;
 
-  vec3 d_x = vec3(32.0 * 2.0 * step, right - left, 0.0);
-  vec3 d_z = vec3(0.0, up - down, 32.0 *  2.0 * step);
-  vec3 normal = normalize(cross(d_z, d_x));
+  float up      = texture2D
+                  (
+                      u_heightFieldTexture,
+                      vec2
+                      (
+                          a_heightFieldTexCoords.x,
+                          a_heightFieldTexCoords.y + step
+                      )
+                  ).r;
+
+  float down    = texture2D
+                  (
+                      u_heightFieldTexture,
+                      vec2
+                      (
+                          a_heightFieldTexCoords.x,
+                          a_heightFieldTexCoords.y - step
+                      )
+                  ).r;
+
+  float right   = texture2D
+                  (
+                      u_heightFieldTexture,
+                      vec2
+                      (
+                          a_heightFieldTexCoords.x + step,
+                          a_heightFieldTexCoords.y
+                      )
+                  ).r;
+
+  float left    = texture2D
+                  (
+                      u_heightFieldTexture,
+                      vec2
+                      (
+                          a_heightFieldTexCoords.x - step,
+                          a_heightFieldTexCoords.y
+                      )
+                  ).r;
+
+  vec3 d_x      = vec3(u_sideSize * 2.0 * step, right - left, 0.0);
+  vec3 d_z      = vec3(0.0, up - down, u_sideSize *  2.0 * step);
+  vec3 normal   = normalize(cross(d_z, d_x));
+
   return normal;
 }
 
 void main()
 {
-    vTexCoords = texCoords;
-    vec3 vertex = vVertex;
-    vertex.y = texture2D(heightFieldTex, texCoords).r;
-    vPosition = vertex;
-    gl_Position = uProjection * uView * uModel * vec4(vertex,1.0);
+    // Read the vertex height
+    vec3 position = a_position;
+    position.y    = texture2D(u_heightFieldTexture, a_heightFieldTexCoords).r;
 
-    vNormal = calculateNormal();
+    // Update its position according to transformations
+    gl_Position   = u_projectionMatrix *
+                    u_viewMatrix       *
+                    u_modelMatrix      *
+                    vec4(position, 1.0);
+
+    // Pass values to the next shader
+    v_normal      = calculateNormal();
+    v_position    = position;
 }

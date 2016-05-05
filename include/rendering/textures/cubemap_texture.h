@@ -14,7 +14,7 @@
 #include "error_handling.h"
 #include <vector>
 
-using namespace util;
+using namespace utils;
 using namespace std;
 
 namespace rendering {

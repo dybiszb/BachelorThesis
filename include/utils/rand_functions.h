@@ -29,6 +29,16 @@ namespace utils {
         void seed();
 
         /**
+         * Generates random integer from [lBoundary, rBoundary] interval
+         * (inclusively). Implementation follows: http://stackoverflow.com/
+         * questions/686353/c-random-float-number-generation
+         *
+         * @param lBoundary Minimum number that can be randomly chosen.
+         * @param rBoundary Maximum number that can be randomly chosen.
+        */
+        float randomInteger(int lBoundary, int rBoundary);
+
+        /**
          * Generates random number from [lBoundary, rBoundary] interval
          * (inclusively). Implementation follows: http://stackoverflow.com/
          * questions/686353/c-random-float-number-generation

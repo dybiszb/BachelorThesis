@@ -10,7 +10,7 @@
 
 using namespace glm;
 
-namespace util {
+namespace utils {
 
     /**
      * Transforms raw point from the screen to [­1:1, ­1:1, ­1:1] range.

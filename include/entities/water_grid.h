@@ -10,6 +10,7 @@
 #define WATER_GRID_H
 
 #include <iostream>
+#include <string.h>
 #include "renderable_object.h"
 #include "grid.h"
 #include "vertex.h"
@@ -21,7 +22,7 @@
 
 using namespace rendering;
 using namespace geometry;
-using namespace util;
+using namespace utils;
 using namespace glm;
 using namespace std;
 
@@ -50,25 +51,29 @@ namespace entities {
          * @param cameraPosition Current camera position.
          */
         void setCameraPosition(vec3 cameraPosition);
-
-        void intersect(vec2& viewportCoordinates, CCustomCamera& camera);
-
+        void setLightDirections(vec3& lightDirection);
+        void intersect(vec2& viewportCoordinates, CCustomCamera& camera,
+                       float amount);
+        void intersect(vec2& quadCoordinates, float amount);
+        int getVerticesPerSide();
     private:
         CWavesDeformer _wavesDeformer;
         GLfloat        _currentTime;
         vec3           _cameraPosition;
+        vec3           _lightDirection;
         float          _cameraAngle;
         GLuint         _cubemapId;
         GLfloat        _sideSize;
         GLuint         _verticesPerSide;
         int            _viewportWidth;
         int            _viewportHeight;
+        vec3           _box[2];
 
         void _initShader(bool modernShaders);
     };
 
 }
 
-#include "water_builder.h"
+//#include "water_builder.h"
 
 #endif

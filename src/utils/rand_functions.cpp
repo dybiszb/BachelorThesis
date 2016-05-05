@@ -10,6 +10,12 @@ void utils::seed() {
         seeded = true;
     }
 }
+float utils::randomInteger(int lBoundary, int rBoundary) {
+    return lBoundary +
+           static_cast <int> (rand()) / (static_cast <int>
+           (RAND_MAX / (rBoundary - lBoundary)));
+}
+
 // TODO swap to template
 float utils::randomFloat(float lBoundary, float rBoundary) {
     return lBoundary +

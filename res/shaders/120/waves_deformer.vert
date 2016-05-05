@@ -1,12 +1,23 @@
+//==============================================================================
+// The shader just sends its texture coordinates to the fragment shaders.
+//==============================================================================
+// author: dybisz
+//------------------------------------------------------------------------------
 #version 120
-attribute vec3 vVertex;
-attribute vec2 texCoords;
-varying vec2 texUV;
 
-uniform sampler2D sampler;
+//==============================================================================
+// In / Attributes
+//------------------------------------------------------------------------------
+attribute vec3 a_position;
+attribute vec2 a_heightFieldTexCoords;
+
+//==============================================================================
+// Out / Varying
+//------------------------------------------------------------------------------
+varying vec2   v_heightFieldTexCoords;
 
 void main()
 {
-   texUV = texCoords;
-   gl_Position = vec4(vVertex,1);
+   v_heightFieldTexCoords = a_heightFieldTexCoords;
+   gl_Position            = vec4(a_position, 1);
 }

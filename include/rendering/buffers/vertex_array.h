@@ -18,7 +18,7 @@
 #include <GL/glew.h>
 #include "error_handling.h"
 
-using namespace util;
+using namespace utils;
 
 namespace rendering {
 

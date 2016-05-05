@@ -20,8 +20,10 @@
 #include "water_grid.h"
 #include "water_builder.h"
 #include "skybox_builder.h"
+#include "rand_functions.h"
 
 using namespace entities;
+using namespace utils;
 
 class CGLFWRenderer {
 public:
@@ -56,18 +58,31 @@ private:
     GLFWwindow*         _window;
     CCustomCamera       _camera;
     TwBar*              _waterBar;
+    TwBar*              _sceneBar;
     CSkybox*            _skybox;
     CWaterGrid*         _water;
 
 //==============================================================================
 // Renderable Objects Properties
 //------------------------------------------------------------------------------
+    float               _disturbanceHeight;
+    bool                _isRaining;
+    int                 _rainIntensity;
+    float               _rainDropSize;
+    bool                _waves;
+    float               _wavesIntensity;
+    vec3                _lightDirection;
 
     /**
      * Initializes GLFW context.
      */
     void _initGLFW();
 
+    /**
+     * Initialize properties related to water. Eg. strength of the disturance
+     * or weather conditions like rain.
+     */
+    void _initWaterProperties();
     /**
      * Initializes GLFW window;
      */

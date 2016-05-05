@@ -14,7 +14,7 @@
 
 using namespace std;
 
-namespace util {
+namespace utils {
     /**
      * In many SOIL's function error indication is in form of some specific
      * returned value. Providing this value as an argument to the function

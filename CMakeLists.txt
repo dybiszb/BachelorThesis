@@ -44,7 +44,7 @@ include_directories(
         include/rendering/buffers
         include/rendering/textures
         include/rendering
-        include/util
+        include/utils
         res/
 )
 
@@ -71,10 +71,10 @@ set(
         src/rendering/textures/texture2D.cpp
         src/rendering/glsl_shader.cpp
         src/rendering/renderable_object.cpp
-        src/util/error_handling.cpp
-        src/util/rand_functions.cpp
-        src/util/rays_functions.cpp
-        src/util/waves_deformer.cpp
+        src/utils/error_handling.cpp
+        src/utils/rand_functions.cpp
+        src/utils/rays_functions.cpp
+        src/utils/waves_deformer.cpp
         src/main.cpp
 )
 

@@ -2,22 +2,22 @@
 
 #include "error_handling.h"
 
-using namespace util;
+using namespace utils;
 
-void util::checkErrorSOIL(int errorId) {
+void utils::checkErrorSOIL(int errorId) {
     if (0 == errorId) {
         printf("SOIL error: '%s'\n", SOIL_last_result());
     }
 }
 
-void util::checkErrorOpenGL(string errorSource) {
+void utils::checkErrorOpenGL(string errorSource) {
     GLenum err = GL_NO_ERROR;
     if ((err = glGetError()) != GL_NO_ERROR) {
         cout << errorSource << " || OpenGL error no: " << err << std::endl;
     }
 }
 
-void util::checkErrorFrameBuffer(string errorSource) {
+void utils::checkErrorFrameBuffer(string errorSource) {
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         cout << errorSource << " || FrameBufferStatus != "
                                        "GL_FRAMEBUFFER_COMPLETE " <<
@@ -25,7 +25,7 @@ void util::checkErrorFrameBuffer(string errorSource) {
     }
 }
 
-void util::checkErrorCubemapId(string errorSource, int cubemapId) {
+void utils::checkErrorCubemapId(string errorSource, int cubemapId) {
     if(cubemapId == -1) {
         cout << errorSource << " || Cubemap's id not set."<< std::endl;
     }

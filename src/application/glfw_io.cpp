@@ -37,10 +37,13 @@ void CGLFWInputOutput::updateCamera(float deltaTime) {
 
 void CGLFWInputOutput::mouse_button_callback(GLFWwindow *window, int button,
                                              int action, int mods) {
-    if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS) {
+    if (button == /*GLFW_MOUSE_BUTTON_MIDDLE*/ GLFW_MOUSE_BUTTON_RIGHT &&
+            action == GLFW_PRESS) {
         glfwGetCursorPos(window, &_mouseX, &_mouseY);
         _rightButtonPressed = true;
-    } else if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE) {
+    } else if (button == /*GLFW_MOUSE_BUTTON_MIDDLE*/GLFW_MOUSE_BUTTON_RIGHT &&
+            action ==
+                                                          GLFW_RELEASE) {
         _rightButtonPressed = false;
     }
 

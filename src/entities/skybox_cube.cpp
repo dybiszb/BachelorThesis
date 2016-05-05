@@ -18,7 +18,7 @@ CSkybox::CSkybox(int sideSize,
 
     _vao.bind();
     _vao.setVertices(CCube::getTotalVertices() * sizeof(Vertex), &vertices[0]);
-    _vao.assignFloatAttribute(_shader["vVertex"], 3, stride, 0);
+    _vao.assignFloatAttribute(_shader["v_position"], 3, stride, 0);
     _vao.setIndices(CCube::getTotalIndices() * sizeof(GLuint), &indices[0]);
     _vao.unbind();
 
@@ -33,10 +33,10 @@ void CSkybox::render(const float *view,
     glActiveTexture(GL_TEXTURE0);
     _texture.bind();
 
-    glUniformMatrix4fv(_shader("uModel"), 1, GL_FALSE, &mat4(1.0)[0][0]);
-    glUniformMatrix4fv(_shader("uView"), 1, GL_FALSE, view);
-    glUniformMatrix4fv(_shader("uProjection"), 1, GL_FALSE, projection);
-    glUniform1iARB(_shader("SkyBoxTexture"),0);
+    glUniformMatrix4fv(_shader("u_modelMatrix"), 1, GL_FALSE, &mat4(1.0)[0][0]);
+    glUniformMatrix4fv(_shader("u_viewMatrix"), 1, GL_FALSE, view);
+    glUniformMatrix4fv(_shader("u_projectionMatrix"), 1, GL_FALSE, projection);
+    glUniform1iARB(_shader("u_skyboxTexture"),0);
     glDrawElements(GL_TRIANGLES, CCube::getTotalIndices(), GL_UNSIGNED_INT, 0);
 
     _texture.unbind();
@@ -70,11 +70,11 @@ void CSkybox::_initShader(bool modernShaders) {
     _shader.CreateAndLinkProgram();
 
     _shader.Use();
-    _shader.AddAttribute("vVertex");
+    _shader.AddAttribute("v_position");
     _shader.AddUniform("MVP");
-    _shader.AddUniform("SkyBoxTexture");
-    _shader.AddUniform("uModel");
-    _shader.AddUniform("uView");
-    _shader.AddUniform("uProjection");
+    _shader.AddUniform("u_skyboxTexture");
+    _shader.AddUniform("u_modelMatrix");
+    _shader.AddUniform("u_viewMatrix");
+    _shader.AddUniform("u_projectionMatrix");
     _shader.UnUse();
 }

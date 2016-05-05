@@ -20,11 +20,19 @@ bottomCorner, GLuint cubemapId, bool modernShaders, int viewportWidth,
     GLuint *indices = CGrid::generateIndices();
     GLsizei stride = sizeof(Vertex);
 
+    // Bounding box
+    float halfSide = _sideSize/2.0f;
+//    GLfloat values[6] = {-halfSide, -halfSide, -halfSide,
+//                         halfSide, halfSide, halfSide};
+//    memcpy(_box, values, sizeof(values));
+    _box[0] = vec3(-halfSide, -halfSide, -halfSide);
+    _box[1] = vec3(halfSide, halfSide, halfSide);
+
     _vao.bind();
     _vao.setVertices(CGrid::getTotalVertices() * sizeof(Vertex), &vertices[0]);
 
-    _vao.assignFloatAttribute(_shader["vVertex"], 3, stride, 0);
-    _vao.assignFloatAttribute(_shader["texCoords"], 2, stride,
+    _vao.assignFloatAttribute(_shader["a_position"], 3, stride, 0);
+    _vao.assignFloatAttribute(_shader["a_heightFieldTexCoords"], 2, stride,
                               (const GLvoid *) offsetof(Vertex, texCoord));
     _vao.setIndices(CGrid::getTotalIndices() * sizeof(GLuint), &indices[0]);
     _vao.unbind();
@@ -49,8 +57,8 @@ void CWaterGrid::render(const float *view,
     _shader.Use();
     _vao.bind();
 
-    glUniform1iARB(_shader("heightFieldTex"), 0);
-    glUniform1iARB(_shader("skyBoxTex"), 1);
+    glUniform1iARB(_shader("u_heightFieldTexture"), 0);
+    glUniform1iARB(_shader("u_skyboxTexture"), 1);
 
     // Sampler of cubemap
     checkErrorCubemapId("CWaterGrid::render", _cubemapId);
@@ -58,13 +66,18 @@ void CWaterGrid::render(const float *view,
     glBindTexture(GL_TEXTURE_CUBE_MAP, _cubemapId);
     checkErrorOpenGL("CWaterGrid::render");
 
-    glUniform1f(_shader("sideSize"), _sideSize);
-    glUniform1i(_shader("verticesPerSide"), _verticesPerSide);
-    glUniform3fv(_shader("cameraPos"), 1, &_cameraPosition[0]);
-    glUniform1f(_shader("waveTime"), _currentTime);
-    glUniformMatrix4fv(_shader("uModel"), 1, GL_FALSE, &mat4(1.0)[0][0]);
-    glUniformMatrix4fv(_shader("uView"), 1, GL_FALSE, view);
-    glUniformMatrix4fv(_shader("uProjection"), 1, GL_FALSE, projection);
+    glUniform1f(_shader("u_sideSize"), _sideSize);
+    glUniform1i(_shader("u_verticesPerSide"), _verticesPerSide);
+    glUniform3fv(_shader("u_cameraPosition"), 1, &_cameraPosition[0]);
+    glUniform3fv(_shader("u_lightDirection"), 1, &_lightDirection[0]);
+
+    // Box
+    glUniform3fv(_shader("u_box.boxMin"), 1, &_box[0][0]);
+    glUniform3fv(_shader("u_box.boxMax"), 1, &_box[1][0]);
+
+    glUniformMatrix4fv(_shader("u_modelMatrix"), 1, GL_FALSE, &mat4(1.0)[0][0]);
+    glUniformMatrix4fv(_shader("u_viewMatrix"), 1, GL_FALSE, view);
+    glUniformMatrix4fv(_shader("u_projectionMatrix"), 1, GL_FALSE, projection);
     glDrawElements(GL_TRIANGLES, CGrid::getTotalIndices(), GL_UNSIGNED_INT, 0);
     checkErrorOpenGL("CWaterGrid::render");
 
@@ -82,7 +95,14 @@ void CWaterGrid::setCameraPosition(vec3 cameraPosition) {
     _cameraPosition.z = cameraPosition.z;
 }
 
-void CWaterGrid::intersect(vec2 &viewportCoordinates, CCustomCamera &camera) {
+void CWaterGrid::setLightDirections(vec3& lightDirection) {
+    _lightDirection.x = lightDirection.x;
+    _lightDirection.y = lightDirection.y;
+    _lightDirection.z = lightDirection.z;
+}
+
+void CWaterGrid::intersect(vec2 &viewportCoordinates, CCustomCamera &camera,
+                           float amount) {
 
     /* ----- Clip Coordinates ----- */
     vec3 rayNormalizedDeviceSpace = toNormalizedDeviceCoordinates(
@@ -118,15 +138,18 @@ void CWaterGrid::intersect(vec2 &viewportCoordinates, CCustomCamera &camera) {
             float spaceBetweenQuads = _gridSizeOnX / (float)_quadsOnX;
             quad.x = (int)(quad.x / spaceBetweenQuads);
             quad.y = (int)(quad.y / spaceBetweenQuads);
-            _wavesDeformer.disturbSurface(quad, 1.0f);
-            cout << quad.x << " " << quad.y << endl;
+            _wavesDeformer.disturbSurface(quad, amount);
         }
 
 
-    } else {
-        cout << "miss!" << endl;
     }
+}
+void CWaterGrid::intersect(vec2& quadCoordinates, float amount) {
+    _wavesDeformer.disturbSurface(quadCoordinates, amount);
+}
 
+int CWaterGrid::getVerticesPerSide() {
+    return _verticesPerSide;
 }
 
 void CWaterGrid::_initShader(bool modernShaders) {
@@ -140,17 +163,18 @@ void CWaterGrid::_initShader(bool modernShaders) {
     _shader.CreateAndLinkProgram();
 
     _shader.Use();
-    _shader.AddAttribute("vVertex");
-    _shader.AddAttribute("vColor");
-    _shader.AddAttribute("texCoords");
-    _shader.AddUniform("uModel");
-    _shader.AddUniform("uView");
-    _shader.AddUniform("uProjection");
-    _shader.AddUniform("waveTime");
-    _shader.AddUniform("heightFieldTex");
-    _shader.AddUniform("skyBoxTex");
-    _shader.AddUniform("cameraPos");
-    _shader.AddUniform("sideSize");
-    _shader.AddUniform("verticesPerSide");
+    _shader.AddAttribute("a_position");
+    _shader.AddAttribute("a_heightFieldTexCoords");
+    _shader.AddUniform("u_modelMatrix");
+    _shader.AddUniform("u_viewMatrix");
+    _shader.AddUniform("u_projectionMatrix");
+    _shader.AddUniform("u_heightFieldTexture");
+    _shader.AddUniform("u_skyboxTexture");
+    _shader.AddUniform("u_cameraPosition");
+    _shader.AddUniform("u_sideSize");
+    _shader.AddUniform("u_verticesPerSide");
+    _shader.AddUniform("u_box.boxMin");
+    _shader.AddUniform("u_box.boxMax");
+    _shader.AddUniform("u_lightDirection");
     _shader.UnUse();
 }

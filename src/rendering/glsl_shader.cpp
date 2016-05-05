@@ -95,12 +95,12 @@ void GLSLShader::AddAttribute(const string& attribute) {
 //An indexer that returns the location of the attribute
 GLuint GLSLShader::operator [](const string& attribute) {
     return _attributeList[attribute];
-    util::checkErrorOpenGL("GLSLShader::operator []");
+    utils::checkErrorOpenGL("GLSLShader::operator []");
 }
 
 void GLSLShader::AddUniform(const string& uniform) {
     _uniformLocationList[uniform] = glGetUniformLocation(_program, uniform.c_str());
-    util::checkErrorOpenGL("GLSLShader::AddUniform");
+    utils::checkErrorOpenGL("GLSLShader::AddUniform");
 }
 
 GLuint GLSLShader::operator()(const string& uniform){

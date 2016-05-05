@@ -2,7 +2,7 @@
 
 #include "rays_functions.h"
 
-vec3 util::toNormalizedDeviceCoordinates(vec2 &viewportCoordinates,
+vec3 utils::toNormalizedDeviceCoordinates(vec2 &viewportCoordinates,
                                          int windowWidth, int windowHeight) {
     float x = (2.0f * viewportCoordinates.x) / (float) windowWidth - 1.0f;
     float y = 1.0f - (2.0f * viewportCoordinates.y) / windowHeight;
@@ -11,14 +11,14 @@ vec3 util::toNormalizedDeviceCoordinates(vec2 &viewportCoordinates,
     return vec3(x, y, z);
 }
 
-vec4 util::toCameraCoordinates(vec4 &clipCoordinates, mat4 &projectionMatrix) {
+vec4 utils::toCameraCoordinates(vec4 &clipCoordinates, mat4 &projectionMatrix) {
     vec4 rayCameraSpace = inverse(projectionMatrix) * clipCoordinates;
     rayCameraSpace.z = -1.0;
     rayCameraSpace.w = 0.0;
     return rayCameraSpace;
 }
 
-vec3 util::toWorldCoordinates(vec4 &cameraCoordinates, mat4 &viewMatrix) {
+vec3 utils::toWorldCoordinates(vec4 &cameraCoordinates, mat4 &viewMatrix) {
     vec4 rayWorldSpace4 = (inverse(viewMatrix) * cameraCoordinates);
     vec3 rayWorldSpace3 = vec3(rayWorldSpace4.x, rayWorldSpace4.y,
                                rayWorldSpace4.z);
@@ -26,7 +26,7 @@ vec3 util::toWorldCoordinates(vec4 &cameraCoordinates, mat4 &viewMatrix) {
     return rayWorldSpace3;
 }
 
-bool util::rayIntersectsPlane(vec3 &worldCoordinates, vec3 &planeNormal,
+bool utils::rayIntersectsPlane(vec3 &worldCoordinates, vec3 &planeNormal,
                               vec3 &cameraPosition, vec3 &intersectionPoint) {
     float denominator = dot(worldCoordinates, planeNormal);
     float t = -1.0;

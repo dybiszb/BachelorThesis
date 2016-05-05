@@ -20,6 +20,7 @@ CWavesDeformer::CWavesDeformer(int width, int height, bool modernShaders)
     _fbo1->setColorAttachement(*_tex1);
     _fbo1->unbind();
 
+    _initMembraneCoefficients();
     _initShaders(modernShaders);
     _initVao();
 }
@@ -29,7 +30,15 @@ void CWavesDeformer::setVerticesPerSide(int verticesPerSide) {
 }
 
 void CWavesDeformer::disturbSurface(vec2 &quad, float amount) {
-    _tex0->bind();
+
+
+    if (_counter % 2 == 0) {
+        _tex0->bind();
+    } else {
+        _tex1->bind();
+    }
+
+
     GLfloat data[4] = {amount, 0, 0, 0};
     glTexSubImage2D(GL_TEXTURE_2D,
                     0,
@@ -57,20 +66,42 @@ void CWavesDeformer::bindTextureOfNextAnimationStep() {
 
     _shader.Use();
     _vao.bind();
-    glUniform1iARB(_shader("oldvalues"), 0);
-    glUniform1f(_shader("sideSize"), _width);
-    glUniform1i(_shader("verticesPerSide"), _verticesPerSide);
+    glUniform1iARB(_shader("u_heightFieldTexture"), 0);
+    glUniform1f(_shader("u_sideSize"), _width);
+    glUniform1i(_shader("u_verticesPerSide"), _verticesPerSide);
 
-    _tex0->bind();
-    _fbo1->bind();
-    glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
-    checkErrorOpenGL("CWavesDeformer::renderStep");
+    glUniform1f(_shader("u_membraneProperties.h"),  _h);
+    glUniform1f(_shader("u_membraneProperties.c"),  _c);
+    glUniform1f(_shader("u_membraneProperties.dt"), _dt);
 
-    _tex1->bind();
-    _fbo0->bind();
-    glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
-    checkErrorOpenGL("CWavesDeformer::renderStep");
-    _fbo0->unbind();
+    if (_counter % 2 == 0) {
+        _tex0->bind();
+        _fbo1->bind();
+        glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
+        checkErrorOpenGL("CWavesDeformer::renderStep");
+        _fbo1->unbind();
+        _tex0->unbind();
+        _tex1->bind();
+    } else {
+        _tex1->bind();
+        _fbo0->bind();
+        glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
+        checkErrorOpenGL("CWavesDeformer::renderStep");
+        _fbo0->unbind();
+        _tex1->unbind();
+        _tex0->bind();
+    }
+    _counter++;
+//    _tex0->bind();
+//    _fbo1->bind();
+//    glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
+//    checkErrorOpenGL("CWavesDeformer::renderStep");
+
+//    _tex1->bind();
+//    _fbo0->bind();
+//    glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
+//    checkErrorOpenGL("CWavesDeformer::renderStep");
+//    _fbo0->unbind();
 
     _vao.unbind();
     _shader.UnUse();
@@ -92,13 +123,14 @@ void CWavesDeformer::_initShaders(bool modernShaders) {
     _shader.CreateAndLinkProgram();
 
     _shader.Use();
-    _shader.AddAttribute("vVertex");
-    _shader.AddAttribute("texCoords");
-    _shader.AddUniform("oldvalues");
-    _shader.AddUniform("newvalues");
-    _shader.AddUniform("sideSize");
-    _shader.AddUniform("disturbance");
-    _shader.AddUniform("verticesPerSide");
+    _shader.AddAttribute("a_position");
+    _shader.AddAttribute("a_heightFieldTexCoords");
+    _shader.AddUniform("u_heightFieldTexture");
+    _shader.AddUniform("u_sideSize");
+    _shader.AddUniform("u_verticesPerSide");
+    _shader.AddUniform("u_membraneProperties.h");
+    _shader.AddUniform("u_membraneProperties.c");
+    _shader.AddUniform("u_membraneProperties.dt");
     _shader.UnUse();
 }
 
@@ -109,12 +141,19 @@ void CWavesDeformer::_initVao() {
 
     _vao.bind();
     _vao.setVertices(_quad.getTotalVertices() * sizeof(Vertex), &vertices[0]);
-    _vao.assignFloatAttribute(_shader["vVertex"], 3, stride, 0);
-    _vao.assignFloatAttribute(_shader["texCoords"], 2, stride,
+    _vao.assignFloatAttribute(_shader["a_position"], 3, stride, 0);
+    _vao.assignFloatAttribute(_shader["a_heightFieldTexCoords"], 2, stride,
                               (const GLvoid *) offsetof(Vertex, texCoord));
     _vao.setIndices(_quad.getTotalIndices() * sizeof(GLuint), &indices[0]);
     _vao.unbind();
 
     delete[] vertices;
     delete[] indices;
+}
+
+void CWavesDeformer::_initMembraneCoefficients() {
+    float N = (float) _verticesPerSide;
+    _h = 2. / (N - 1.);
+    _c = 1.;
+    _dt = 1./(N);
 }

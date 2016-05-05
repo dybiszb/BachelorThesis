@@ -22,7 +22,7 @@
 using namespace rendering;
 using namespace geometry;
 using namespace glm;
-using namespace util;
+using namespace utils;
 using namespace std;
 
 class CWavesDeformer{
@@ -56,8 +56,13 @@ private:
     GLSLShader _shader;
     CVertexArray _vao;
     CQuad _quad;
+    GLfloat _h;
+    GLfloat _c;
+    GLfloat _dt;
+    int _counter = 0;
     void _initShaders(bool modernShaders);
     void _initVao();
+    void _initMembraneCoefficients();
 };
 
 

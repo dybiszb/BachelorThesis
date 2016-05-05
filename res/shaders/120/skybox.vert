@@ -1,13 +1,40 @@
+//==============================================================================
+// The shader calculates appropriate texture coordinates (further needed by
+// cubemap sampler) and transforms vertex to fit in the scene.
+//==============================================================================
+// author: dybisz
+//------------------------------------------------------------------------------
 #version 120
-attribute vec3 vVertex;
-varying vec3 textUV;
 
-uniform mat4 uModel;
-uniform mat4 uView;
-uniform mat4 uProjection;
+//==============================================================================
+// In
+//------------------------------------------------------------------------------
+attribute vec3 v_position;
+
+//==============================================================================
+// Out
+//------------------------------------------------------------------------------
+varying vec3   v_skyboxTexCoords;
+
+//==============================================================================
+// Uniforms
+//------------------------------------------------------------------------------
+uniform mat4   u_modelMatrix;
+uniform mat4   u_viewMatrix;
+uniform mat4   u_projectionMatrix;
 
 void main()
 {
-   textUV = normalize(vVertex);
-   gl_Position = uProjection * uView * uModel *vec4(vVertex,1);
+   // Cubemap sampler needs normalized vector from the center of the cube to
+   // the part that one wants to sample. It happens that after normalizing each
+   // vertex position one can interpret it as a vector and supply to the
+   // sampler. Via interpolation process each fragment will acquire
+   // appropriate vector. Such operation is possible because cubemap's center
+   // is the scene origin.
+   v_skyboxTexCoords = normalize(v_position);
+
+   gl_Position       = u_projectionMatrix *
+                       u_viewMatrix       *
+                       u_modelMatrix      *
+                       vec4(v_position, 1.0);
 }

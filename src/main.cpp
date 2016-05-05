@@ -4,7 +4,7 @@
 CGLFWRenderer renderer(800, 600);
 
 int main(void) {
-    //utils::seed();
+    utils::seed();
     renderer.runMainLoop();
     return 0;
 }

@@ -1,16 +1,21 @@
+//==============================================================================
+// The shader simply assigns appropriate part of the texture to the fragment.
+//==============================================================================
+// author: dybisz
+//------------------------------------------------------------------------------
 #version 120
-//precision highp float;
 
-//1. declare a uniform sampler2d that contains the texture data
-uniform samplerCube SkyBoxTexture;
+//==============================================================================
+// In
+//------------------------------------------------------------------------------
+varying vec3        v_skyboxTexCoords;
 
-//2. declare varying type which will transfer the texture coordinates from the vertex shader
-varying vec3 textUV;
+//==============================================================================
+// Uniforms
+//------------------------------------------------------------------------------
+uniform samplerCube u_skyboxTexture;
 
 void main()
 {
-
-//3. set the final color to the output of the fragment shader
-gl_FragColor = textureCube(SkyBoxTexture,textUV);
-
+    gl_FragColor = textureCube(u_skyboxTexture,v_skyboxTexCoords);
 }

@@ -10,7 +10,7 @@
 #include <GL/glew.h>
 #include "textures/texture2D.h"
 
-using namespace util;
+using namespace utils;
 
 namespace rendering {
     class CFrameBuffer {
