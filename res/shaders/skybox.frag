@@ -3,12 +3,12 @@
 //==============================================================================
 // author: dybisz
 //------------------------------------------------------------------------------
-#version 120
+#version 330 core
 
 //==============================================================================
 // In
 //------------------------------------------------------------------------------
-varying vec3        v_skyboxTexCoords;
+in vec3        v_skyboxTexCoords;
 
 //==============================================================================
 // Uniforms
@@ -17,5 +17,5 @@ uniform samplerCube u_skyboxTexture;
 
 void main()
 {
-    gl_FragColor = textureCube(u_skyboxTexture,v_skyboxTexCoords);
+    gl_FragColor = texture(u_skyboxTexture,v_skyboxTexCoords);
 }

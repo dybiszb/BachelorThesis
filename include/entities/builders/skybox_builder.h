@@ -17,7 +17,8 @@ namespace entities {
     class CSkyboxBuilder {
     public:
         static const float defaultSideSize;
-        static vector<const GLchar *> *defaultFaces;
+//        static vector<const GLchar *> *defaultFaces;
+        static const char* defaultFaces[6];
         static const bool defaultModernShaders;
 
         /**
@@ -48,7 +49,7 @@ namespace entities {
          * @param defaultFaces Pointer to the vector filled with 6 paths to
          *                     textures that will be mapped on the cube.
          */
-        CSkyboxBuilder &setFaces(vector<const GLchar *> *defaultFaces);
+        CSkyboxBuilder &setFaces(const char* faces[6]);
 
         /**
          * Use modern shaders?
@@ -61,7 +62,7 @@ namespace entities {
 
     private:
         float _sideSize;
-        vector<const GLchar *> *_faces;
+        const char* _faces[6];
         bool _modernShaders;
     };
 }

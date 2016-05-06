@@ -27,7 +27,7 @@ namespace rendering {
          *
          * @param facesNames Six paths to textures defining a cube.
          */
-        CCubemapTexture(vector<const GLchar *>* facesNames);
+        CCubemapTexture(const char* facesNames[6]);
 
         /**
          * Releases textures from OpenGL context.
@@ -40,7 +40,7 @@ namespace rendering {
          *
          * @param facesNames Six paths to textures defining a cube.
          */
-        void loadTexture(vector<const GLchar *>* facesNames);
+        void loadTexture(const char* facesNames[6]);
 
         /**
          * Binds textures to current GL_TEXTURE_CUBE_MAP object.

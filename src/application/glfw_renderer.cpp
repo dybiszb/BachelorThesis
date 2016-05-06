@@ -12,8 +12,8 @@ CGLFWRenderer::CGLFWRenderer(int windowWidth, int windowHeight,
     _initInputOutput();
     _initGLEW();
     _initWaterProperties();
-//    _initATWBar();
-//    _initCallbacks();
+    _initATWBar();
+    _initCallbacks();
     _initRenderableObjects();
     _initGLGlobalSettings();
 }
@@ -27,8 +27,8 @@ CGLFWRenderer::~CGLFWRenderer() {
 }
 
 void CGLFWRenderer::runMainLoop() {
-    _initATWBar();
-    _initCallbacks();
+//    _initATWBar();
+//    _initCallbacks();
     do {
         /* ----- Calculate Time ----- */
         float deltaTime = _timer.tick();
@@ -57,9 +57,9 @@ void CGLFWRenderer::runMainLoop() {
         if(_waves) {
             for(int i = 0; i < 800; i++) {
                 int x = utils::randomInteger(0, _water->getVerticesPerSide()
-                                                - 1);
+                                                - 2);
                 int y = utils::randomInteger(0, _water->getVerticesPerSide() -
-                                                1);
+                                                2);
                 vec2 quadCoordinates(x,y);
                 _water->intersect(quadCoordinates, _wavesIntensity);
             }
@@ -70,9 +70,9 @@ void CGLFWRenderer::runMainLoop() {
         if(_isRaining) {
             for(int i = 0; i < _rainIntensity; i++) {
                 int x = utils::randomInteger(0, _water->getVerticesPerSide()
-                                                - 1);
+                                                - 2);
                 int y = utils::randomInteger(0, _water->getVerticesPerSide() -
-                        1);
+                        2);
                 vec2 quadCoordinates(x,y);
                 _water->intersect(quadCoordinates, _rainDropSize);
             }
@@ -82,11 +82,14 @@ void CGLFWRenderer::runMainLoop() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         /* ----- Render Scene ----- */
+//        cout << "skybox render starts\n";
         _skybox->render(&_camera.getViewMatrix()[0][0],
                         &_camera.getProjectionMatrix()[0][0]);
+//        cout << "skybox render ends\n";
+//        cout << "water render starts\n";
         _water->render(&_camera.getViewMatrix()[0][0],
                        &_camera.getProjectionMatrix()[0][0]);
-
+//        cout << "water render ends\n";
         TwDraw();
         glfwSwapBuffers(_window);
         glfwPollEvents();
@@ -102,8 +105,8 @@ void CGLFWRenderer::_initGLFW() {
     }
 
     glfwWindowHint(GLFW_SAMPLES, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+//    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+//    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 }
 
 void CGLFWRenderer::_initWaterProperties() {

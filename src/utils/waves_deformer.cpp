@@ -31,6 +31,7 @@ void CWavesDeformer::setVerticesPerSide(int verticesPerSide) {
 
 void CWavesDeformer::disturbSurface(vec2 &quad, float amount) {
 
+//    cout << "quad: " << quad.x << " " << quad.y << endl;
 
     if (_counter % 2 == 0) {
         _tex0->bind();
@@ -49,7 +50,16 @@ void CWavesDeformer::disturbSurface(vec2 &quad, float amount) {
                     GL_RGBA,
                     GL_FLOAT,
                     data);
-    _tex0->unbind();
+
+    if (_counter % 2 == 0) {
+//        cout << "unbinding tex0\n";
+        _tex0->unbind();
+//        cout << "unbinding tex0 ends\n";
+    } else {
+//        cout << "unbinding tex1\n";
+        _tex1->unbind();
+//        cout << "unbinding tex1 ends\n";
+    }
 }
 
 CWavesDeformer::~CWavesDeformer() {
@@ -70,14 +80,15 @@ void CWavesDeformer::bindTextureOfNextAnimationStep() {
     glUniform1f(_shader("u_sideSize"), _width);
     glUniform1i(_shader("u_verticesPerSide"), _verticesPerSide);
 
-    glUniform1f(_shader("u_membraneProperties.h"),  _h);
-    glUniform1f(_shader("u_membraneProperties.c"),  _c);
+    glUniform1f(_shader("u_membraneProperties.h"), _h);
+    glUniform1f(_shader("u_membraneProperties.c"), _c);
     glUniform1f(_shader("u_membraneProperties.dt"), _dt);
 
     if (_counter % 2 == 0) {
         _tex0->bind();
         _fbo1->bind();
-        glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT,
+                       0);
         checkErrorOpenGL("CWavesDeformer::renderStep");
         _fbo1->unbind();
         _tex0->unbind();
@@ -85,7 +96,8 @@ void CWavesDeformer::bindTextureOfNextAnimationStep() {
     } else {
         _tex1->bind();
         _fbo0->bind();
-        glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT,
+                       0);
         checkErrorOpenGL("CWavesDeformer::renderStep");
         _fbo0->unbind();
         _tex1->unbind();
@@ -96,7 +108,7 @@ void CWavesDeformer::bindTextureOfNextAnimationStep() {
 //    _fbo1->bind();
 //    glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
 //    checkErrorOpenGL("CWavesDeformer::renderStep");
-
+//
 //    _tex1->bind();
 //    _fbo0->bind();
 //    glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
@@ -108,18 +120,11 @@ void CWavesDeformer::bindTextureOfNextAnimationStep() {
 }
 
 void CWavesDeformer::_initShaders(bool modernShaders) {
-    if (modernShaders) {
-        _shader.LoadFromFile
-                (GL_VERTEX_SHADER, "res/shaders/330/waves_deformer.vert");
-        _shader.LoadFromFile
-                (GL_FRAGMENT_SHADER, "res/shaders/330/waves_deformer.frag");
-    } else {
-        _shader.LoadFromFile
-                (GL_VERTEX_SHADER, "res/shaders/120/waves_deformer.vert");
-        _shader.LoadFromFile
-                (GL_FRAGMENT_SHADER, "res/shaders/120/waves_deformer.frag");
+    _shader.LoadFromFile
+            (GL_VERTEX_SHADER, "res/shaders/waves_deformer.vert");
+    _shader.LoadFromFile
+            (GL_FRAGMENT_SHADER, "res/shaders/waves_deformer.frag");
 
-    }
     _shader.CreateAndLinkProgram();
 
     _shader.Use();
@@ -155,5 +160,5 @@ void CWavesDeformer::_initMembraneCoefficients() {
     float N = (float) _verticesPerSide;
     _h = 2. / (N - 1.);
     _c = 1.;
-    _dt = 1./(N);
+    _dt = 1. / (N);
 }

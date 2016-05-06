@@ -21,7 +21,7 @@ bottomCorner, GLuint cubemapId, bool modernShaders, int viewportWidth,
     GLsizei stride = sizeof(Vertex);
 
     // Bounding box
-    float halfSide = _sideSize/2.0f;
+    float halfSide = _sideSize / 2.0f;
 //    GLfloat values[6] = {-halfSide, -halfSide, -halfSide,
 //                         halfSide, halfSide, halfSide};
 //    memcpy(_box, values, sizeof(values));
@@ -95,7 +95,7 @@ void CWaterGrid::setCameraPosition(vec3 cameraPosition) {
     _cameraPosition.z = cameraPosition.z;
 }
 
-void CWaterGrid::setLightDirections(vec3& lightDirection) {
+void CWaterGrid::setLightDirections(vec3 &lightDirection) {
     _lightDirection.x = lightDirection.x;
     _lightDirection.y = lightDirection.y;
     _lightDirection.z = lightDirection.z;
@@ -135,16 +135,17 @@ void CWaterGrid::intersect(vec2 &viewportCoordinates, CCustomCamera &camera,
             quad.y > 0 && quad.y <= _gridSizeOnZ) {
 
             /* ----- Which Quad ----- */
-            float spaceBetweenQuads = _gridSizeOnX / (float)_quadsOnX;
-            quad.x = (int)(quad.x / spaceBetweenQuads);
-            quad.y = (int)(quad.y / spaceBetweenQuads);
+            float spaceBetweenQuads = _gridSizeOnX / (float) _quadsOnX;
+            quad.x = (int) (quad.x / spaceBetweenQuads);
+            quad.y = (int) (quad.y / spaceBetweenQuads);
             _wavesDeformer.disturbSurface(quad, amount);
         }
 
 
     }
 }
-void CWaterGrid::intersect(vec2& quadCoordinates, float amount) {
+
+void CWaterGrid::intersect(vec2 &quadCoordinates, float amount) {
     _wavesDeformer.disturbSurface(quadCoordinates, amount);
 }
 
@@ -153,13 +154,8 @@ int CWaterGrid::getVerticesPerSide() {
 }
 
 void CWaterGrid::_initShader(bool modernShaders) {
-    if (modernShaders) {
-        _shader.LoadFromFile(GL_VERTEX_SHADER, "res/shaders/330/water.vert");
-        _shader.LoadFromFile(GL_FRAGMENT_SHADER, "res/shaders/330/water.frag");
-    } else {
-        _shader.LoadFromFile(GL_VERTEX_SHADER, "res/shaders/120/water.vert");
-        _shader.LoadFromFile(GL_FRAGMENT_SHADER, "res/shaders/120/water.frag");
-    }
+    _shader.LoadFromFile(GL_VERTEX_SHADER, "res/shaders/water.vert");
+    _shader.LoadFromFile(GL_FRAGMENT_SHADER, "res/shaders/water.frag");
     _shader.CreateAndLinkProgram();
 
     _shader.Use();

@@ -35,7 +35,7 @@ namespace entities {
          * @param facesNames Pointer to vector with faces paths.
          * @param TODO
          */
-        CSkybox(int sideSize, vector<const GLchar *> *facesNames,
+        CSkybox(int sideSize, const char* facesNames[6],
                 bool modernShaders);
 
         /**

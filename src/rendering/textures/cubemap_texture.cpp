@@ -4,7 +4,7 @@
 
 using namespace rendering;
 
-CCubemapTexture::CCubemapTexture(vector<const GLchar *>* facesNames) {
+CCubemapTexture::CCubemapTexture(const char* facesNames[6]) {
     loadTexture(facesNames);
 }
 
@@ -12,17 +12,17 @@ CCubemapTexture::~CCubemapTexture() {
     glDeleteTextures(1, &_id);
 }
 
-void CCubemapTexture::loadTexture(vector<const GLchar *> *facesNames) {
+void CCubemapTexture::loadTexture(const char* facesNames[6]) {
 
 
     _id = SOIL_load_OGL_cubemap
             (
-                    (*facesNames)[0],
-                    (*facesNames)[1],
-                    (*facesNames)[2],
-                    (*facesNames)[3],
-                    (*facesNames)[4],
-                    (*facesNames)[5],
+                    facesNames[0],
+                    facesNames[1],
+                    facesNames[2],
+                    facesNames[3],
+                    facesNames[4],
+                    facesNames[5],
                     SOIL_LOAD_RGB,
                     SOIL_CREATE_NEW_ID,
                     SOIL_FLAG_MIPMAPS

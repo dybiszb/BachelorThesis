@@ -7,7 +7,7 @@
 //==============================================================================
 // author: dybisz
 //------------------------------------------------------------------------------
-#version 120
+#version 330 core
 
 struct BoundingBox{
     vec3 boxMin;
@@ -17,8 +17,8 @@ struct BoundingBox{
 //==============================================================================
 // In
 //------------------------------------------------------------------------------
-varying vec3        v_position;
-varying vec3        v_normal;
+in vec3             v_position;
+in vec3             v_normal;
 
 //==============================================================================
 // Uniforms
@@ -96,13 +96,10 @@ void main()
                                               u_box.boxMax, u_box.boxMin);
 
     // Colors at the intersections
-    vec4 reflectedColor = textureCube(u_skyboxTexture, reflectedIntersection);
-    vec4 refractedColor = textureCube(u_skyboxTexture, refractedIntersection);
+    vec4 reflectedColor = texture(u_skyboxTexture, reflectedIntersection);
+    vec4 refractedColor = texture(u_skyboxTexture, refractedIntersection);
 
     // Fresnel's coefficient
     float w = fresnel(u_cameraPosition, v_position, v_normal);
-    float light = dot(v_normal, u_lightDirection);
-    light = normalize(light);
-
-    gl_FragColor = light * mix(reflectedColor, refractedColor, w);
+    gl_FragColor = mix(reflectedColor, refractedColor, w);
 }

@@ -7,19 +7,19 @@
 //==============================================================================
 // author: dybisz
 //------------------------------------------------------------------------------
-#version 120
+#version 330 core
 
 //==============================================================================
 // In
 //------------------------------------------------------------------------------
-attribute vec3    a_position;
-attribute vec2    a_heightFieldTexCoords;
+in vec3           a_position;
+in vec2           a_heightFieldTexCoords;
 
 //==============================================================================
 // Out
 //------------------------------------------------------------------------------
-varying vec3      v_position;
-varying vec3      v_normal;
+out vec3          v_position;
+out vec3          v_normal;
 
 //==============================================================================
 // Uniforms
@@ -42,7 +42,7 @@ uniform float     u_sideSize;
 vec3 calculateNormal() {
   float step    = 1. / float(u_verticesPerSide);
 
-  float current = texture2D
+  float current = texture
                   (
                       u_heightFieldTexture,
                       vec2
@@ -52,7 +52,7 @@ vec3 calculateNormal() {
                       )
                   ).r;
 
-  float up      = texture2D
+  float up      = texture
                   (
                       u_heightFieldTexture,
                       vec2
@@ -62,7 +62,7 @@ vec3 calculateNormal() {
                       )
                   ).r;
 
-  float down    = texture2D
+  float down    = texture
                   (
                       u_heightFieldTexture,
                       vec2
@@ -72,7 +72,7 @@ vec3 calculateNormal() {
                       )
                   ).r;
 
-  float right   = texture2D
+  float right   = texture
                   (
                       u_heightFieldTexture,
                       vec2
@@ -82,7 +82,7 @@ vec3 calculateNormal() {
                       )
                   ).r;
 
-  float left    = texture2D
+  float left    = texture
                   (
                       u_heightFieldTexture,
                       vec2
@@ -103,7 +103,7 @@ void main()
 {
     // Read the vertex height
     vec3 position = a_position;
-    position.y    = texture2D(u_heightFieldTexture, a_heightFieldTexCoords).r;
+    position.y    = texture(u_heightFieldTexture, a_heightFieldTexCoords).r;
 
     // Update its position according to transformations
     gl_Position   = u_projectionMatrix *

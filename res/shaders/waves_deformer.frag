@@ -4,7 +4,7 @@
 //==============================================================================
 // author: dybisz
 //------------------------------------------------------------------------------
-#version 120
+#version 330 core
 
 #define NONE                 0
 #define UP_NEIGHBOUR         1.0
@@ -21,7 +21,7 @@ struct MembraneEqProperties {
 //==============================================================================
 // In
 //------------------------------------------------------------------------------
-varying vec2                 v_heightFieldTexCoords;
+in vec2                      v_heightFieldTexCoords;
 
 //==============================================================================
 // Uniforms
@@ -55,7 +55,7 @@ float calculateDamping(vec2 position) {
  */
 float getNeighbour(float uModifier, float vModifier) {
     float step = 1.0 / float(u_verticesPerSide);
-    return texture2D
+    return texture
            (
            u_heightFieldTexture,
                vec2
