@@ -61,6 +61,7 @@ private:
     CCustomCamera       _camera;
     TwBar*              _waterBar;
     TwBar*              _sceneBar;
+    TwBar*              _controlsBar;
     CSkybox*            _skybox;
     CWaterGrid*         _water;
 
@@ -74,6 +75,7 @@ private:
     bool                _waves;
     float               _wavesIntensity;
     vec3                _lightDirection;
+    bool                _waterAnimation;
 
     /**
      * Initializes GLFW context.

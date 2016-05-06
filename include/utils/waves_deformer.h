@@ -42,7 +42,9 @@ public:
      * makes this function somehow independent.
      *
      */
-    void bindTextureOfNextAnimationStep();
+    void animationStep();
+    void bindAndSwapTextures();
+    void bindTexture();
     void setVerticesPerSide(int verticesPerSide);
     void disturbSurface(vec2& quad, float amount);
 private:

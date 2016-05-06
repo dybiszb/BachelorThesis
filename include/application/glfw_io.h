@@ -41,7 +41,9 @@ public:
                                       int action, int mods);
 
     static void setIntersectionRequested(bool intersectionRequested);
+    static void setStopAnimationRequested(bool stopAnimationRequested);
     static bool isIntersectionRequested();
+    static bool isStopAnimationRequested();
     vec2 getIntersectionCoordinates();
 
 private:
@@ -51,6 +53,7 @@ private:
     static double  _mouseX;
     static double  _mouseY;
     static bool    _intersectionRequested;
+    static bool    _stopAnimationRequested;
     static vec2    _intersectionCoordinates;
 
     /**

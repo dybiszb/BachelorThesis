@@ -54,7 +54,7 @@ void CGLFWRenderer::runMainLoop() {
         }
 
         /* ----- Waves ----- */
-        if(_waves) {
+        if(_waves && _waterAnimation) {
             for(int i = 0; i < 800; i++) {
                 int x = utils::randomInteger(0, _water->getVerticesPerSide()
                                                 - 2);
@@ -65,9 +65,8 @@ void CGLFWRenderer::runMainLoop() {
             }
         }
 
-
         /* ----- Rain ----- */
-        if(_isRaining) {
+        if(_isRaining && _waterAnimation) {
             for(int i = 0; i < _rainIntensity; i++) {
                 int x = utils::randomInteger(0, _water->getVerticesPerSide()
                                                 - 2);
@@ -78,18 +77,23 @@ void CGLFWRenderer::runMainLoop() {
             }
         }
 
+        /* ----- Check Stop Scene ----- */
+//        if(_inputOutput->isStopAnimationRequested()) {
+//            _waterAnimation = !_waterAnimation;
+//            _inputOutput->setStopAnimationRequested(false);
+//        }
+        if(_waterAnimation != _water->getAnimation()) {
+            _water->setAnimation(_waterAnimation);
+        }
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         /* ----- Render Scene ----- */
-//        cout << "skybox render starts\n";
         _skybox->render(&_camera.getViewMatrix()[0][0],
                         &_camera.getProjectionMatrix()[0][0]);
-//        cout << "skybox render ends\n";
-//        cout << "water render starts\n";
         _water->render(&_camera.getViewMatrix()[0][0],
                        &_camera.getProjectionMatrix()[0][0]);
-//        cout << "water render ends\n";
+
         TwDraw();
         glfwSwapBuffers(_window);
         glfwPollEvents();
@@ -115,6 +119,7 @@ void CGLFWRenderer::_initWaterProperties() {
     _rainIntensity     = 1;
     _rainDropSize      = 1.0;
     _waves             = false;
+    _waterAnimation    = true;
     _wavesIntensity    = 0.01;
     _lightDirection.x  = 1.0;
     _lightDirection.y  = 1.0;
@@ -152,15 +157,14 @@ void CGLFWRenderer::_initATWBar() {
     TwInit(TW_OPENGL, NULL);
     TwWindowSize(_windowWidth, _windowHeight);
     _waterBar = TwNewBar("Water");
-    TwDefine(" 'Water' size='240 180' ");
-//    TwSetParam(_waterBar, NULL, "refresh", TW_PARAM_CSTRING, 1, "0.1");
-//    TwAddVarRO(_waterBar, "Direction", TW_TYPE_DIR3F,
-//               &_camera.getPosition()[0], " axisz=-z"
-//                       " ");
-
+    TwDefine(" 'Water' size='240 220' contained=true fontsize=1");
 
 //
 //    TwAddSeparator(_waterBar, "", NULL);
+    TwAddButton(_waterBar, "Animation", NULL, NULL, "");
+    TwAddVarRW(_waterBar, "animation:", TW_TYPE_BOOL32, &_waterAnimation,
+               " label='On / Off:' help='Animate water or not' ");
+
     TwAddButton(_waterBar, "Manual_Disturbance", NULL, NULL, "");
     TwAddVarRW(_waterBar, "Height: ", TW_TYPE_FLOAT,
                &_disturbanceHeight,
@@ -188,15 +192,19 @@ void CGLFWRenderer::_initATWBar() {
                &_rainIntensity,
                "step=1");
 
-
-
-
+    _controlsBar = TwNewBar("Controls");
+    TwDefine(" 'Controls' size='170 85' contained=true position='625 510' "
+                     "alpha=0 fontsize=1");
+    TwAddButton(_controlsBar, "W, S, A, D  - move around", NULL, NULL, "");
+    TwAddButton(_controlsBar, "Z, X         - move up / down", NULL, NULL, "");
+    TwAddButton(_controlsBar, "LMB         - disturb water", NULL, NULL, "");
+    TwAddButton(_controlsBar, "RMB         - look around", NULL, NULL, "");
     ///////////////////////////////////////////////////////////////////
-    _sceneBar = TwNewBar("Scene");
-    TwDefine(" 'Scene' size='240 160' ");
-    TwSetParam(_sceneBar, NULL, "position", TW_PARAM_CSTRING, 1, "545 16");
-    TwAddVarRW(_sceneBar, "Light_Direction", TW_TYPE_DIR3F, &_lightDirection,
-               "showval=true open=true ");
+//    _sceneBar = TwNewBar("Scene");
+//    TwDefine(" 'Scene' size='240 160' contained=true fontsize=1");
+//    TwSetParam(_sceneBar, NULL, "position", TW_PARAM_CSTRING, 1, "545 16");
+//    TwAddVarRW(_sceneBar, "Light_Direction", TW_TYPE_DIR3F, &_lightDirection,
+//               "showval=true open=true ");
 
 
 //    TwAddSeparator(_waterBar, "", NULL);

@@ -7,6 +7,7 @@ double  CGLFWInputOutput::_mouseX = 0;
 double  CGLFWInputOutput::_mouseY = 0;
 vec2    CGLFWInputOutput::_intersectionCoordinates(-1.0, -1.0);
 bool    CGLFWInputOutput::_intersectionRequested = false;
+bool    CGLFWInputOutput::_stopAnimationRequested = false;
 
 CGLFWInputOutput::CGLFWInputOutput(GLFWwindow *window)
         : _window(window){
@@ -63,8 +64,16 @@ void CGLFWInputOutput::setIntersectionRequested(bool intersectionRequested) {
     _intersectionRequested = intersectionRequested;
 }
 
+void CGLFWInputOutput::setStopAnimationRequested(bool stopAnimationRequested) {
+    _stopAnimationRequested = stopAnimationRequested;
+}
+
 bool CGLFWInputOutput::isIntersectionRequested() {
     return _intersectionRequested;
+}
+
+bool CGLFWInputOutput::isStopAnimationRequested() {
+    return _stopAnimationRequested;
 }
 
 vec2 CGLFWInputOutput::getIntersectionCoordinates() {
@@ -99,5 +108,9 @@ void CGLFWInputOutput::_handleKeyboard(double deltaTime) {
         _camera->moveUp(deltaTime);
     } else if (glfwGetKey(_window, 'X')) {
         _camera->moveDown(deltaTime);
+    }
+
+    if(glfwGetKey(_window, GLFW_KEY_SPACE)) {
+        _stopAnimationRequested = true;
     }
 }

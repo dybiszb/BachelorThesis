@@ -20,11 +20,9 @@ bottomCorner, GLuint cubemapId, bool modernShaders, int viewportWidth,
     GLuint *indices = CGrid::generateIndices();
     GLsizei stride = sizeof(Vertex);
 
+    _animation = true;
     // Bounding box
     float halfSide = _sideSize / 2.0f;
-//    GLfloat values[6] = {-halfSide, -halfSide, -halfSide,
-//                         halfSide, halfSide, halfSide};
-//    memcpy(_box, values, sizeof(values));
     _box[0] = vec3(-halfSide, -halfSide, -halfSide);
     _box[1] = vec3(halfSide, halfSide, halfSide);
 
@@ -51,7 +49,11 @@ void CWaterGrid::render(const float *view,
     // samplers) to one texture unit. Hence one needs to swap it between
     // animation texture and cubemap texture
     glActiveTexture(GL_TEXTURE0);
-    _wavesDeformer.bindTextureOfNextAnimationStep();
+    if (_animation) {
+        _wavesDeformer.animationStep();
+        _wavesDeformer.bindAndSwapTextures();
+    }
+    _wavesDeformer.bindTexture();
     glViewport(0, 0, _viewportWidth, _viewportHeight);
 
     _shader.Use();
@@ -151,6 +153,14 @@ void CWaterGrid::intersect(vec2 &quadCoordinates, float amount) {
 
 int CWaterGrid::getVerticesPerSide() {
     return _verticesPerSide;
+}
+
+void CWaterGrid::setAnimation(bool animation) {
+    _animation = animation;
+}
+
+bool CWaterGrid::getAnimation() {
+    return _animation;
 }
 
 void CWaterGrid::_initShader(bool modernShaders) {

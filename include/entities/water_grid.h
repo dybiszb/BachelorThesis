@@ -56,6 +56,8 @@ namespace entities {
                        float amount);
         void intersect(vec2& quadCoordinates, float amount);
         int getVerticesPerSide();
+        void setAnimation(bool animation);
+        bool getAnimation();
     private:
         CWavesDeformer _wavesDeformer;
         GLfloat        _currentTime;
@@ -68,6 +70,7 @@ namespace entities {
         int            _viewportWidth;
         int            _viewportHeight;
         vec3           _box[2];
+        bool           _animation;
 
         void _initShader(bool modernShaders);
     };

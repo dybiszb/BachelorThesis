@@ -71,7 +71,7 @@ CWavesDeformer::~CWavesDeformer() {
     _shader.DeleteShaderProgram();
 }
 
-void CWavesDeformer::bindTextureOfNextAnimationStep() {
+void CWavesDeformer::animationStep() {
     glViewport(0, 0, _width, _height);
 
     _shader.Use();
@@ -103,7 +103,7 @@ void CWavesDeformer::bindTextureOfNextAnimationStep() {
         _tex1->unbind();
         _tex0->bind();
     }
-    _counter++;
+
 //    _tex0->bind();
 //    _fbo1->bind();
 //    glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
@@ -115,6 +115,31 @@ void CWavesDeformer::bindTextureOfNextAnimationStep() {
 //    checkErrorOpenGL("CWavesDeformer::renderStep");
 //    _fbo0->unbind();
 
+    _vao.unbind();
+    _shader.UnUse();
+}
+
+void CWavesDeformer::bindAndSwapTextures() {
+    _shader.Use();
+    _vao.bind();
+    if (_counter % 2 == 0) {
+        _tex1->bind();
+    } else {
+        _tex0->bind();
+    }
+    _counter++;
+    _vao.unbind();
+    _shader.UnUse();
+}
+
+void CWavesDeformer::bindTexture() {
+    _shader.Use();
+    _vao.bind();
+    if (_counter % 2 == 0) {
+        _tex1->bind();
+    } else {
+        _tex0->bind();
+    }
     _vao.unbind();
     _shader.UnUse();
 }
