@@ -10,7 +10,7 @@ bool    CGLFWInputOutput::_intersectionRequested = false;
 bool    CGLFWInputOutput::_stopAnimationRequested = false;
 
 CGLFWInputOutput::CGLFWInputOutput(GLFWwindow *window)
-        : _window(window){
+        : _window(window) {
 
 }
 
@@ -38,26 +38,27 @@ void CGLFWInputOutput::updateCamera(float deltaTime) {
 
 void CGLFWInputOutput::mouse_button_callback(GLFWwindow *window, int button,
                                              int action, int mods) {
-    if (button == /*GLFW_MOUSE_BUTTON_MIDDLE*/ GLFW_MOUSE_BUTTON_RIGHT &&
+    if (!TwEventMouseButtonGLFW(window, button, action, mods)) {
+        if (button == /*GLFW_MOUSE_BUTTON_MIDDLE*/ GLFW_MOUSE_BUTTON_RIGHT &&
             action == GLFW_PRESS) {
-        glfwGetCursorPos(window, &_mouseX, &_mouseY);
-        _rightButtonPressed = true;
-    } else if (button == /*GLFW_MOUSE_BUTTON_MIDDLE*/GLFW_MOUSE_BUTTON_RIGHT &&
-            action ==
-                                                          GLFW_RELEASE) {
-        _rightButtonPressed = false;
-    }
+            glfwGetCursorPos(window, &_mouseX, &_mouseY);
+            _rightButtonPressed = true;
+        } else if (
+                button == /*GLFW_MOUSE_BUTTON_MIDDLE*/GLFW_MOUSE_BUTTON_RIGHT &&
+                action ==
+                GLFW_RELEASE) {
+            _rightButtonPressed = false;
+        }
 
-    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-        double x;
-        double y;
-        glfwGetCursorPos(window, &x, &y);
-        _intersectionCoordinates.x = x;
-        _intersectionCoordinates.y = y;
-        _intersectionRequested = true;
+        if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+            double x;
+            double y;
+            glfwGetCursorPos(window, &x, &y);
+            _intersectionCoordinates.x = x;
+            _intersectionCoordinates.y = y;
+            _intersectionRequested = true;
+        }
     }
-
-    TwEventMouseButtonGLFW(window, button, action, mods);
 }
 
 void CGLFWInputOutput::setIntersectionRequested(bool intersectionRequested) {
@@ -110,7 +111,7 @@ void CGLFWInputOutput::_handleKeyboard(double deltaTime) {
         _camera->moveDown(deltaTime);
     }
 
-    if(glfwGetKey(_window, GLFW_KEY_SPACE)) {
+    if (glfwGetKey(_window, GLFW_KEY_SPACE)) {
         _stopAnimationRequested = true;
     }
 }

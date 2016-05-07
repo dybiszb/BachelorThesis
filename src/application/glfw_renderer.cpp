@@ -27,8 +27,6 @@ CGLFWRenderer::~CGLFWRenderer() {
 }
 
 void CGLFWRenderer::runMainLoop() {
-//    _initATWBar();
-//    _initCallbacks();
     do {
         /* ----- Calculate Time ----- */
         float deltaTime = _timer.tick();
@@ -78,10 +76,6 @@ void CGLFWRenderer::runMainLoop() {
         }
 
         /* ----- Check Stop Scene ----- */
-//        if(_inputOutput->isStopAnimationRequested()) {
-//            _waterAnimation = !_waterAnimation;
-//            _inputOutput->setStopAnimationRequested(false);
-//        }
         if(_waterAnimation != _water->getAnimation()) {
             _water->setAnimation(_waterAnimation);
         }

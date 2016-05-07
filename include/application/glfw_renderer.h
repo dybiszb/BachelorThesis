@@ -62,6 +62,10 @@ private:
     TwBar*              _waterBar;
     TwBar*              _sceneBar;
     TwBar*              _controlsBar;
+
+
+
+
     CSkybox*            _skybox;
     CWaterGrid*         _water;
 
