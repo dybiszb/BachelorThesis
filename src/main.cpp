@@ -1,10 +1,12 @@
 #include "glfw_renderer.h"
-#include "rand_functions.h"
+#include "settings_reader.h"
 
-CGLFWRenderer renderer(800, 600, false);
+using namespace std;
 
 int main(void) {
     utils::seed();
+    Settings settings = utils::readFromINI("res/config.ini");
+    CGLFWRenderer renderer(settings);
     renderer.runMainLoop();
     return 0;
 }

@@ -35,6 +35,10 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 			)
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
+### INIH ###
+add_library(INIH inih/cpp/INIReader.cpp inih/ini.c inih/cpp/INIReader.h
+		inih/ini.h)
+
 ### GLEW ###
 
 set(GLEW_SOURCE

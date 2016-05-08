@@ -13,8 +13,10 @@
 #include "builders/atw_bar_builder.h"
 #include "builders/atw_button_builder.h"
 #include "builders/atw_var_builder.h"
+#include "settings_struct.h"
 
 using namespace glm;
+using namespace utils;
 
 class CAtwGui {
 public:
@@ -25,7 +27,7 @@ public:
      * @param windowWidth  Width of the scene window.
      * @param windowHeight Height of the scene window.
      */
-    CAtwGui(int windowWidth, int windowHeight);
+    CAtwGui(Settings& settings);
 
     /**
      * Creates Ant Tweak Bar library's context.
@@ -73,23 +75,22 @@ private:
 //==============================================================================
 // Interface Properties
 //------------------------------------------------------------------------------
-    TwBar *_waterBar;
-    TwBar *_sceneBar;
-    TwBar *_controlsBar;
-    int    _windowWidth;
-    int    _windowHeight;
+    TwBar *  _waterBar;
+    TwBar *  _sceneBar;
+    TwBar *  _controlsBar;
+    Settings _settings;
 
 //==============================================================================
 // Water Properties
 //------------------------------------------------------------------------------
-    float  _disturbanceHeight;
-    bool   _isRaining;
-    int    _rainIntensity;
-    float  _rainDropSize;
-    bool   _waves;
-    float  _wavesIntensity;
-    vec3   _lightDirection;
-    bool   _waterAnimation;
+    float    _disturbanceHeight;
+    bool     _isRaining;
+    int      _rainIntensity;
+    float    _rainDropSize;
+    bool     _waves;
+    float    _wavesIntensity;
+    vec3     _lightDirection;
+    bool     _waterAnimation;
 
 };
 

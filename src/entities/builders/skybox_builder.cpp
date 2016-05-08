@@ -5,41 +5,24 @@
 using namespace entities;
 
 const float CSkyboxBuilder::defaultSideSize = 32.0f;
-//vector<const GLchar *> *CSkyboxBuilder::defaultFaces = new vector<const
-//GLchar *>(
-//                {
-//                        "./res/textures/skybox/alt2/front.tga",
-//                        "./res/textures/skybox/alt2/back.tga",
-//                        "./res/textures/skybox/alt2/up.tga",
-//                        "./res/textures/skybox/alt2/down.tga",
-//                        "./res/textures/skybox/alt2/right.tga",
-//                        "./res/textures/skybox/alt2/left.tga"});
-const char* CSkyboxBuilder::defaultFaces[6]= {
-"./res/textures/skybox/alt2/front.tga",
-"./res/textures/skybox/alt2/back.tga",
-"./res/textures/skybox/alt2/up.tga",
-"./res/textures/skybox/alt2/down.tga",
-"./res/textures/skybox/alt2/right.tga",
-"./res/textures/skybox/alt2/left.tga"};
-//vector<const GLchar *> *CSkyboxBuilder::defaultFaces = new vector<const
-//GLchar *>(
-//        {
-//                "./res/textures/skybox/alternative/front.jpg",
-//                "./res/textures/skybox/alternative/back.jpg",
-//                "./res/textures/skybox/alternative/top.jpg",
-//                "./res/textures/skybox/alternative/bottom.jpg",
-//                "./res/textures/skybox/alternative/right.jpg",
-//                "./res/textures/skybox/alternative/left.jpg"});
 
-//vector<const GLchar *> *CSkyboxBuilder::defaultFaces = new vector<const
-//GLchar *>(
-//        {
-//                "./res/textures/skybox/sor_sea/front.jpg",
-//                "./res/textures/skybox/sor_sea/back.jpg",
-//                "./res/textures/skybox/sor_sea/top.jpg",
-//                "./res/textures/skybox/sor_sea/bottom.jpg",
-//                "./res/textures/skybox/sor_sea/right.jpg",
-//                "./res/textures/skybox/sor_sea/left.jpg"});
+//const char* CSkyboxBuilder::defaultFaces[6]= {
+//"./res/textures/skybox/alt2/front.tga",
+//"./res/textures/skybox/alt2/back.tga",
+//"./res/textures/skybox/alt2/up.tga",
+//"./res/textures/skybox/alt2/down.tga",
+//"./res/textures/skybox/alt2/right.tga",
+//"./res/textures/skybox/alt2/left.tga"
+//};
+
+const char* CSkyboxBuilder::defaultFaces[6]= {
+        "./res/textures/skybox/mountains/front.jpg",
+        "./res/textures/skybox/mountains/back.jpg",
+        "./res/textures/skybox/mountains/up.jpg",
+        "./res/textures/skybox/mountains/down.jpg",
+        "./res/textures/skybox/mountains/right.jpg",
+        "./res/textures/skybox/mountains/left.jpg"
+};
 
 const bool CSkyboxBuilder::defaultModernShaders = false;
 

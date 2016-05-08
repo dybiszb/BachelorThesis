@@ -5,6 +5,7 @@
 // author: dybisz
 //------------------------------------------------------------------------------
 #version 330 core
+precision highp float;
 
 #define NONE                 0
 #define UP_NEIGHBOUR         1.0
@@ -91,8 +92,6 @@ void main()
 //    f = f / (u_membraneProperties.h * u_membraneProperties.h);
 //    oldV = oldV + f * u_membraneProperties.dt;
 //    float height = current + oldV * u_membraneProperties.dt;
-//    float omega = 1.00001;
-//    float height = (1.0 - omega) * current
-//                    + omega * (up + down + left + right) /4.;
+
     gl_FragColor = vec4(height, current, oldV, 0.0);
 }

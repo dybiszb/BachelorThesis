@@ -22,7 +22,7 @@
 #include "skybox_builder.h"
 #include "rand_functions.h"
 #include "atw_gui.h"
-
+#include "settings_struct.h"
 
 using namespace entities;
 using namespace utils;
@@ -36,7 +36,7 @@ public:
      * @param windowHeight  How high should be the window?
      * @param fullscreen    Fullscreen on or off?
      */
-    CGLFWRenderer(int windowWidth, int windowHeight, bool fullscreen);
+    CGLFWRenderer(Settings& settings);
 
     /**
      * Besides ordinary dispose calls, both GLFW and AntTweakBar must be
@@ -51,9 +51,7 @@ public:
     void runMainLoop();
 
 private:
-    int _windowWidth;
-    int _windowHeight;
-    bool _fullscreen;
+    Settings _settings;
     CGLFWInputOutput *_inputOutput;
     CTimer _timer;
     CAtwGui _gui;

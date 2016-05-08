@@ -2,12 +2,9 @@
 
 #include "glfw_renderer.h"
 
-CGLFWRenderer::CGLFWRenderer(int windowWidth, int windowHeight,
-                             bool fullscreen) :
-        _fullscreen(fullscreen),
-        _windowWidth(windowWidth),
-        _windowHeight(windowHeight),
-        _gui(windowWidth, windowHeight) {
+CGLFWRenderer::CGLFWRenderer(Settings& settings) :
+        _settings(settings),
+        _gui(settings) {
     _initGLFW();
     _initWindow();
     _initInputOutput();
@@ -104,9 +101,9 @@ void CGLFWRenderer::_initGLFW() {
 }
 
 void CGLFWRenderer::_initWindow() {
-    _window = glfwCreateWindow(_windowWidth, _windowHeight,
+    _window = glfwCreateWindow(_settings.windowWidth, _settings.windowHeight,
                                "Bachelor Thesis - Bartlomiej Dybisz",
-                               _fullscreen ? glfwGetPrimaryMonitor() : NULL,
+                               _settings.fullScreen ? glfwGetPrimaryMonitor() : NULL,
                                NULL);
     if (_window == NULL) {
         fprintf(stderr, "Failed to open GLFW window.\n");
@@ -147,21 +144,19 @@ void CGLFWRenderer::_initCallbacks() {
 }
 
 void CGLFWRenderer::_initRenderableObjects() {
-    float sceneLength = 32.0f;
-    int quadsPerSide = 256;
-
     _skybox = CSkyboxBuilder()
-            .setSideSize(sceneLength)
+            .setSideSize(_settings.edgeSize)
             .setModernShaders(false)
             .build();
 
     _water = CWaterBuilder()
-            .setQuadsPerSide(quadsPerSide)
-            .setSideSize(sceneLength)
-            .setBottomCorner(vec2(-sceneLength / 2.0, -sceneLength / 2.0))
+            .setQuadsPerSide(_settings.quads)
+            .setSideSize(_settings.edgeSize)
+            .setBottomCorner(vec2(-_settings.edgeSize / 2.0,
+                                  -_settings.edgeSize / 2.0))
             .setModernShaders(false)
             .setSkyboxId(_skybox->getCubemapId())
-            .setViewport(_windowWidth, _windowHeight)
+            .setViewport(_settings.windowWidth, _settings.windowHeight)
             .build();
 }
 

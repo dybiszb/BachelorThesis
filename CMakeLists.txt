@@ -22,6 +22,8 @@ include_directories(
         external/glew-1.13.0/include/
         external/glfw-3.1.2/include/GLFW/
         external/glm-0.9.7.1/
+        external/inih/cpp/
+        external/inih/
         external/SOIL_/
 )
 
@@ -31,6 +33,7 @@ set(EXTERNAL_LIBS
         glfw
         GLEW_1130
         ANTTWEAKBAR_116_OGLCORE_GLFW
+        INIH
 )
 
 #===============================================================================
@@ -81,6 +84,7 @@ set(
         src/application/builders/atw_bar_builder.cpp
         src/application/builders/atw_button_builder.cpp
         src/application/builders/atw_var_builder.cpp
+        src/utils/settings_reader.cpp
 )
 
 #===============================================================================

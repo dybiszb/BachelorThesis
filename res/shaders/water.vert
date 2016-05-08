@@ -20,6 +20,7 @@ in vec2           a_heightFieldTexCoords;
 //------------------------------------------------------------------------------
 out vec3          v_position;
 out vec3          v_normal;
+out vec2          v_textureCoords;
 
 //==============================================================================
 // Uniforms
@@ -114,4 +115,5 @@ void main()
     // Pass values to the next shader
     v_normal      = calculateNormal();
     v_position    = position;
+    v_textureCoords = a_heightFieldTexCoords;
 }

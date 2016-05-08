@@ -2,17 +2,16 @@
 
 #include "atw_gui.h"
 
-CAtwGui::CAtwGui(int windowWidth, int windowHeight)
-        : _windowWidth(windowWidth),
-          _windowHeight(windowHeight) {
+CAtwGui::CAtwGui(Settings& settings)
+        : _settings(settings) {
 
-    _disturbanceHeight = 2.0;
-    _isRaining = false;
-    _rainIntensity = 1;
-    _rainDropSize = 1.0;
-    _waves = false;
-    _waterAnimation = true;
-    _wavesIntensity = 0.01;
+    _disturbanceHeight = _settings.manualDisturbanceStrength;
+    _isRaining = _settings.rain;
+    _rainIntensity = _settings.rainIntensity;
+    _rainDropSize = _settings.rainStrength;
+    _waves = _settings.waves;
+    _waterAnimation = _settings.animation;
+    _wavesIntensity = _settings.wavesStrength;
     _lightDirection.x = 1.0;
     _lightDirection.y = 1.0;
     _lightDirection.z = 1.0;
@@ -20,7 +19,7 @@ CAtwGui::CAtwGui(int windowWidth, int windowHeight)
 
 void CAtwGui::initializeATW() {
     TwInit(TW_OPENGL, NULL);
-    TwWindowSize(_windowWidth, _windowHeight);
+    TwWindowSize(_settings.windowWidth, _settings.windowHeight);
 }
 
 void CAtwGui::initializeWaterBar() {
