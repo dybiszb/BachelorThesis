@@ -52,14 +52,14 @@ void CWavesDeformer::disturbSurface(vec2 &quad, float amount) {
                     data);
 
     if (_counter % 2 == 0) {
-//        cout << "unbinding tex0\n";
         _tex0->unbind();
-//        cout << "unbinding tex0 ends\n";
     } else {
-//        cout << "unbinding tex1\n";
         _tex1->unbind();
-//        cout << "unbinding tex1 ends\n";
     }
+}
+
+void CWavesDeformer::updateTime(float deltaTime) {
+    _dt = deltaTime;
 }
 
 CWavesDeformer::~CWavesDeformer() {

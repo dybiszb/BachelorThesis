@@ -21,6 +21,8 @@
 #include "water_builder.h"
 #include "skybox_builder.h"
 #include "rand_functions.h"
+#include "atw_gui.h"
+
 
 using namespace entities;
 using namespace utils;
@@ -49,48 +51,22 @@ public:
     void runMainLoop();
 
 private:
-//==============================================================================
-// Application Variables
-//------------------------------------------------------------------------------
-    int                 _windowWidth;
-    int                 _windowHeight;
-    bool                _fullscreen;
-    CGLFWInputOutput*   _inputOutput;
-    CTimer              _timer;
-    GLFWwindow*         _window;
-    CCustomCamera       _camera;
-    TwBar*              _waterBar;
-    TwBar*              _sceneBar;
-    TwBar*              _controlsBar;
-
-
-
-
-    CSkybox*            _skybox;
-    CWaterGrid*         _water;
-
-//==============================================================================
-// Renderable Objects Properties
-//------------------------------------------------------------------------------
-    float               _disturbanceHeight;
-    bool                _isRaining;
-    int                 _rainIntensity;
-    float               _rainDropSize;
-    bool                _waves;
-    float               _wavesIntensity;
-    vec3                _lightDirection;
-    bool                _waterAnimation;
+    int _windowWidth;
+    int _windowHeight;
+    bool _fullscreen;
+    CGLFWInputOutput *_inputOutput;
+    CTimer _timer;
+    CAtwGui _gui;
+    GLFWwindow *_window;
+    CCustomCamera _camera;
+    CSkybox *_skybox;
+    CWaterGrid *_water;
 
     /**
      * Initializes GLFW context.
      */
     void _initGLFW();
 
-    /**
-     * Initialize properties related to water. Eg. strength of the disturance
-     * or weather conditions like rain.
-     */
-    void _initWaterProperties();
     /**
      * Initializes GLFW window;
      */

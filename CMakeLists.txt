@@ -37,6 +37,7 @@ set(EXTERNAL_LIBS
 # Project's Includes
 #-------------------------------------------------------------------------------
 include_directories(
+        include/application/builders
         include/application
         include/entities
         include/entities/builders
@@ -76,6 +77,10 @@ set(
         src/utils/rays_functions.cpp
         src/utils/waves_deformer.cpp
         src/main.cpp
+        src/application/atw_gui.cpp
+        src/application/builders/atw_bar_builder.cpp
+        src/application/builders/atw_button_builder.cpp
+        src/application/builders/atw_var_builder.cpp
 )
 
 #===============================================================================

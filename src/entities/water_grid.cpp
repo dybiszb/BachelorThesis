@@ -87,8 +87,9 @@ void CWaterGrid::render(const float *view,
     _shader.UnUse();
 }
 
-void CWaterGrid::updateTime(float currentTime) {
-    _currentTime = (GLfloat) currentTime;
+void CWaterGrid::updateTime(float deltaTime) {
+    _currentTime = (GLfloat) deltaTime;
+//    _wavesDeformer.updateTime(deltaTime);
 }
 
 void CWaterGrid::setCameraPosition(vec3 cameraPosition) {

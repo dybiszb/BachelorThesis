@@ -47,6 +47,7 @@ public:
     void bindTexture();
     void setVerticesPerSide(int verticesPerSide);
     void disturbSurface(vec2& quad, float amount);
+    void updateTime(float deltaT);
 private:
     GLsizei _width;
     GLsizei _height;

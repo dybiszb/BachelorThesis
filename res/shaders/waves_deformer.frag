@@ -81,9 +81,18 @@ void main()
     float right   = getNeighbour(RIGHT_NEIGHBOUR, NONE);
     float current = getNeighbour(NONE,            NONE);
     float old     = texture2D(u_heightFieldTexture, v_heightFieldTexCoords).g;
+    float oldV    = texture2D(u_heightFieldTexture, v_heightFieldTexCoords).b;
 
     float d       = calculateDamping(v_heightFieldTexCoords);
 
     float height = d * dividedDifferencies(up, down, left, right, current, old);
-    gl_FragColor = vec4(height, current, 0.0, 0.0);
+//    float f =  (up + down + left + right - 4.0 * current);
+//    f = u_membraneProperties.c * u_membraneProperties.c * f;
+//    f = f / (u_membraneProperties.h * u_membraneProperties.h);
+//    oldV = oldV + f * u_membraneProperties.dt;
+//    float height = current + oldV * u_membraneProperties.dt;
+//    float omega = 1.00001;
+//    float height = (1.0 - omega) * current
+//                    + omega * (up + down + left + right) /4.;
+    gl_FragColor = vec4(height, current, oldV, 0.0);
 }
