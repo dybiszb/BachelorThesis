@@ -2,8 +2,8 @@
 
 #include "atw_gui.h"
 
-CAtwGui::CAtwGui(Settings& settings)
-        : _settings(settings) {
+CAtwGui::CAtwGui(Settings& settings, CCustomCamera* camera)
+        : _settings(settings), _camera(camera), _margin(10.0) {
 
     _disturbanceHeight = _settings.manualDisturbanceStrength;
     _isRaining = _settings.rain;
@@ -25,15 +25,10 @@ void CAtwGui::initializeATW() {
 void CAtwGui::initializeWaterBar() {
     _waterBar = CAtwBarBuilder()
             .setLabel("Water")
-            .setPosition(10, 10)
+            .setPosition(_margin, _margin)
             .setContained(true)
             .setColor(0, 128, 128)
-            .setSize(240, 220)
-            .build();
-
-    CAtwButtonBuilder()
-            .setOwner(_waterBar)
-            .setLabel("Animation")
+            .setSize(240, 210)
             .build();
 
     CAtwVarBuilder()
@@ -42,11 +37,7 @@ void CAtwGui::initializeWaterBar() {
             .setDataType(TW_TYPE_BOOL32)
             .setObservableData(&_waterAnimation)
             .setLabel("On / Off:")
-            .build();
-
-    CAtwButtonBuilder()
-            .setOwner(_waterBar)
-            .setLabel("Manual_Disturbance")
+            .setGroup("Animation")
             .build();
 
     CAtwVarBuilder()
@@ -56,11 +47,7 @@ void CAtwGui::initializeWaterBar() {
             .setObservableData(&_disturbanceHeight)
             .setLabel("Strength:")
             .setStep(0.1)
-            .build();
-
-    CAtwButtonBuilder()
-            .setOwner(_waterBar)
-            .setLabel("Waves")
+            .setGroup("Manual_Disturbance")
             .build();
 
     CAtwVarBuilder()
@@ -69,15 +56,17 @@ void CAtwGui::initializeWaterBar() {
             .setDataType(TW_TYPE_BOOL32)
             .setObservableData(&_waves)
             .setLabel("On / Off:")
+            .setGroup("Waves")
             .build();
 
-    TwAddVarRW(_waterBar, "wavesHeight", TW_TYPE_FLOAT,
-               &_wavesIntensity,
-               "label='Strength:' step=0.0001");
-
-    CAtwButtonBuilder()
+    CAtwVarBuilder()
             .setOwner(_waterBar)
-            .setLabel("Rain")
+            .setId("wavesHeight")
+            .setDataType(TW_TYPE_FLOAT)
+            .setObservableData(&_wavesIntensity)
+            .setLabel("Strength:")
+            .setStep(0.0001)
+            .setGroup("Waves")
             .build();
 
     CAtwVarBuilder()
@@ -86,6 +75,7 @@ void CAtwGui::initializeWaterBar() {
             .setDataType(TW_TYPE_BOOL32)
             .setObservableData(&_isRaining)
             .setLabel("On / Off:")
+            .setGroup("Rain")
             .build();
 
     CAtwVarBuilder()
@@ -95,6 +85,7 @@ void CAtwGui::initializeWaterBar() {
             .setObservableData(&_rainDropSize)
             .setLabel("Strength:")
             .setStep(0.1)
+            .setGroup("Rain")
             .build();
 
     CAtwVarBuilder()
@@ -104,42 +95,87 @@ void CAtwGui::initializeWaterBar() {
             .setObservableData(&_rainIntensity)
             .setLabel("Intensity:")
             .setStep(1.0)
+            .setGroup("Rain")
             .build();
 }
 
 void CAtwGui::initializeSceneBar() {
-    ///////////////////////////////////////////////////////////////////
-//    _sceneBar = TwNewBar("Scene");
-//    TwDefine(" 'Scene' size='240 160' contained=true fontsize=1");
-//    TwSetParam(_sceneBar, NULL, "position", TW_PARAM_CSTRING, 1, "545 16");
-//    TwAddVarRW(_sceneBar, "Light_Direction", TW_TYPE_DIR3F, &_lightDirection,
-//               "showval=true open=true ");
+    _sceneBar = CAtwBarBuilder()
+            .setLabel("Scene")
+            .setPosition(_settings.windowWidth- 195 - _margin, 0 + _margin)
+            .setContained(true)
+            .setColor(0, 128, 128)
+            .setSize(240, 250)
+            .setRefresh(0.1)
+            .build();
 
+    TwStructMember pointMembers[] = {
+            { "X", TW_TYPE_FLOAT, offsetof(vec3, x), "step=0.1"},
+            { "Y", TW_TYPE_FLOAT, offsetof(vec3, y), "step=0.1"},
+            { "Z", TW_TYPE_FLOAT, offsetof(vec3, z), "step=0.1"}
+    };
+    TwType pointType = TwDefineStruct("POINT", pointMembers, 3, sizeof(vec3),
+                                      NULL, NULL);
 
-//    TwAddSeparator(_waterBar, "", NULL);
-//    TwAddVarRW(_waterBar, "particles/s", TW_TYPE_INT32,
-//               &_particlesPerSecond,"step=10");
-//    TwAddVarRW(_waterBar, "spread", TW_TYPE_FLOAT, &_particlesSpread,
-//               "step=0.01");
+    CAtwVarBuilder()
+            .setOwner(_sceneBar)
+            .setId("cameraPosX")
+            .setDataType(pointType)
+            .setObservableData(&_camera->_position)
+            .setLabel("Position")
+            .setGroup("Position")
+            .build();
 
-//    TwAddVarRW(_waterBar, "smoke color", TW_TYPE_COLOR3F, &_smokeColor, " "
-//            "label='smoke color' ");
-//
-//    TwAddSeparator(_waterBar, "", NULL);
-//    TwAddButton(_waterBar, "Spawn Sphere", NULL, NULL, "");
-//    TwAddSeparator(_waterBar, "", NULL);
-//    TwAddVarRW(_waterBar, "Visible", TW_TYPE_BOOL32,
-//               &_spawnSphereVisible,
-//               " label='Visible' help='Should spawn sphere be"
-//                       " visible?'");
-//
-//    TwAddVarRW(_waterBar, "Radius", TW_TYPE_FLOAT,
-//               &_spawnSphereRadius,
-//               "step=0.01");
-//    TwAddSeparator(_particlesGUI, "", NULL);
-//    TwAddButton(_particlesGUI, "Controls:", NULL, NULL, "");
-//    TwAddButton(_particlesGUI, "RMB  - Rotate Camera", NULL, NULL, "");
-//    TwAddButton(_particlesGUI, "WSAD - Move Camera", NULL, NULL, "");
+    CAtwVarBuilder()
+            .setOwner(_sceneBar)
+            .setId("horizontalAngle")
+            .setDataType(TW_TYPE_FLOAT)
+            .setObservableData(&_camera->_horizontalAngle)
+            .setLabel("Horizontal")
+            .setGroup("Angle")
+            .build();
+
+    CAtwVarBuilder()
+            .setOwner(_sceneBar)
+            .setId("verticalAngle")
+            .setDataType(TW_TYPE_FLOAT)
+            .setObservableData(&_camera->_verticalAngle)
+            .setLabel("Vertical")
+            .setGroup("Angle")
+            .build();
+
+    CAtwVarBuilder()
+            .setOwner(_sceneBar)
+            .setId("fovAngle")
+            .setDataType(TW_TYPE_FLOAT)
+            .setObservableData(&_camera->_fov)
+            .setLabel("FoV")
+            .setGroup("Angle")
+            .build();
+
+    CAtwVarBuilder()
+            .setOwner(_sceneBar)
+            .setId("movementSpeed")
+            .setDataType(TW_TYPE_FLOAT)
+            .setObservableData(&_camera->_movementSpeed)
+            .setLabel("Movement")
+            .setGroup("Speed")
+            .build();
+
+    CAtwVarBuilder()
+            .setOwner(_sceneBar)
+            .setId("angularSpeed")
+            .setDataType(TW_TYPE_FLOAT)
+            .setObservableData(&_camera->_angularSpeed)
+            .setLabel("Angular")
+            .setStep(0.01)
+            .setGroup("Speed")
+            .build();
+
+    TwDefine("Scene/cameraPosX opened=true");
+    TwDefine("Scene/cameraPosX group=Camera");
+    TwDefine("Scene/Angle group=Camera");
+    TwDefine("Scene/Speed group=Camera");
 }
 
 void CAtwGui::initializeControlsBar() {
@@ -209,4 +245,8 @@ vec3 &CAtwGui::getLightDirection() {
 
 bool CAtwGui::getWaterAnimation() {
     return _waterAnimation;
+}
+
+void  CAtwGui::setCameraPosition(vec3& cameraPosition) {
+    _cameraPosition = cameraPosition;
 }

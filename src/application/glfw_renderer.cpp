@@ -4,12 +4,14 @@
 
 CGLFWRenderer::CGLFWRenderer(Settings& settings) :
         _settings(settings),
-        _gui(settings) {
+        _camera(settings),
+        _gui(settings, &_camera) {
     _initGLFW();
     _initWindow();
     _initInputOutput();
     _initGLEW();
     _initATWBar();
+    _initGuiAssociations();
     _initCallbacks();
     _initRenderableObjects();
     _initGLGlobalSettings();
@@ -27,7 +29,6 @@ void CGLFWRenderer::runMainLoop() {
     do {
         /* ----- Calculate Time ----- */
         float deltaTime = _timer.tick();
-
 
         /* ----- Update Time ----- */
         _water->updateTime(deltaTime);
@@ -78,6 +79,7 @@ void CGLFWRenderer::runMainLoop() {
         }
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 
         /* ----- Render Scene ----- */
         _skybox->render(&_camera.getViewMatrix()[0][0],
@@ -133,6 +135,10 @@ void CGLFWRenderer::_initATWBar() {
     _gui.initializeWaterBar();
     _gui.initializeSceneBar();
     _gui.initializeControlsBar();
+}
+
+void CGLFWRenderer::_initGuiAssociations() {
+    _gui.setCameraPosition(_camera.getPosition());
 }
 
 void CGLFWRenderer::_initCallbacks() {

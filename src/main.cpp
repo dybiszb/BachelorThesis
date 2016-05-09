@@ -5,7 +5,7 @@ using namespace std;
 
 int main(void) {
     utils::seed();
-    Settings settings = utils::readFromINI("res/config.ini");
+    Settings settings = utils::readFromINI("config.ini");
     CGLFWRenderer renderer(settings);
     renderer.runMainLoop();
     return 0;

@@ -25,6 +25,24 @@ Settings utils::readFromINI(string pathToINI) {
     settings.quads =
             reader.GetInteger("Scene", "quads", 256);
 
+    /* ----- Camera ----- */
+    settings.cameraStartPositionX =
+            reader.GetReal("Camera", "start_position_x", 0.0);
+    settings.cameraStartPositionY =
+            reader.GetReal("Camera", "start_position_y", 0.0);
+    settings.cameraStartPositionZ =
+            reader.GetReal("Camera", "start_position_z", 0.0);
+    settings.cameraHorizontalAngle =
+            reader.GetReal("Camera", "horizontal_angle", 0.0);
+    settings.cameraVerticalAngle =
+            reader.GetReal("Camera", "vertical_angle", 0.0);
+    settings.cameraFov =
+            reader.GetReal("Camera", "fov", 45.0);
+    settings.cameraMovementSpeed =
+            reader.GetReal("Camera", "movement_speed", 10.0);
+    settings.cameraAngularSpeed =
+            reader.GetReal("Camera", "angular_speed", 0.5);
+
     /* ----- Water ----- */
     settings.animation =
             reader.GetBoolean("Water", "animation", true);

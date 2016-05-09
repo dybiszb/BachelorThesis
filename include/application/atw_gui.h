@@ -14,6 +14,7 @@
 #include "builders/atw_button_builder.h"
 #include "builders/atw_var_builder.h"
 #include "settings_struct.h"
+#include "camera.h"
 
 using namespace glm;
 using namespace utils;
@@ -24,10 +25,11 @@ public:
      * For initializing the interface, height and width are essential
      * information.
      *
-     * @param windowWidth  Width of the scene window.
-     * @param windowHeight Height of the scene window.
+     * @param settings  Set of settings.
+     * @param camera    Pointer to the scene's camera. Resources will not be
+     *                  freed after deleting the class.
      */
-    CAtwGui(Settings& settings);
+    CAtwGui(Settings& settings, CCustomCamera* camera);
 
     /**
      * Creates Ant Tweak Bar library's context.
@@ -70,15 +72,18 @@ public:
     float getWavesIntensity();
     vec3& getLightDirection();
     bool  getWaterAnimation();
+    void  setCameraPosition(vec3& cameraPosition);
 
 private:
 //==============================================================================
 // Interface Properties
 //------------------------------------------------------------------------------
-    TwBar *  _waterBar;
-    TwBar *  _sceneBar;
-    TwBar *  _controlsBar;
-    Settings _settings;
+    TwBar *        _waterBar;
+    TwBar *        _sceneBar;
+    TwBar *        _controlsBar;
+    Settings       _settings;
+    CCustomCamera* _camera;
+    float          _margin;
 
 //==============================================================================
 // Water Properties
@@ -91,7 +96,10 @@ private:
     float    _wavesIntensity;
     vec3     _lightDirection;
     bool     _waterAnimation;
+    vec3     _cameraPosition;
+    struct Point3D {
 
+    };
 };
 
 #endif

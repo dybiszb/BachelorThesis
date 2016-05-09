@@ -8,6 +8,7 @@ const ETwType CAtwVarBuilder::defaultDataType = TW_TYPE_UNDEF;
 const void *CAtwVarBuilder::defaultObservableData = NULL;
 const string CAtwVarBuilder::defaultLabel = "__defaultLabel";
 const string CAtwVarBuilder::defaultStep = "0.1";
+const string CAtwVarBuilder::defaultGroup = "";
 
 CAtwVarBuilder::CAtwVarBuilder() {
     _owner = (TwBar *) defaultOwner;
@@ -16,10 +17,12 @@ CAtwVarBuilder::CAtwVarBuilder() {
     _observableData = (void *) defaultObservableData;
     _label = defaultLabel;
     _step = defaultStep;
+    _group = defaultGroup;
 }
 
 void CAtwVarBuilder::build() {
     string parameters = "label='" + _label + "' ";
+
     switch(_dataType) {
         case TW_TYPE_BOOL32:
             break;
@@ -28,6 +31,10 @@ void CAtwVarBuilder::build() {
             parameters += "step=" + _step;
     }
 
+    // Group specified
+    if(_group.size() > 0) {
+        parameters += " group=" + _group +"";
+    }
 
     TwAddVarRW(_owner, _id.c_str(), _dataType, _observableData,
                parameters.c_str());
@@ -65,5 +72,10 @@ CAtwVarBuilder &CAtwVarBuilder::setLabel(const string label) {
 
 CAtwVarBuilder &CAtwVarBuilder::setStep(const float step) {
     _step = to_string(step);
+    return *this;
+}
+
+CAtwVarBuilder &CAtwVarBuilder::setGroup(const string group) {
+    _group = group;
     return *this;
 }

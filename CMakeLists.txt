@@ -12,10 +12,14 @@ cmake_minimum_required(VERSION 2.8.4)
 project(BachelorThesis)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -std=gnu++0x")
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib)
+
 #===============================================================================
 # External Libraries
 #-------------------------------------------------------------------------------
 add_subdirectory (external)
+
 
 include_directories(
         external/AntTweakBar-1.16/include/
@@ -109,10 +113,22 @@ add_definitions(
 )
 
 #===============================================================================
-# Custom Commands
+# Copy Resources
 #-------------------------------------------------------------------------------
 add_custom_command(
         TARGET bachelor_water PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory   # Copy resources
         ${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:bachelor_water>/res
 )
+
+#===============================================================================
+# Copy Configuration Files
+#-------------------------------------------------------------------------------
+file(GLOB ConfigFiles ${CMAKE_SOURCE_DIR}/config/*.ini)
+
+foreach(ConfigFiles ${ConfigFiles})
+    add_custom_command(
+            TARGET bachelor_water PRE_BUILD COMMAND ${CMAKE_COMMAND} -E
+            copy  ${ConfigFiles} $<TARGET_FILE_DIR:bachelor_water>
+    )
+endforeach()

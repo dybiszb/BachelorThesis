@@ -5,14 +5,19 @@
 //------------------------------------------------------------------------------
 #ifndef CUSTOM_CAMERA_H
 #define CUSTOM_CAMERA_H
+#define _USE_MATH_DEFINES
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <cmath>
+#include "settings_struct.h"
 
 using namespace glm;
+using namespace utils;
 
 class CCustomCamera {
 public:
+    CCustomCamera(Settings& settings);
     void updateViewingAngles(double mouseX, double mouseY, float deltaTime);
 
     void moveForward(float deltaTime);
@@ -37,17 +42,19 @@ public:
 
     vec3 getUpVector();
 
-    vec3 getPosition();
+    vec3& getPosition();
 
     float getVerticalAngle();
-
+public:
+    vec3 _position;
+    float _horizontalAngle;
+    float _verticalAngle;
+    float _fov;
+    float _movementSpeed;
+    float _angularSpeed;
 private:
-    vec3 _position = glm::vec3(0,3,8);
-    float _horizontalAngle =  3.14f;
-    float _verticalAngle = 0.0f;
-    float _initialFoV = 45.0f;
-    float _speed = 10.0f;
-    float _mouseSpeed = 0.0050f;
+    Settings _settings;
+
 };
 
 

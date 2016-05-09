@@ -9,6 +9,7 @@ const string CAtwBarBuilder::defaultSize = "500 100";
 const string CAtwBarBuilder::defaultContained = "false";
 const string CAtwBarBuilder::defaultAlpha = "128";
 const string CAtwBarBuilder::defaultFontsize = "2";
+const string CAtwBarBuilder::defaultRefresh = "0.5";
 
 CAtwBarBuilder::CAtwBarBuilder() {
     _label = defaultLabel;
@@ -18,6 +19,7 @@ CAtwBarBuilder::CAtwBarBuilder() {
     _contained = defaultContained;
     _alpha = defaultAlpha;
     _fontsize = defaultFontsize;
+    _refresh = defaultRefresh;
 }
 
 TwBar *CAtwBarBuilder::build() {
@@ -28,7 +30,8 @@ TwBar *CAtwBarBuilder::build() {
                         " size='" + _size + "'" +
                         " contained=" + _contained +
                         " alpha='" + _alpha + "'" +
-                        " fontsize=" + _fontsize;
+                        " fontsize=" + _fontsize +
+                        " refresh=" + _refresh;
     TwDefine(parameters.c_str());
     return bar;
 }
@@ -67,3 +70,8 @@ CAtwBarBuilder &CAtwBarBuilder::setFontsize(int fontsize) {
     _fontsize = to_string(fontsize);
     return *this;
 };
+
+CAtwBarBuilder &CAtwBarBuilder::setRefresh(float refresh) {
+    _refresh = to_string(refresh);
+    return *this;
+}

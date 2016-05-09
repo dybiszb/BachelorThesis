@@ -23,6 +23,7 @@ private:
     void *_observableData;
     string _label;
     string _step;
+    string _group;
 
 public:
     static const TwBar *defaultOwner;
@@ -31,6 +32,7 @@ public:
     static const void *defaultObservableData;
     static const string defaultLabel;
     static const string defaultStep;
+    static const string defaultGroup;
 
     CAtwVarBuilder();
 
@@ -45,6 +47,7 @@ public:
     CAtwVarBuilder &setObservableData(void *observableData);
     CAtwVarBuilder &setLabel(const string label);
     CAtwVarBuilder &setStep(const float step);
+    CAtwVarBuilder &setGroup(const string group);
 };
 
 

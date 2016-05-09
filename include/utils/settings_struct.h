@@ -22,6 +22,18 @@ namespace utils {
         int quads;
 
 //==============================================================================
+// Camera Properties
+//------------------------------------------------------------------------------
+        float cameraStartPositionX;
+        float cameraStartPositionY;
+        float cameraStartPositionZ;
+        float cameraHorizontalAngle;
+        float cameraVerticalAngle;
+        float cameraFov;
+        float cameraMovementSpeed;
+        float cameraAngularSpeed;
+
+//==============================================================================
 // Water Properties
 //------------------------------------------------------------------------------
         bool animation;

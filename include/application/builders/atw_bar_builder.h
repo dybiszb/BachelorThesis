@@ -23,7 +23,7 @@ private:
     string _contained;
     string _alpha;
     string _fontsize;
-
+    string _refresh;
 public:
     static const string defaultLabel;
     static const string defaultColor;
@@ -32,6 +32,7 @@ public:
     static const string defaultContained;
     static const string defaultAlpha;
     static const string defaultFontsize;
+    static const string defaultRefresh;
 
     CAtwBarBuilder();
 
@@ -50,6 +51,8 @@ public:
     CAtwBarBuilder& setAlpha(int alpha);
 
     CAtwBarBuilder& setFontsize(int fontsize);
+
+    CAtwBarBuilder& setRefresh(float refresh);
 };
 
 #endif
