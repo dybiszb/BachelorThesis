@@ -3,7 +3,7 @@
 #include "atw_gui.h"
 
 CAtwGui::CAtwGui(Settings& settings, CCustomCamera* camera)
-        : _settings(settings), _camera(camera), _margin(10.0) {
+        : _settings(settings), _camera(camera) {
 
     _disturbanceHeight = _settings.manualDisturbanceStrength;
     _isRaining = _settings.rain;
@@ -12,9 +12,13 @@ CAtwGui::CAtwGui(Settings& settings, CCustomCamera* camera)
     _waves = _settings.waves;
     _waterAnimation = _settings.animation;
     _wavesIntensity = _settings.wavesStrength;
-    _lightDirection.x = 1.0;
-    _lightDirection.y = 1.0;
-    _lightDirection.z = 1.0;
+
+    _lightDirection = vec3
+            {
+                _settings.lightDirectionX,
+                _settings.lightDirectionY,
+                _settings.lightDirectionZ
+            };
 }
 
 void CAtwGui::initializeATW() {
@@ -25,7 +29,7 @@ void CAtwGui::initializeATW() {
 void CAtwGui::initializeWaterBar() {
     _waterBar = CAtwBarBuilder()
             .setLabel("Water")
-            .setPosition(_margin, _margin)
+            .setPosition(_settings.guiMargin, _settings.guiMargin)
             .setContained(true)
             .setColor(0, 128, 128)
             .setSize(240, 210)
@@ -102,12 +106,40 @@ void CAtwGui::initializeWaterBar() {
 void CAtwGui::initializeSceneBar() {
     _sceneBar = CAtwBarBuilder()
             .setLabel("Scene")
-            .setPosition(_settings.windowWidth- 195 - _margin, 0 + _margin)
+            .setPosition
+                    (
+                            _settings.windowWidth- 195 - _settings.guiMargin,
+                            0 + _settings.guiMargin
+                    )
             .setContained(true)
             .setColor(0, 128, 128)
-            .setSize(240, 250)
+            .setSize(240, 450)
             .setRefresh(0.1)
             .build();
+
+    CAtwVarBuilder()
+            .setOwner(_sceneBar)
+            .setId("windowWidth")
+            .setDataType(TW_TYPE_INT32)
+            .setObservableData(&_settings.windowWidth)
+            .setLabel("Width")
+            .setGroup("Window")
+            .setReadOnly(true)
+            .build();
+
+    CAtwVarBuilder()
+            .setOwner(_sceneBar)
+            .setId("windowHeight")
+            .setDataType(TW_TYPE_INT32)
+            .setObservableData(&_settings.windowHeight)
+            .setLabel("Height")
+            .setGroup("Window")
+            .setReadOnly(true)
+            .build();
+
+    TwAddVarRW(_sceneBar, "Direction", TW_TYPE_DIR3F, &_lightDirection,
+               "opened=true axisz=-z showval=true group=Light");
+
 
     TwStructMember pointMembers[] = {
             { "X", TW_TYPE_FLOAT, offsetof(vec3, x), "step=0.1"},
@@ -245,8 +277,4 @@ vec3 &CAtwGui::getLightDirection() {
 
 bool CAtwGui::getWaterAnimation() {
     return _waterAnimation;
-}
-
-void  CAtwGui::setCameraPosition(vec3& cameraPosition) {
-    _cameraPosition = cameraPosition;
 }

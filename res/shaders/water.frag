@@ -27,7 +27,6 @@ in vec2             v_textureCoords;
 uniform sampler2D   u_heightFieldTexture;
 uniform samplerCube u_skyboxTexture;
 uniform BoundingBox u_box;
-uniform vec4        u_lightPosition;
 uniform vec3        u_cameraPosition;
 uniform float       u_sideSize;
 uniform vec3        u_lightDirection;
@@ -75,11 +74,22 @@ vec3 intersection(vec3 origin, vec3 direction, vec3 boxMax, vec3 boxMin) {
  */
 float fresnel(vec3 cameraPosition, vec3 fragmentPosition, vec3 vertexNormal)
 {
-    vec3 toPosition = normalize(cameraPosition - fragmentPosition);
-    float cosfi     = 1.0 - dot(toPosition, vertexNormal);
+    vec3 toCamera = normalize(cameraPosition - fragmentPosition);
+    float cosfi     = max(0.0, 1.0 - dot(toCamera, vertexNormal));
     float rzero     = pow((1.33 - 1.0) / (1.33 + 1.0), 2.0);
 
     return rzero + (1.0 - rzero) * pow(1.0 - cosfi, 5.0);
+}
+
+void sunLight(float shiny, float specular, float diffuse, vec3 sunColor,
+              inout vec3 diffuseColor, inout vec3 specularColor) {
+    vec3 reflection = normalize(reflect(normalize(u_lightDirection), v_normal));
+    vec3 toCamera = normalize(u_cameraPosition - v_position);
+    float direction = max(0.0, dot(toCamera, reflection));
+
+    specularColor += pow(direction, shiny) * sunColor * specular;
+    diffuseColor += max(0.0, dot(-u_lightDirection, v_normal)) * sunColor *
+                    diffuse;
 }
 
 void main()
@@ -97,10 +107,33 @@ void main()
                                               u_box.boxMax, u_box.boxMin);
 
     // Colors at the intersections
-    vec4 reflectedColor = texture(u_skyboxTexture, reflectedIntersection);
-    vec4 refractedColor = texture(u_skyboxTexture, refractedIntersection);
+    vec3 reflectedColor = vec3(texture(u_skyboxTexture, reflectedIntersection));
+    vec3 refractedColor = vec3(texture(u_skyboxTexture, refractedIntersection));
 
     // Fresnel's coefficient
     float w = fresnel(u_cameraPosition, v_position, v_normal);
-    gl_FragColor = mix(reflectedColor, refractedColor, w);
+
+    // Sun Light
+    vec3 diffuse = vec3(0.0);
+    vec3 specular = vec3(0.0);
+    vec3 sunColor = vec3(1.0, 1.0, 1.0);
+    sunLight(100.0, 2.0, 0.5, sunColor, diffuse, specular);
+
+//    gl_FragColor = vec4(mix(reflectedColor, refractedColor, w), 1.0);
+//    vec3 scatter = max(0.0, dot(v_normal, normalize(u_cameraPosition -
+//                        v_position))) * vec3(0.0, 00.1, 0.07);
+//    vec3 albedo = mix(
+//                        ((scatter + refractedColor*diffuse)) * 0.3,
+//                        (vec3(0.1) + reflectedColor*0.9 + specular),
+//                        w
+//                     );
+//    vec3 albedo = mix(
+//                     ((vec3(0.0, 0.0, 0.5)*diffuse)) * 0.3,
+//                     (vec3(0.1) + reflectedColor*0.9 + specular),
+//                     w
+//                  );
+
+    vec3 mixed = mix(reflectedColor * 0.9 + specular, diffuse * refractedColor, w);
+    mixed = mixed + specular;
+    gl_FragColor = vec4(mixed, 1.0);
 }

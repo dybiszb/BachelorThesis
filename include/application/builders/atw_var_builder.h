@@ -24,6 +24,7 @@ private:
     string _label;
     string _step;
     string _group;
+    string _readOnly;
 
 public:
     static const TwBar *defaultOwner;
@@ -33,6 +34,7 @@ public:
     static const string defaultLabel;
     static const string defaultStep;
     static const string defaultGroup;
+    static const string defaultReadOnly;
 
     CAtwVarBuilder();
 
@@ -48,6 +50,7 @@ public:
     CAtwVarBuilder &setLabel(const string label);
     CAtwVarBuilder &setStep(const float step);
     CAtwVarBuilder &setGroup(const string group);
+    CAtwVarBuilder &setReadOnly(const bool readOnly);
 };
 
 

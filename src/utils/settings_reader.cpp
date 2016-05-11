@@ -25,6 +25,18 @@ Settings utils::readFromINI(string pathToINI) {
     settings.quads =
             reader.GetInteger("Scene", "quads", 256);
 
+    /* ----- Light ----- */
+    settings.lightDirectionX =
+            reader.GetReal("Light", "direction_x", -1);
+    settings.lightDirectionY =
+            reader.GetReal("Light", "direction_y", -1);
+    settings.lightDirectionZ =
+            reader.GetReal("Light", "direction_z", -1);
+
+    /* ----- GUI ----- */
+    settings.guiMargin =
+            reader.GetReal("GUI", "margin", 10.0);
+
     /* ----- Camera ----- */
     settings.cameraStartPositionX =
             reader.GetReal("Camera", "start_position_x", 0.0);

@@ -89,12 +89,6 @@ private:
     void _initATWBar();
 
     /**
-     * Various variables like e.g. camera or light must be passed to the gui
-     * for dynamical updates.
-     */
-    void _initGuiAssociations();
-
-    /**
      * Initially GLFW events must be redirected to ATWBar GUI. This is the
      * place where one can plug in his/hers functions into GUI functionality.
      */

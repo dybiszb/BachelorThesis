@@ -72,7 +72,6 @@ public:
     float getWavesIntensity();
     vec3& getLightDirection();
     bool  getWaterAnimation();
-    void  setCameraPosition(vec3& cameraPosition);
 
 private:
 //==============================================================================
@@ -83,7 +82,6 @@ private:
     TwBar *        _controlsBar;
     Settings       _settings;
     CCustomCamera* _camera;
-    float          _margin;
 
 //==============================================================================
 // Water Properties
@@ -94,12 +92,14 @@ private:
     float    _rainDropSize;
     bool     _waves;
     float    _wavesIntensity;
-    vec3     _lightDirection;
     bool     _waterAnimation;
-    vec3     _cameraPosition;
-    struct Point3D {
 
-    };
+
+//==============================================================================
+// Scene Properties
+//------------------------------------------------------------------------------
+    vec3     _lightDirection;
+    vec3     _cameraPosition;
 };
 
 #endif

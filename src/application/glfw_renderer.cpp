@@ -11,7 +11,6 @@ CGLFWRenderer::CGLFWRenderer(Settings& settings) :
     _initInputOutput();
     _initGLEW();
     _initATWBar();
-    _initGuiAssociations();
     _initCallbacks();
     _initRenderableObjects();
     _initGLGlobalSettings();
@@ -135,10 +134,6 @@ void CGLFWRenderer::_initATWBar() {
     _gui.initializeWaterBar();
     _gui.initializeSceneBar();
     _gui.initializeControlsBar();
-}
-
-void CGLFWRenderer::_initGuiAssociations() {
-    _gui.setCameraPosition(_camera.getPosition());
 }
 
 void CGLFWRenderer::_initCallbacks() {
