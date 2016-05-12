@@ -76,7 +76,7 @@ set(
         src/rendering/buffers/frame_buffer.cpp
         src/rendering/buffers/vertex_array.cpp
         src/rendering/textures/cubemap_texture.cpp
-        src/rendering/textures/texture2D.cpp
+        src/rendering/textures/texture_2D.cpp
         src/rendering/glsl_shader.cpp
         src/rendering/renderable_object.cpp
         src/utils/error_handling.cpp

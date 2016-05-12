@@ -15,7 +15,7 @@
 #include "grid.h"
 #include "vertex.h"
 #include "error_handling.h"
-#include "textures/texture2D.h"
+#include "textures/texture_2D.h"
 #include "waves_deformer.h"
 #include "camera.h"
 #include "rays_functions.h"

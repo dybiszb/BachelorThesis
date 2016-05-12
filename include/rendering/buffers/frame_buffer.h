@@ -8,7 +8,7 @@
 #define FRAME_BUFFER_H
 
 #include <GL/glew.h>
-#include "textures/texture2D.h"
+#include "textures/texture_2D.h"
 
 using namespace utils;
 

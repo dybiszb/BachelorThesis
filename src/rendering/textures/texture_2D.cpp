@@ -1,6 +1,6 @@
 // author: dybisz
 
-#include "textures/texture2D.h"
+#include "textures/texture_2D.h"
 #include <iostream>
 
 using namespace rendering;

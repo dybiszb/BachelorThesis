@@ -12,7 +12,7 @@
 #include <GL/glew.h>
 #include <iostream>
 #include "buffers/frame_buffer.h"
-#include "textures/texture2D.h"
+#include "textures/texture_2D.h"
 #include "glsl_shader.h"
 #include "vertex_array.h"
 #include "vertex.h"
