@@ -25,6 +25,8 @@ private:
     string _step;
     string _group;
     string _readOnly;
+    string _opened;
+    string _showVal;
 
 public:
     static const TwBar *defaultOwner;
@@ -35,6 +37,8 @@ public:
     static const string defaultStep;
     static const string defaultGroup;
     static const string defaultReadOnly;
+    static const string defaultOpened;
+    static const string defaultShowVal;
 
     CAtwVarBuilder();
 
@@ -47,10 +51,19 @@ public:
     CAtwVarBuilder &setDataType(const ETwType dataType);
 
     CAtwVarBuilder &setObservableData(void *observableData);
+
     CAtwVarBuilder &setLabel(const string label);
+
     CAtwVarBuilder &setStep(const float step);
+
     CAtwVarBuilder &setGroup(const string group);
+
     CAtwVarBuilder &setReadOnly(const bool readOnly);
+
+    CAtwVarBuilder &setOpened(const bool opened);
+
+    CAtwVarBuilder &setShowVal(const bool showVal);
+
 };
 
 

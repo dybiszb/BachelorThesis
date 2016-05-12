@@ -6,12 +6,12 @@ using namespace entities;
 
 CWaterGrid::CWaterGrid(int quadsPerSide, float sideSize, glm::vec2
 bottomCorner, GLuint cubemapId, bool modernShaders, int viewportWidth,
-                       int viewportHeight)
+                       int viewportHeight, bool animation, bool lightOn)
         : CGrid(quadsPerSide, quadsPerSide, sideSize, sideSize, bottomCorner),
           _wavesDeformer(quadsPerSide + 1, quadsPerSide + 1, modernShaders),
           _cubemapId(cubemapId), _sideSize(sideSize),
           _verticesPerSide(quadsPerSide + 1), _viewportWidth(viewportWidth),
-          _viewportHeight(viewportHeight) {
+          _viewportHeight(viewportHeight), _animation(animation), _lightOn(lightOn) {
 
     _initShader(modernShaders);
     _wavesDeformer.setVerticesPerSide(_verticesPerSide);
@@ -72,6 +72,7 @@ void CWaterGrid::render(const float *view,
     glUniform1i(_shader("u_verticesPerSide"), _verticesPerSide);
     glUniform3fv(_shader("u_cameraPosition"), 1, &_cameraPosition[0]);
     glUniform3fv(_shader("u_lightDirection"), 1, &_lightDirection[0]);
+    glUniform1i(_shader("u_lightOn"), _lightOn);
 
     // Box
     glUniform3fv(_shader("u_box.boxMin"), 1, &_box[0][0]);
@@ -164,6 +165,13 @@ bool CWaterGrid::getAnimation() {
     return _animation;
 }
 
+void CWaterGrid::setLightOn(bool lightOn) {
+    _lightOn = lightOn;
+}
+
+bool CWaterGrid::getLightOn() {
+    return _lightOn;
+}
 void CWaterGrid::_initShader(bool modernShaders) {
     _shader.LoadFromFile(GL_VERTEX_SHADER, "res/shaders/water.vert");
     _shader.LoadFromFile(GL_FRAGMENT_SHADER, "res/shaders/water.frag");
@@ -183,5 +191,6 @@ void CWaterGrid::_initShader(bool modernShaders) {
     _shader.AddUniform("u_box.boxMin");
     _shader.AddUniform("u_box.boxMax");
     _shader.AddUniform("u_lightDirection");
+    _shader.AddUniform("u_lightOn");
     _shader.UnUse();
 }

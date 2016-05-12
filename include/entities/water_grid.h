@@ -35,7 +35,7 @@ namespace entities {
         CWaterGrid(int quadsPerSide, float sideSize,
                    vec2 bottomCorner,  GLuint cubemapId,
                    bool modernShaders, int viewportWidth,
-                   int viewportHeight);
+                   int viewportHeight, bool animation, bool lightOn);
 
         ~CWaterGrid();
 
@@ -58,6 +58,8 @@ namespace entities {
         int getVerticesPerSide();
         void setAnimation(bool animation);
         bool getAnimation();
+        bool getLightOn();
+        void setLightOn(bool lightOn);
     private:
         CWavesDeformer _wavesDeformer;
         GLfloat        _currentTime;
@@ -71,6 +73,7 @@ namespace entities {
         int            _viewportHeight;
         vec3           _box[2];
         bool           _animation;
+        bool           _lightOn;
 
         void _initShader(bool modernShaders);
     };

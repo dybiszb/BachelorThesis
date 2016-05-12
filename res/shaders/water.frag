@@ -30,6 +30,7 @@ uniform BoundingBox u_box;
 uniform vec3        u_cameraPosition;
 uniform float       u_sideSize;
 uniform vec3        u_lightDirection;
+uniform bool        u_lightOn;
 
 /**
  * Given parameters describing box and a ray, procedure finds their
@@ -114,26 +115,18 @@ void main()
     float w = fresnel(u_cameraPosition, v_position, v_normal);
 
     // Sun Light
-    vec3 diffuse = vec3(0.0);
-    vec3 specular = vec3(0.0);
-    vec3 sunColor = vec3(1.0, 1.0, 1.0);
-    sunLight(100.0, 2.0, 0.5, sunColor, diffuse, specular);
+    if(u_lightOn) {
+        vec3 diffuse = vec3(0.0);
+        vec3 specular = vec3(0.0);
+        vec3 sunColor = vec3(1.0, 1.0, 1.0);
+        sunLight(100.0, 2.0, 0.5, sunColor, diffuse, specular);
+        vec3 mixed = mix(reflectedColor * 0.9 + specular, diffuse * refractedColor, w);
+        mixed = mixed + specular;
+        gl_FragColor = vec4(mixed, 1.0);
 
-//    gl_FragColor = vec4(mix(reflectedColor, refractedColor, w), 1.0);
-//    vec3 scatter = max(0.0, dot(v_normal, normalize(u_cameraPosition -
-//                        v_position))) * vec3(0.0, 00.1, 0.07);
-//    vec3 albedo = mix(
-//                        ((scatter + refractedColor*diffuse)) * 0.3,
-//                        (vec3(0.1) + reflectedColor*0.9 + specular),
-//                        w
-//                     );
-//    vec3 albedo = mix(
-//                     ((vec3(0.0, 0.0, 0.5)*diffuse)) * 0.3,
-//                     (vec3(0.1) + reflectedColor*0.9 + specular),
-//                     w
-//                  );
+    // Plane Skybox Check
+    } else {
+        gl_FragColor = vec4(mix(reflectedColor, refractedColor, w), 1.0);
+    }
 
-    vec3 mixed = mix(reflectedColor * 0.9 + specular, diffuse * refractedColor, w);
-    mixed = mixed + specular;
-    gl_FragColor = vec4(mixed, 1.0);
 }

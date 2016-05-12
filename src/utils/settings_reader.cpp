@@ -26,6 +26,8 @@ Settings utils::readFromINI(string pathToINI) {
             reader.GetInteger("Scene", "quads", 256);
 
     /* ----- Light ----- */
+    settings.lightOn =
+            reader.GetBoolean("Light", "on", false);
     settings.lightDirectionX =
             reader.GetReal("Light", "direction_x", -1);
     settings.lightDirectionY =

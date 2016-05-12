@@ -48,6 +48,11 @@ void CGLFWRenderer::runMainLoop() {
             _inputOutput->setIntersectionRequested(false);
         }
 
+        /* ----- Check if Lights are On ----- */
+        if(_gui.getLightOn() != _water->getLightOn()) {
+            _water->setLightOn(_gui.getLightOn());
+        }
+
         /* ----- Waves ----- */
         if (_gui.getWaves() && _gui.getWaterAnimation()) {
             for (int i = 0; i < 800; i++) {
@@ -158,6 +163,8 @@ void CGLFWRenderer::_initRenderableObjects() {
             .setModernShaders(false)
             .setSkyboxId(_skybox->getCubemapId())
             .setViewport(_settings.windowWidth, _settings.windowHeight)
+            .setAnimation(true)
+            .setLightOn(false)
             .build();
 }
 

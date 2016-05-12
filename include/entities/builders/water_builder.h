@@ -26,6 +26,8 @@ namespace entities {
         bool  _modernShaders;
         int   _viewportWidth;
         int   _viewportHeight;
+        bool  _animation;
+        bool  _lightOn;
 
     public:
     //==========================================================================
@@ -38,6 +40,8 @@ namespace entities {
         static const bool  defaultModernShaders;
         static const int   defaultViewportWidth;
         static const int   defaultViewportHeight;
+        static const bool  defaultAnimation;
+        static const bool  defaultLightOn;
 
         /**
          * Basically initializes all internal values with default quantities.
@@ -82,7 +86,7 @@ namespace entities {
         /**
          * Use modern shaders?
          *
-         * @param If true 330 core shaders will be used. Otherwise version
+         * @param If true 330 core shaders will be used. Otherwise, version
          *        120 will be loaded.
          */
         CWaterBuilder& setModernShaders(const bool modernShaders);
@@ -95,6 +99,21 @@ namespace entities {
          */
         CWaterBuilder& setViewport(const int viewportWidth,
                                    const int viewportHeight);
+
+        /**
+         * Animation should be on or off?
+         *
+         * @param If true water animation will be displayed. Otherwise, the application will stop it.
+         */
+        CWaterBuilder& setAnimation(const bool animation);
+
+        /**
+         * Directional lightening should be on or off?
+         *
+         * @param If true the water grid will consider light in its color computations. Otherwise, the application will
+         *        use plain colors taken from the skybox.
+         */
+        CWaterBuilder& setLightOn(const bool lightOn);
     };
 }
 

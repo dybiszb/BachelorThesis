@@ -12,7 +12,7 @@ CAtwGui::CAtwGui(Settings& settings, CCustomCamera* camera)
     _waves = _settings.waves;
     _waterAnimation = _settings.animation;
     _wavesIntensity = _settings.wavesStrength;
-
+    _lightOn = _settings.lightOn;
     _lightDirection = vec3
             {
                 _settings.lightDirectionX,
@@ -137,9 +137,25 @@ void CAtwGui::initializeSceneBar() {
             .setReadOnly(true)
             .build();
 
-    TwAddVarRW(_sceneBar, "Direction", TW_TYPE_DIR3F, &_lightDirection,
-               "opened=true axisz=-z showval=true group=Light");
+    CAtwVarBuilder()
+            .setOwner(_sceneBar)
+            .setId("lightOnOff")
+            .setDataType(TW_TYPE_BOOL32)
+            .setObservableData(&_lightOn)
+            .setLabel("On / Off")
+            .setGroup("Light")
+            .build();
 
+    CAtwVarBuilder()
+            .setOwner(_sceneBar)
+            .setId("direction")
+            .setDataType(TW_TYPE_DIR3F)
+            .setObservableData(&_lightDirection)
+            .setLabel("Direction")
+            .setGroup("Light")
+            .setOpened(true)
+            .setShowVal(true)
+            .build();
 
     TwStructMember pointMembers[] = {
             { "X", TW_TYPE_FLOAT, offsetof(vec3, x), "step=0.1"},
@@ -151,7 +167,7 @@ void CAtwGui::initializeSceneBar() {
 
     CAtwVarBuilder()
             .setOwner(_sceneBar)
-            .setId("cameraPosX")
+            .setId("cameraPos")
             .setDataType(pointType)
             .setObservableData(&_camera->_position)
             .setLabel("Position")
@@ -204,8 +220,8 @@ void CAtwGui::initializeSceneBar() {
             .setGroup("Speed")
             .build();
 
-    TwDefine("Scene/cameraPosX opened=true");
-    TwDefine("Scene/cameraPosX group=Camera");
+    TwDefine("Scene/cameraPos opened=true");
+    TwDefine("Scene/cameraPos group=Camera");
     TwDefine("Scene/Angle group=Camera");
     TwDefine("Scene/Speed group=Camera");
 }
@@ -277,4 +293,8 @@ vec3 &CAtwGui::getLightDirection() {
 
 bool CAtwGui::getWaterAnimation() {
     return _waterAnimation;
+}
+
+bool CAtwGui::getLightOn() {
+    return _lightOn;
 }

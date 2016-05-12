@@ -72,6 +72,7 @@ public:
     float getWavesIntensity();
     vec3& getLightDirection();
     bool  getWaterAnimation();
+    bool  getLightOn();
 
 private:
 //==============================================================================
@@ -98,6 +99,7 @@ private:
 //==============================================================================
 // Scene Properties
 //------------------------------------------------------------------------------
+    bool     _lightOn;
     vec3     _lightDirection;
     vec3     _cameraPosition;
 };

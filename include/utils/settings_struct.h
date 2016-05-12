@@ -24,6 +24,7 @@ namespace utils {
 //==============================================================================
 // Light Properties
 //------------------------------------------------------------------------------
+        bool lightOn;
         float lightDirectionX;
         float lightDirectionY;
         float lightDirectionZ;

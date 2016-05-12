@@ -1,15 +1,18 @@
 // author: dybisz
 
 #include "builders/atw_var_builder.h"
-
+#include <iostream>
+using namespace std;
 const TwBar *CAtwVarBuilder::defaultOwner = NULL;
 const string CAtwVarBuilder::defaultId = "";
 const ETwType CAtwVarBuilder::defaultDataType = TW_TYPE_UNDEF;
 const void *CAtwVarBuilder::defaultObservableData = NULL;
 const string CAtwVarBuilder::defaultLabel = "__defaultLabel";
-const string CAtwVarBuilder::defaultStep = "0.1";
+const string CAtwVarBuilder::defaultStep = "";
 const string CAtwVarBuilder::defaultGroup = "";
 const string CAtwVarBuilder::defaultReadOnly = "false";
+const string CAtwVarBuilder::defaultOpened = "";
+const string CAtwVarBuilder::defaultShowVal = "";
 
 CAtwVarBuilder::CAtwVarBuilder() {
     _owner = (TwBar *) defaultOwner;
@@ -20,22 +23,30 @@ CAtwVarBuilder::CAtwVarBuilder() {
     _step = defaultStep;
     _group = defaultGroup;
     _readOnly = defaultReadOnly;
+    _opened = defaultOpened;
+    _showVal = defaultShowVal;
 }
 
 void CAtwVarBuilder::build() {
     string parameters = "label='" + _label + "' ";
 
-    switch(_dataType) {
-        case TW_TYPE_BOOL32:
-            break;
-        // All types besides boolean has step parameter
-        default:
-            parameters += "step=" + _step;
+    if(_step.size() > 0) {
+        parameters += " step=" + _step;
     }
 
     // Group specified
     if(_group.size() > 0) {
         parameters += " group=" + _group +"";
+    }
+
+    // Opened specified
+    if(_opened.size() > 0) {
+        parameters += " opened=true";
+    }
+
+    // ShowVal opened
+    if(_showVal.size() > 0) {
+        parameters += " shovval=" + _showVal;
     }
 
     parameters += " readonly=" + _readOnly;
@@ -86,5 +97,15 @@ CAtwVarBuilder &CAtwVarBuilder::setGroup(const string group) {
 
 CAtwVarBuilder &CAtwVarBuilder::setReadOnly(const bool readOnly) {
     _readOnly = to_string(readOnly);
+    return *this;
+}
+
+CAtwVarBuilder &CAtwVarBuilder::setOpened(const bool opened){
+    _opened = to_string(opened);
+    return *this;
+}
+
+CAtwVarBuilder &CAtwVarBuilder::setShowVal(const bool showVal) {
+    _showVal = to_string(showVal);
     return *this;
 }
