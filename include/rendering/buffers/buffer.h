@@ -10,11 +10,17 @@
 #define BUFFER_H
 
 #include <GL/glew.h>
+#include "bindable_object.h"
+#include "error_handling.h"
+
+using namespace utils;
 
 namespace rendering {
 
-    class CBuffer {
+    class CBuffer : public IBindableObject {
     public:
+        ~CBuffer();
+
         /**
          * Two existing types of buffers (at least in this project) can be
          * manage via this class: GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER.
@@ -26,25 +32,46 @@ namespace rendering {
         CBuffer(GLenum type);
 
         /**
-         * Bind buffer to the OpenGl's context.
+         * Bind object to the active OpenGl context.
          */
-        void bind();
+        virtual void bind();
 
         /**
-         * Put data into the data structure.
+         * Unbind object from the OpenGl active context.
+         */
+        virtual void unbind();
+
+        /**
+         * Put data into the data structure with GL_STATIC_DRAW flag.
+         * Should be used for data that will be created and set once but used
+         * a lot.
          *
-         * @param size How many objects one wants to store
+         * @param size How many objects one wants to store (in bytes)
          * @param data Array of data to store
          */
-        void setData(GLsizeiptr size, const GLvoid *data);
+        void setDataStatic(GLsizeiptr size, const GLvoid *data);
 
         /**
-         * Release OpenGL from this buffer.
+         * Put data into the data structure with GL_STREAM_DRAW flag.
+         * Should be used for data that will be created, set and used once.
+         * Great for orphaning.
+         *
+         * @param size How many objects one wants to store (in bytes)
+         * @param data Array of data to store
          */
-        void deleteBuffer();
+        void setDataStream(GLsizeiptr size, const GLvoid *data);
+
+        /**
+         * Updates a subset of the buffer object's data store.
+         *
+         * @param offset Specifies offset into the buffer object's data store
+         *               where data replacement will begin, measured in bytes.
+         * @param size   How many objects one wants to store (in bytes)
+         * @param data   Array of data to store
+         */
+        void setSubData(GLintptr offset, GLsizeiptr size, const GLvoid *data);
 
     private:
-        GLuint _id;
         GLenum _type;
     };
 }

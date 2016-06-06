@@ -62,10 +62,6 @@ Settings utils::readFromINI(string pathToINI) {
             reader.GetBoolean("Water", "animation", true);
     settings.manualDisturbanceStrength =
             reader.GetReal("Water", "manual_disturbance_strength", 0.1);
-    settings.waves =
-            reader.GetBoolean("Water", "waves", false);
-    settings.wavesStrength =
-            reader.GetReal("Water", "waves_strength", 0.01);
     settings.rain =
             reader.GetBoolean("Water", "rain", false);
     settings.rainStrength =

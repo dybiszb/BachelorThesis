@@ -5,21 +5,26 @@
 using namespace entities;
 
 CSkybox::CSkybox(int sideSize,
-                 const char* facesNames[6],
-                 bool modernShaders) :
+                 const char* facesNames[6]) :
         CCube(sideSize),
         _texture(facesNames) {
 
-    _initShader(modernShaders);
+    _initShader();
 
     Vertex *vertices = CCube::generateVertices();
     GLuint *indices = CCube::generateIndices();
     GLsizei stride = sizeof(Vertex);
 
     _vao.bind();
-    _vao.setVertices(CCube::getTotalVertices() * sizeof(Vertex), &vertices[0]);
+    _vao.setBuffer("vertices", GL_ARRAY_BUFFER);
+    _vao.setBuffer("indices", GL_ELEMENT_ARRAY_BUFFER);
+    _vao.bindBuffers();
+    _vao.getBuffer("vertices")->setDataStatic
+            (CCube::getTotalVertices() * sizeof(Vertex), &vertices[0]);
     _vao.assignFloatAttribute(_shader["v_position"], 3, stride, 0);
-    _vao.setIndices(CCube::getTotalIndices() * sizeof(GLuint), &indices[0]);
+    _vao.getBuffer("indices")->
+            setDataStatic(CCube::getTotalIndices() * sizeof(GLuint),
+                          &indices[0]);
     _vao.unbind();
 
     delete[] vertices;
@@ -57,7 +62,7 @@ GLuint CSkybox::getCubemapId() {
 }
 
 
-void CSkybox::_initShader(bool modernShaders) {
+void CSkybox::_initShader() {
     _shader.LoadFromFile(GL_VERTEX_SHADER, "res/shaders/skybox.vert");
     _shader.LoadFromFile(GL_FRAGMENT_SHADER, "res/shaders/skybox.frag");
 

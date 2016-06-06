@@ -15,63 +15,75 @@
 #define VERTEX_ARRAY_H
 
 #include <buffers/buffer.h>
+#include <cstddef>
 #include <GL/glew.h>
+#include <map>
+#include <string>
+#include "bindable_object.h"
 #include "error_handling.h"
 
 using namespace utils;
+using namespace std;
 
 namespace rendering {
 
-    class CVertexArray {
+    class CVertexArray : public IBindableObject {
     public:
-        /**
-         * Initializes buffers and generates Vertex Array in OpenGL context.
-         */
         CVertexArray();
-
-        /**
-         * Deletes Vertex Array object along with its buffers.
-         */
         ~CVertexArray();
 
         /**
-         * Binds VAO to the current OpenGL context via glBindVertexArray method.
+         * Bind the object to the active OpenGl context.
          */
-        void bind();
+        virtual void bind();
 
         /**
-        * Unbinds VAO from current OpenGL context.
-        */
-        void unbind();
+         * Unbind the object from the OpenGl active context.
+         */
+        virtual void unbind();
 
         /**
-         * Fill up vertices buffer with data.
+         * Binds all buffers assigned to the vertex array object.
          */
-        void setVertices(GLsizeiptr size, const GLvoid *data);
+        void bindBuffers();
 
         /**
-         * Fill up indices buffer with data.
+         * Unbinds all buffers assigned to the vertex array object.
          */
-        void setIndices(GLsizeiptr size, const GLvoid *data);
+        void unbindBuffers();
+
+        /**
+         * Adds a buffer of a given type to the vertex array object.
+         *
+         * @param name Name of the buffer. It is the only way to directly
+         *             access the proper buffer later on.
+         * @param type Type of the buffer that one wants to create. Normally
+         *             it is either GL_ARRAY_BUFFER or GL_ELEMENT_ARRAY_BUFFER.
+         */
+        void setBuffer(string name, GLenum type);
+
+        /**
+         * Allows to acces some particular buffer by its name.
+         *
+         * @param name Name of a buffer one wants to access.
+         *
+         * @return When buffer of a given name exists procedure returns its
+         *         pointer. Otherwise exception of type std::out_of_range is
+         *         thrown.
+         */
+        CBuffer* getBuffer(string name);
 
         /**
          * By default method should be used with Vertex structure but it is
-         * not obligatory. Basicly the procedure wraps process of asigning
+         * not obligatory. Basically the procedure wraps process of assigning
          * shader's attribute to the VAO. The purpose of this is to inform
          * shader how to interpret data stored in buffers.
          */
         void assignFloatAttribute(GLuint index, GLint size, GLsizei stride,
                                   const GLvoid *pointer);
 
-        /**
-         * Returns id of VAO withing OpenGL context.
-         */
-        GLuint getId();
-
     private:
-        GLuint _id;
-        CBuffer _vertices;
-        CBuffer _indices;
+        map<string, CBuffer *> _buffers;
     };
 
 }

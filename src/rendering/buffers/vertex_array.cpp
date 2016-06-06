@@ -4,16 +4,13 @@
 
 using namespace rendering;
 
-CVertexArray::CVertexArray() : _vertices(GL_ARRAY_BUFFER),
-                               _indices(GL_ELEMENT_ARRAY_BUFFER) {
-
+CVertexArray::CVertexArray(){
     glGenVertexArrays(1, &_id);
     checkErrorOpenGL("CVertexArray::CVertexArray");
 }
 
 CVertexArray::~ CVertexArray() {
-    _vertices.deleteBuffer();
-    _indices.deleteBuffer();
+    for (auto &pair : _buffers) delete pair.second;
     glDeleteVertexArrays(1, &_id);
     checkErrorOpenGL("CVertexArray::~ CVertexArray");
 }
@@ -21,8 +18,6 @@ CVertexArray::~ CVertexArray() {
 void CVertexArray::bind() {
     glBindVertexArray(_id);
     checkErrorOpenGL("CVertexArray::bind");
-    _vertices.bind();
-    _indices.bind();
 }
 
 void CVertexArray::unbind() {
@@ -30,21 +25,27 @@ void CVertexArray::unbind() {
     checkErrorOpenGL("CVertexArray::unbind");
 }
 
-void CVertexArray::setVertices(GLsizeiptr size, const GLvoid *data) {
-    _vertices.setData(size, data);
+void CVertexArray::bindBuffers() {
+    for(auto &pair : _buffers) pair.second->bind();
+    checkErrorOpenGL("CVertexArray::bindBuffers");
 }
 
-void CVertexArray::setIndices(GLsizeiptr size, const GLvoid *data) {
-    _indices.setData(size, data);
+void CVertexArray::unbindBuffers() {
+    for(auto &pair : _buffers) pair.second->unbind();
+    checkErrorOpenGL("CVertexArray::unbindBuffers");
 }
 
-void CVertexArray::assignFloatAttribute(GLuint index, GLint size, GLsizei
-stride, const GLvoid *pointer) {
+void CVertexArray::setBuffer(string name, GLenum type) {
+    _buffers[name] = new CBuffer(type);
+}
+
+CBuffer* CVertexArray::getBuffer(string name) {
+    return _buffers.at(name);
+}
+
+void CVertexArray::assignFloatAttribute(GLuint index, GLint size,
+                                        GLsizei stride, const GLvoid *pointer) {
     glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, pointer);
     glEnableVertexAttribArray(index);
     checkErrorOpenGL("CVertexArray::assignFloatAttribute");
-}
-
-GLuint CVertexArray::getId() {
-    return _id;
 }

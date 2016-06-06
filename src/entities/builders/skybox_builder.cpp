@@ -15,8 +15,6 @@ const char* CSkyboxBuilder::defaultFaces[6]= {
         "./res/textures/skybox/left.jpg"
 };
 
-const bool CSkyboxBuilder::defaultModernShaders = false;
-
 
 CSkyboxBuilder::CSkyboxBuilder() {
     _sideSize = defaultSideSize;
@@ -26,8 +24,6 @@ CSkyboxBuilder::CSkyboxBuilder() {
     _faces[3] = defaultFaces[3];
     _faces[4] = defaultFaces[4];
     _faces[5] = defaultFaces[5];
-
-    _modernShaders = defaultModernShaders;
 };
 
 CSkyboxBuilder::~CSkyboxBuilder() {
@@ -35,7 +31,7 @@ CSkyboxBuilder::~CSkyboxBuilder() {
 }
 
 CSkybox *CSkyboxBuilder::build() {
-    return new CSkybox(this->_sideSize, this->_faces, this->_modernShaders);
+    return new CSkybox(this->_sideSize, this->_faces);
 }
 
 CSkyboxBuilder &CSkyboxBuilder::setSideSize(const float sideSize) {
@@ -50,10 +46,5 @@ CSkyboxBuilder &CSkyboxBuilder::setFaces(const char* faces[6]) {
     this->_faces[3] = faces[3];
     this->_faces[4] = faces[4];
     this->_faces[5] = faces[5];
-    return *this;
-}
-
-CSkyboxBuilder &CSkyboxBuilder::setModernShaders(const bool modernShaders) {
-    this->_modernShaders = modernShaders;
     return *this;
 }

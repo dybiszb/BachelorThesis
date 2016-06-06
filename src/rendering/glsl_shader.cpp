@@ -82,10 +82,12 @@ void GLSLShader::CreateAndLinkProgram() {
 
 void GLSLShader::Use() {
     glUseProgram(_program);
+    checkErrorOpenGL("GLSLShader::Use");
 }
 
 void GLSLShader::UnUse() {
     glUseProgram(0);
+    checkErrorOpenGL("GLSLShader::UnUse");
 }
 
 void GLSLShader::AddAttribute(const string& attribute) {

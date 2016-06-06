@@ -9,6 +9,8 @@
 
 #include <GL/glew.h>
 #include <vector>
+#include <src/SOIL.h>
+#include "bindable_object.h"
 #include "error_handling.h"
 
 using namespace utils;
@@ -16,21 +18,37 @@ using namespace std;
 
 namespace rendering {
 
-    class CTexture2D {
+    class CTexture2D : public IBindableObject {
     public:
+        ~CTexture2D();
+
         /**
          * Creates black texture of given sizes.
+         *
+         * @param width Texture's width
+         * @param width Texture's height
          */
         CTexture2D(int width, int height);
-        // Constructor that takes image data
-        // Constructor that takes path to image (SOIL)
-        ~CTexture2D();
-        void bind();
-        void unbind();
-        GLuint getId();
-    private:
-        GLuint _id;
 
+        /**
+         * Creates texture from image on provided path.
+         *
+         * @param Path to an image.
+         */
+        CTexture2D(string path);
+
+        /**
+         * Bind object to the active OpenGl context.
+         */
+        virtual void bind();
+
+        /**
+         * Unbind object from the OpenGl active context.
+         */
+        virtual void unbind();
+
+    private:
+        GLint _textureFromFile(string fullPath);
     };
 }
 

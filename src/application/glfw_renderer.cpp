@@ -53,24 +53,12 @@ void CGLFWRenderer::runMainLoop() {
             _water->setLightOn(_gui.getLightOn());
         }
 
-        /* ----- Waves ----- */
-        if (_gui.getWaves() && _gui.getWaterAnimation()) {
-            for (int i = 0; i < 800; i++) {
-                int x = utils::randomInteger(0, _water->getVerticesPerSide()
-                                                - 2);
-                int y = utils::randomInteger(0, _water->getVerticesPerSide() -
-                                                2);
-                vec2 quadCoordinates(x, y);
-                _water->intersect(quadCoordinates, _gui.getWavesIntensity());
-            }
-        }
-
         /* ----- Rain ----- */
         if (_gui.getIsRaining() && _gui.getWaterAnimation()) {
             for (int i = 0; i < _gui.getRainingIntensity(); i++) {
-                int x = utils::randomInteger(0, _water->getVerticesPerSide()
+                int x = utils::randomInteger(2, _water->getVerticesPerSide()
                                                 - 2);
-                int y = utils::randomInteger(0, _water->getVerticesPerSide() -
+                int y = utils::randomInteger(2, _water->getVerticesPerSide() -
                                                 2);
                 vec2 quadCoordinates(x, y);
                 _water->intersect(quadCoordinates, _gui.getRainDropSize());
@@ -152,7 +140,6 @@ void CGLFWRenderer::_initCallbacks() {
 void CGLFWRenderer::_initRenderableObjects() {
     _skybox = CSkyboxBuilder()
             .setSideSize(_settings.edgeSize)
-            .setModernShaders(false)
             .build();
 
     _water = CWaterBuilder()
@@ -166,6 +153,8 @@ void CGLFWRenderer::_initRenderableObjects() {
             .setAnimation(true)
             .setLightOn(false)
             .build();
+
+//    _ship = new CShipModel();
 }
 
 void CGLFWRenderer::_initGLGlobalSettings() {

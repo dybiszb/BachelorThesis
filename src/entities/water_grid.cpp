@@ -4,17 +4,18 @@
 
 using namespace entities;
 
-CWaterGrid::CWaterGrid(int quadsPerSide, float sideSize, glm::vec2
-bottomCorner, GLuint cubemapId, bool modernShaders, int viewportWidth,
-                       int viewportHeight, bool animation, bool lightOn)
+CWaterGrid::CWaterGrid(
+        int quadsPerSide, float sideSize, glm::vec2 bottomCorner,
+        GLuint cubemapId, bool modernShaders, int viewportWidth,
+        int viewportHeight, bool animation, bool lightOn)
         : CGrid(quadsPerSide, quadsPerSide, sideSize, sideSize, bottomCorner),
-          _wavesDeformer(quadsPerSide + 1, quadsPerSide + 1, modernShaders),
+          _wavesDeformer(quadsPerSide + 1, quadsPerSide + 1),
           _cubemapId(cubemapId), _sideSize(sideSize),
           _verticesPerSide(quadsPerSide + 1), _viewportWidth(viewportWidth),
-          _viewportHeight(viewportHeight), _animation(animation), _lightOn(lightOn) {
+          _viewportHeight(viewportHeight), _animation(animation),
+          _lightOn(lightOn) {
 
     _initShader(modernShaders);
-    _wavesDeformer.setVerticesPerSide(_verticesPerSide);
 
     Vertex *vertices = CGrid::generateVertices();
     GLuint *indices = CGrid::generateIndices();
@@ -27,12 +28,18 @@ bottomCorner, GLuint cubemapId, bool modernShaders, int viewportWidth,
     _box[1] = vec3(halfSide, halfSide, halfSide);
 
     _vao.bind();
-    _vao.setVertices(CGrid::getTotalVertices() * sizeof(Vertex), &vertices[0]);
+    _vao.setBuffer("vertices", GL_ARRAY_BUFFER);
+    _vao.setBuffer("indices", GL_ELEMENT_ARRAY_BUFFER);
+    _vao.bindBuffers();
+    _vao.getBuffer("vertices")->setDataStatic
+            (CGrid::getTotalVertices() * sizeof(Vertex), &vertices[0]);
 
     _vao.assignFloatAttribute(_shader["a_position"], 3, stride, 0);
     _vao.assignFloatAttribute(_shader["a_heightFieldTexCoords"], 2, stride,
                               (const GLvoid *) offsetof(Vertex, texCoord));
-    _vao.setIndices(CGrid::getTotalIndices() * sizeof(GLuint), &indices[0]);
+    _vao.getBuffer("indices")->
+            setDataStatic(CGrid::getTotalIndices() * sizeof(GLuint),
+                          &indices[0]);
     _vao.unbind();
 
     delete[] vertices;
@@ -45,19 +52,15 @@ CWaterGrid::~CWaterGrid() {
 
 void CWaterGrid::render(const float *view,
                         const float *projection) {
-    // Old hardware does not allow to bind two types of textures (two
-    // samplers) to one texture unit. Hence one needs to swap it between
-    // animation texture and cubemap texture
-    glActiveTexture(GL_TEXTURE0);
     if (_animation) {
         _wavesDeformer.animationStep();
-        _wavesDeformer.bindAndSwapTextures();
     }
     _wavesDeformer.bindTexture();
     glViewport(0, 0, _viewportWidth, _viewportHeight);
 
     _shader.Use();
     _vao.bind();
+    _vao.bindBuffers();
 
     glUniform1iARB(_shader("u_heightFieldTexture"), 0);
     glUniform1iARB(_shader("u_skyboxTexture"), 1);
@@ -84,6 +87,7 @@ void CWaterGrid::render(const float *view,
     glDrawElements(GL_TRIANGLES, CGrid::getTotalIndices(), GL_UNSIGNED_INT, 0);
     checkErrorOpenGL("CWaterGrid::render");
 
+    _wavesDeformer.unbindTexture();
     _vao.unbind();
     _shader.UnUse();
 }
@@ -172,6 +176,7 @@ void CWaterGrid::setLightOn(bool lightOn) {
 bool CWaterGrid::getLightOn() {
     return _lightOn;
 }
+
 void CWaterGrid::_initShader(bool modernShaders) {
     _shader.LoadFromFile(GL_VERTEX_SHADER, "res/shaders/water.vert");
     _shader.LoadFromFile(GL_FRAGMENT_SHADER, "res/shaders/water.frag");

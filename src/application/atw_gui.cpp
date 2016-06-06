@@ -9,9 +9,7 @@ CAtwGui::CAtwGui(Settings& settings, CCustomCamera* camera)
     _isRaining = _settings.rain;
     _rainIntensity = _settings.rainIntensity;
     _rainDropSize = _settings.rainStrength;
-    _waves = _settings.waves;
     _waterAnimation = _settings.animation;
-    _wavesIntensity = _settings.wavesStrength;
     _lightOn = _settings.lightOn;
     _lightDirection = vec3
             {
@@ -53,26 +51,6 @@ void CAtwGui::initializeWaterBar() {
             .setStep(0.1)
             .setGroup("Manual_Disturbance")
             .build();
-
-    CAtwVarBuilder()
-            .setOwner(_waterBar)
-            .setId("wavesOnOf")
-            .setDataType(TW_TYPE_BOOL32)
-            .setObservableData(&_waves)
-            .setLabel("On / Off:")
-            .setGroup("Waves")
-            .build();
-
-    CAtwVarBuilder()
-            .setOwner(_waterBar)
-            .setId("wavesHeight")
-            .setDataType(TW_TYPE_FLOAT)
-            .setObservableData(&_wavesIntensity)
-            .setLabel("Strength:")
-            .setStep(0.0001)
-            .setGroup("Waves")
-            .build();
-
     CAtwVarBuilder()
             .setOwner(_waterBar)
             .setId("isRaining")
@@ -277,14 +255,6 @@ int CAtwGui::getRainingIntensity() {
 
 float CAtwGui::getRainDropSize() {
     return _rainDropSize;
-}
-
-bool CAtwGui::getWaves() {
-    return _waves;
-}
-
-float CAtwGui::getWavesIntensity() {
-    return _wavesIntensity;
 }
 
 vec3 &CAtwGui::getLightDirection() {

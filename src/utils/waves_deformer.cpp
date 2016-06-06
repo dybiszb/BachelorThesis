@@ -3,9 +3,11 @@
 #include "waves_deformer.h"
 
 // TODO wdth and height change to side length
-CWavesDeformer::CWavesDeformer(int width, int height, bool modernShaders)
+CWavesDeformer::CWavesDeformer(int width, int height)
         : _width(width),
           _height(height) {
+
+    _verticesPerSide = height;
 
     _fbo0 = new CFrameBuffer();
     _fbo1 = new CFrameBuffer();
@@ -13,32 +15,20 @@ CWavesDeformer::CWavesDeformer(int width, int height, bool modernShaders)
     _tex1 = new CTexture2D(width, height);
 
     _fbo0->bind();
-    _fbo0->setColorAttachement(*_tex0);
+    _fbo0->setColorAttachment(*_tex0);
     _fbo0->unbind();
 
     _fbo1->bind();
-    _fbo1->setColorAttachement(*_tex1);
+    _fbo1->setColorAttachment(*_tex1);
     _fbo1->unbind();
 
     _initMembraneCoefficients();
-    _initShaders(modernShaders);
+    _initShaders();
     _initVao();
 }
 
-void CWavesDeformer::setVerticesPerSide(int verticesPerSide) {
-    _verticesPerSide = verticesPerSide;
-}
-
 void CWavesDeformer::disturbSurface(vec2 &quad, float amount) {
-
-//    cout << "quad: " << quad.x << " " << quad.y << endl;
-
-    if (_counter % 2 == 0) {
-        _tex0->bind();
-    } else {
-        _tex1->bind();
-    }
-
+    _tex0->bind();
 
     GLfloat data[4] = {amount, 0, 0, 0};
     glTexSubImage2D(GL_TEXTURE_2D,
@@ -51,11 +41,7 @@ void CWavesDeformer::disturbSurface(vec2 &quad, float amount) {
                     GL_FLOAT,
                     data);
 
-    if (_counter % 2 == 0) {
-        _tex0->unbind();
-    } else {
-        _tex1->unbind();
-    }
+    _tex0->unbind();
 }
 
 void CWavesDeformer::updateTime(float deltaTime) {
@@ -76,6 +62,8 @@ void CWavesDeformer::animationStep() {
 
     _shader.Use();
     _vao.bind();
+    _vao.bindBuffers();
+
     glUniform1iARB(_shader("u_heightFieldTexture"), 0);
     glUniform1f(_shader("u_sideSize"), _width);
     glUniform1i(_shader("u_verticesPerSide"), _verticesPerSide);
@@ -84,67 +72,31 @@ void CWavesDeformer::animationStep() {
     glUniform1f(_shader("u_membraneProperties.c"), _c);
     glUniform1f(_shader("u_membraneProperties.dt"), _dt);
 
-    if (_counter % 2 == 0) {
-        _tex0->bind();
-        _fbo1->bind();
-        glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT,
-                       0);
-        checkErrorOpenGL("CWavesDeformer::renderStep");
-        _fbo1->unbind();
-        _tex0->unbind();
-        _tex1->bind();
-    } else {
-        _tex1->bind();
-        _fbo0->bind();
-        glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT,
-                       0);
-        checkErrorOpenGL("CWavesDeformer::renderStep");
-        _fbo0->unbind();
-        _tex1->unbind();
-        _tex0->bind();
-    }
+    _tex0->bind();
+    _fbo1->bind();
+    glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
+    checkErrorOpenGL("CWavesDeformer::renderStep");
 
-//    _tex0->bind();
-//    _fbo1->bind();
-//    glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
-//    checkErrorOpenGL("CWavesDeformer::renderStep");
-//
-//    _tex1->bind();
-//    _fbo0->bind();
-//    glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
-//    checkErrorOpenGL("CWavesDeformer::renderStep");
-//    _fbo0->unbind();
+    _tex1->bind();
+    _fbo0->bind();
+    glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
+    checkErrorOpenGL("CWavesDeformer::renderStep");
+    _fbo0->unbind();
 
     _vao.unbind();
     _shader.UnUse();
 }
 
-void CWavesDeformer::bindAndSwapTextures() {
-    _shader.Use();
-    _vao.bind();
-    if (_counter % 2 == 0) {
-        _tex1->bind();
-    } else {
-        _tex0->bind();
-    }
-    _counter++;
-    _vao.unbind();
-    _shader.UnUse();
-}
 
 void CWavesDeformer::bindTexture() {
-    _shader.Use();
-    _vao.bind();
-    if (_counter % 2 == 0) {
-        _tex1->bind();
-    } else {
-        _tex0->bind();
-    }
-    _vao.unbind();
-    _shader.UnUse();
+    _tex0->bind();
 }
 
-void CWavesDeformer::_initShaders(bool modernShaders) {
+void CWavesDeformer::unbindTexture() {
+    _tex0->unbind();
+}
+
+void CWavesDeformer::_initShaders() {
     _shader.LoadFromFile
             (GL_VERTEX_SHADER, "res/shaders/waves_deformer.vert");
     _shader.LoadFromFile
@@ -169,12 +121,18 @@ void CWavesDeformer::_initVao() {
     GLuint *indices = _quad.generateIndices();
     GLsizei stride = sizeof(Vertex);
 
+
+    _vao.setBuffer("vertices", GL_ARRAY_BUFFER);
+    _vao.setBuffer("indices", GL_ELEMENT_ARRAY_BUFFER);
     _vao.bind();
-    _vao.setVertices(_quad.getTotalVertices() * sizeof(Vertex), &vertices[0]);
+    _vao.bindBuffers();
+    _vao.getBuffer("vertices")->setDataStatic(_quad.getTotalVertices() * sizeof(Vertex), &vertices[0]);
     _vao.assignFloatAttribute(_shader["a_position"], 3, stride, 0);
     _vao.assignFloatAttribute(_shader["a_heightFieldTexCoords"], 2, stride,
                               (const GLvoid *) offsetof(Vertex, texCoord));
-    _vao.setIndices(_quad.getTotalIndices() * sizeof(GLuint), &indices[0]);
+    _vao.getBuffer("indices")->
+            setDataStatic(_quad.getTotalIndices() * sizeof(GLuint),
+                          &indices[0]);
     _vao.unbind();
 
     delete[] vertices;

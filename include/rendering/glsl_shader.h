@@ -9,9 +9,10 @@
 #include <GL/glew.h>
 #include <map>
 #include <string>
+#include "error_handling.h"
 
 using namespace std;
-
+using namespace utils;
 
 class GLSLShader
 {

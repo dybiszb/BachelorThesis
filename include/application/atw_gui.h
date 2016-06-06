@@ -68,8 +68,6 @@ public:
     bool  getIsRaining();
     int   getRainingIntensity();
     float getRainDropSize();
-    bool  getWaves();
-    float getWavesIntensity();
     vec3& getLightDirection();
     bool  getWaterAnimation();
     bool  getLightOn();
@@ -91,8 +89,6 @@ private:
     bool     _isRaining;
     int      _rainIntensity;
     float    _rainDropSize;
-    bool     _waves;
-    float    _wavesIntensity;
     bool     _waterAnimation;
 
 

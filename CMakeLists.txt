@@ -23,12 +23,14 @@ add_subdirectory (external)
 
 include_directories(
         external/AntTweakBar-1.16/include/
+        external/assimp-3.0.1270/include/
         external/glew-1.13.0/include/
         external/glfw-3.1.2/include/GLFW/
         external/glm-0.9.7.1/
         external/inih/cpp/
         external/inih/
         external/SOIL_/
+        external/tinyobjloader/
 )
 
 set(EXTERNAL_LIBS
@@ -38,6 +40,8 @@ set(EXTERNAL_LIBS
         GLEW_1130
         ANTTWEAKBAR_116_OGLCORE_GLFW
         INIH
+#        assimp
+        tinyobjloader
 )
 
 #===============================================================================
@@ -89,7 +93,9 @@ set(
         src/application/builders/atw_button_builder.cpp
         src/application/builders/atw_var_builder.cpp
         src/utils/settings_reader.cpp
-)
+        src/entities/ship_model.cpp
+        src/utils/obj_model.cpp
+        include/rendering/bindable_object.h)
 
 #===============================================================================
 # Executable

@@ -29,7 +29,7 @@ class CWavesDeformer{
 
 public:
     // input # vertices in row & column !!!
-    CWavesDeformer(int width, int height, bool modernShaders);
+    CWavesDeformer(int width, int height);
 
     ~CWavesDeformer();
     /**
@@ -43,9 +43,8 @@ public:
      *
      */
     void animationStep();
-    void bindAndSwapTextures();
     void bindTexture();
-    void setVerticesPerSide(int verticesPerSide);
+    void unbindTexture();
     void disturbSurface(vec2& quad, float amount);
     void updateTime(float deltaT);
 private:
@@ -62,8 +61,7 @@ private:
     GLfloat _h;
     GLfloat _c;
     GLfloat _dt;
-    int _counter = 0;
-    void _initShaders(bool modernShaders);
+    void _initShaders();
     void _initVao();
     void _initMembraneCoefficients();
 };

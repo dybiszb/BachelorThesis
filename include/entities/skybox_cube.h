@@ -35,8 +35,7 @@ namespace entities {
          * @param facesNames Pointer to vector with faces paths.
          * @param TODO
          */
-        CSkybox(int sideSize, const char* facesNames[6],
-                bool modernShaders);
+        CSkybox(int sideSize, const char* facesNames[6]);
 
         /**
          * Renders textured cube (skybox) in the center of world's space
@@ -63,7 +62,7 @@ namespace entities {
     private:
         CCubemapTexture _texture;
         vec3 _cameraPosition;
-        void _initShader(bool modernShaders);
+        void _initShader();
     };
 }
 

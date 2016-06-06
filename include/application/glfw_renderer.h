@@ -23,6 +23,7 @@
 #include "rand_functions.h"
 #include "atw_gui.h"
 #include "settings_struct.h"
+#include "ship_model.h"
 
 using namespace entities;
 using namespace utils;
@@ -59,6 +60,7 @@ private:
     CCustomCamera _camera;
     CSkybox *_skybox;
     CWaterGrid *_water;
+    CShipModel *_ship;
 
     /**
      * Initializes GLFW context.

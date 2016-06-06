@@ -17,9 +17,7 @@ namespace entities {
     class CSkyboxBuilder {
     public:
         static const float defaultSideSize;
-//        static vector<const GLchar *> *defaultFaces;
         static const char* defaultFaces[6];
-        static const bool defaultModernShaders;
 
         /**
          * Basically initializes all internal values with default quantities.
@@ -51,19 +49,9 @@ namespace entities {
          */
         CSkyboxBuilder &setFaces(const char* faces[6]);
 
-        /**
-         * Use modern shaders?
-         *
-         * @param modernShaders If true 330 core shaders will be used.
-         *                      Otherwise version 120 will be loaded.
-         */
-        CSkyboxBuilder &setModernShaders(const bool modernShaders);
-
-
     private:
         float _sideSize;
         const char* _faces[6];
-        bool _modernShaders;
     };
 }
 
