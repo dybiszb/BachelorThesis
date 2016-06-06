@@ -52,6 +52,7 @@ CWaterGrid::~CWaterGrid() {
 
 void CWaterGrid::render(const float *view,
                         const float *projection) {
+    glActiveTexture(GL_TEXTURE0);
     if (_animation) {
         _wavesDeformer.animationStep();
     }

@@ -20,6 +20,7 @@ CGLFWRenderer::~CGLFWRenderer() {
     delete _inputOutput;
     delete _water;
     delete _skybox;
+    delete _ship;
     _gui.terminateATW();
     glfwTerminate();
 }
@@ -78,6 +79,8 @@ void CGLFWRenderer::runMainLoop() {
                         &_camera.getProjectionMatrix()[0][0]);
         _water->render(&_camera.getViewMatrix()[0][0],
                        &_camera.getProjectionMatrix()[0][0]);
+        _ship->render(&_camera.getViewMatrix()[0][0],
+                      &_camera.getProjectionMatrix()[0][0]);
 
         TwDraw();
         glfwSwapBuffers(_window);
@@ -154,7 +157,7 @@ void CGLFWRenderer::_initRenderableObjects() {
             .setLightOn(false)
             .build();
 
-//    _ship = new CShipModel();
+    _ship = new CShipModel();
 }
 
 void CGLFWRenderer::_initGLGlobalSettings() {

@@ -26,6 +26,7 @@ COBJModel::~COBJModel() {
 
 void COBJModel::render(const float *view,
                     const float *projection) {
+    glDisable(GL_CULL_FACE);
     _shader.Use();
     _vao.bind();
     _indicesBuffer->bind();
@@ -33,7 +34,7 @@ void COBJModel::render(const float *view,
     glUniformMatrix4fv(_shader("model"), 1, GL_FALSE, &_modelMatrix[0][0]);
     glUniformMatrix4fv(_shader("view"), 1, GL_FALSE, view);
     glUniformMatrix4fv(_shader("projection"), 1, GL_FALSE, projection);
-    glUniform1iARB(_shader("texture_diffuse"), 0);
+    glUniform1iARB(_shader("texture_diffuse"), 3);
 
     // Attributes
     size_t verticesOffset = 0;
@@ -41,6 +42,7 @@ void COBJModel::render(const float *view,
     size_t indicesOffset = 0;
 
     for (int i = 0; i < _shapes.size(); i++) {
+        glActiveTexture(GL_TEXTURE0 + 3);
 
         int texIndex = _shapes[i].mesh.material_ids[0];
         _textures[texIndex]->bind();
@@ -77,6 +79,7 @@ void COBJModel::render(const float *view,
     _indicesBuffer->unbind();
     _vao.unbind();
     _shader.UnUse();
+    glEnable(GL_CULL_FACE);
 }
 
 void COBJModel::setModelMatrix(mat4 modelMatrix) {
@@ -112,8 +115,13 @@ bool COBJModel::_moreThanOneMaterialPerShape(string &errorMessage) {
 
 void COBJModel::_createTexturesFromImages() {
     for (auto &material : _materials) {
-        string path = _directory + "/" + material.diffuse_texname;
-        _textures.push_back(new CTexture2D(path));
+        if(material.diffuse_texname.size() > 0) {
+            string path = _directory + "/" + material.diffuse_texname;
+            _textures.push_back(new CTexture2D(path));
+        }
+        else {
+            _textures.push_back(new CTexture2D(1,1));
+        }
     }
 }
 
