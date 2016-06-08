@@ -14,6 +14,7 @@ COBJModel::COBJModel(string directory, string objName)
     _createBuffers();
     _loadDataToBuffers();
     _initializeShaderProgram();
+    _findMinMax();
 }
 
 COBJModel::~COBJModel() {
@@ -45,7 +46,7 @@ void COBJModel::render(const float *view,
         glActiveTexture(GL_TEXTURE0 + 3);
 
         int texIndex = _shapes[i].mesh.material_ids[0];
-        _textures[texIndex]->bind();
+        if(texIndex >= 0) _textures[texIndex]->bind();
 
         /* ----- Attach Vertices(layout = 0) ----- */
         glEnableVertexAttribArray(0);
@@ -68,7 +69,7 @@ void COBJModel::render(const float *view,
         texCoordOffset += sizeof(float) * _shapes[i].mesh.texcoords.size();
         indicesOffset += sizeof(unsigned int) * _shapes[i].mesh.indices.size();
 
-        _textures[texIndex]->unbind();
+        if(texIndex >= 0) _textures[texIndex]->unbind();
         checkErrorOpenGL("COBJModel - draw loop");
     }
 
@@ -86,6 +87,10 @@ void COBJModel::setModelMatrix(mat4 modelMatrix) {
     _modelMatrix = modelMatrix;
 }
 
+vector<shape_t>& COBJModel::getShapes() {
+    return _shapes;
+}
+
 void COBJModel::_loadShapesAndMaterials() {
     string errorMessage;
 
@@ -97,6 +102,36 @@ void COBJModel::_loadShapesAndMaterials() {
     if (_moreThanOneMaterialPerShape(errorMessage)) {
         cerr << errorMessage << endl;
     }
+}
+
+void COBJModel::_findMinMax() {
+    /* ----- Absurd Numbers ----- */
+    _xMinMax = vec2(INT_MAX, INT_MIN);
+    _yMinMax = vec2(INT_MAX, INT_MIN);
+    _zMinMax = vec2(INT_MAX, INT_MIN);
+
+    for(auto shape : _shapes) {
+        for(int i = 0; i < shape.mesh.positions.size(); i+=3) {
+            float x = shape.mesh.positions[i];
+            float y = shape.mesh.positions[i+1];
+            float z = shape.mesh.positions[i+2];
+
+            /* ----- Check Minima ----- */
+            _xMinMax.x = (x <_xMinMax.x) ? x : _xMinMax.x;
+            _yMinMax.x = (y <_yMinMax.x) ? y : _yMinMax.x;
+            _zMinMax.x = (z <_zMinMax.x) ? z : _zMinMax.x;
+
+            /* ----- Check Maxima ----- */
+            _xMinMax.y = (x > _xMinMax.y) ? x : _xMinMax.y;
+            _yMinMax.y = (y > _yMinMax.y) ? y : _yMinMax.y;;
+            _zMinMax.y = (z > _zMinMax.y) ? z : _zMinMax.y;;
+        }
+    }
+
+    cout << "x interval : < " << _xMinMax.x << " ; " << _xMinMax.y << " > \n";
+    cout << "y interval : < " << _yMinMax.x << " ; " << _yMinMax.y << " > \n";
+    cout << "z interval : < " << _zMinMax.x << " ; " << _zMinMax.y << " > \n";
+
 }
 
 bool COBJModel::_moreThanOneMaterialPerShape(string &errorMessage) {

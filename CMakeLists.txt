@@ -52,6 +52,7 @@ include_directories(
         include/application
         include/entities
         include/entities/builders
+        include/entities/bounding
         include/geometry
         include/rendering/buffers
         include/rendering/textures
@@ -95,7 +96,11 @@ set(
         src/utils/settings_reader.cpp
         src/entities/ship_model.cpp
         src/utils/obj_model.cpp
-        include/rendering/bindable_object.h)
+        include/rendering/bindable_object.h
+        src/entities/bounding/bounding_box.cpp
+        src/entities/bounding/bounding_grid.cpp
+        src/geometry/cuboid.cpp
+)
 
 #===============================================================================
 # Executable

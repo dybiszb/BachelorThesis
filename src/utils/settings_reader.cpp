@@ -24,6 +24,10 @@ Settings utils::readFromINI(string pathToINI) {
             reader.GetReal("Scene", "edge_size", 32.0);
     settings.quads =
             reader.GetInteger("Scene", "quads", 256);
+    settings.modelBoxes =
+            reader.GetBoolean("Scene", "model_boxes", false);
+    settings.emptyBoxes =
+            reader.GetBoolean("Scene", "empty_boxes", false);
 
     /* ----- Light ----- */
     settings.lightOn =

@@ -3,7 +3,7 @@
 #include "atw_gui.h"
 
 CAtwGui::CAtwGui(Settings& settings, CCustomCamera* camera)
-        : _settings(settings), _camera(camera) {
+        : _settings(settings), _camera(camera), _emptyBoxesOn(false) {
 
     _disturbanceHeight = _settings.manualDisturbanceStrength;
     _isRaining = _settings.rain;
@@ -17,6 +17,8 @@ CAtwGui::CAtwGui(Settings& settings, CCustomCamera* camera)
                 _settings.lightDirectionY,
                 _settings.lightDirectionZ
             };
+    _modelBoxesOn = _settings.modelBoxes;
+    _emptyBoxesOn = _settings.emptyBoxes;
 }
 
 void CAtwGui::initializeATW() {
@@ -114,6 +116,25 @@ void CAtwGui::initializeSceneBar() {
             .setGroup("Window")
             .setReadOnly(true)
             .build();
+
+    CAtwVarBuilder()
+            .setOwner(_sceneBar)
+            .setId("emptyBoxesOnOff")
+            .setDataType(TW_TYPE_BOOL32)
+            .setObservableData(&_modelBoxesOn)
+            .setLabel("Empty Boxes On / Off")
+            .setGroup("Bounding")
+            .build();
+
+    CAtwVarBuilder()
+            .setOwner(_sceneBar)
+            .setId("modelBoxesOnOff")
+            .setDataType(TW_TYPE_BOOL32)
+            .setObservableData(&_emptyBoxesOn)
+            .setLabel("Model Boxes On / Off")
+            .setGroup("Bounding2")
+            .build();
+
 
     CAtwVarBuilder()
             .setOwner(_sceneBar)
@@ -267,4 +288,12 @@ bool CAtwGui::getWaterAnimation() {
 
 bool CAtwGui::getLightOn() {
     return _lightOn;
+}
+
+bool CAtwGui::getModelBoxesOn() {
+    return _modelBoxesOn;
+}
+
+bool CAtwGui::getEmptyBoxesOn() {
+    return _emptyBoxesOn;
 }

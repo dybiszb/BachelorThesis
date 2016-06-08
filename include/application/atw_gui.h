@@ -71,6 +71,8 @@ public:
     vec3& getLightDirection();
     bool  getWaterAnimation();
     bool  getLightOn();
+    bool  getModelBoxesOn();
+    bool  getEmptyBoxesOn();
 
 private:
 //==============================================================================
@@ -98,6 +100,8 @@ private:
     bool     _lightOn;
     vec3     _lightDirection;
     vec3     _cameraPosition;
+    bool     _modelBoxesOn;
+    bool     _emptyBoxesOn;
 };
 
 #endif

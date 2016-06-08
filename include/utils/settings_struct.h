@@ -20,6 +20,8 @@ namespace utils {
         int windowHeight;
         float edgeSize;
         int quads;
+        bool modelBoxes;
+        bool emptyBoxes;
 
 //==============================================================================
 // Light Properties

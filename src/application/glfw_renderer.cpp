@@ -66,6 +66,10 @@ void CGLFWRenderer::runMainLoop() {
             }
         }
 
+        /* ----- Check Bounding ----- */
+        _ship->updateBoundingGrid(_gui.getModelBoxesOn(), _gui
+                .getEmptyBoxesOn());
+
         /* ----- Check Stop Scene ----- */
         if (_gui.getWaterAnimation() != _water->getAnimation()) {
             _water->setAnimation(_gui.getWaterAnimation());
@@ -157,7 +161,7 @@ void CGLFWRenderer::_initRenderableObjects() {
             .setLightOn(false)
             .build();
 
-    _ship = new CShipModel();
+    _ship = new CShipModel(_settings);
 }
 
 void CGLFWRenderer::_initGLGlobalSettings() {

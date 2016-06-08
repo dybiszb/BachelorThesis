@@ -8,14 +8,23 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include "obj_model.h"
+#include "bounding_grid.h"
+#include "settings_struct.h"
 
 using namespace rendering;
 using namespace glm;
 
 class CShipModel : public COBJModel{
 public:
-    CShipModel();
+    CShipModel(Settings& settings);
+    ~CShipModel();
 
+    void updateBoundingGrid(bool modelBoxesVisible, bool emptyBoxesVisible);
+
+    virtual void render(const float *view,
+                        const float *projection);
+private:
+    CBoundingGrid* _boundingGrid;
 };
 
 

@@ -22,6 +22,7 @@
 #include "buffer.h"
 #include "glsl_shader.h"
 #include "renderable_object.h"
+#include <climits>
 
 using namespace std;
 using namespace tinyobj;
@@ -55,10 +56,16 @@ namespace rendering {
          * @param modelMatrix New model matrix entries for .obj model.
          */
         void setModelMatrix(mat4 modelMatrix);
-
+        vector<shape_t>& getShapes();
+        // TODO move to private
+        vec2 _xMinMax;
+        vec2 _yMinMax;
+        vec2 _zMinMax;
     protected:
         string _directory;
         string _objName;
+
+
 
         vector<CTexture2D *> _textures;
         vector<shape_t> _shapes;
@@ -71,6 +78,8 @@ namespace rendering {
         mat4 _modelMatrix;
 
         void _loadShapesAndMaterials();
+
+        void _findMinMax();
 
         bool _moreThanOneMaterialPerShape(string &errorMessage);
 
