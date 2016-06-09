@@ -18,6 +18,7 @@
 #include "vertex.h"
 #include "quad.h"
 #include "error_handling.h"
+#include <math.h>
 
 using namespace rendering;
 using namespace geometry;

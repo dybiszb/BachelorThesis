@@ -31,15 +31,60 @@ void CWavesDeformer::disturbSurface(vec2 &quad, float amount) {
     _tex0->bind();
 
     GLfloat data[4] = {amount, 0, 0, 0};
+//    glTexSubImage2D(GL_TEXTURE_2D,
+//                    0,
+//                    quad.x,
+//                    quad.y,
+//                    1,
+//                    1,
+//                    GL_RGBA,
+//                    GL_FLOAT,
+//                    data);
+
+    ////////// TEMPORARY /////////////////////
+    int kernel = 18;
+
+
+    int quadXmin = (quad.x - kernel < 0 ) ? 0 : (quad.x - kernel);
+    int quadXmax = (quad.x + kernel >= _width-2 ) ? _width-2 : (quad.x +
+            kernel);
+    int quadYmin = (quad.y - kernel < 0 ) ? 0 : (quad.y - kernel);
+    int quadYmax = (quad.y + kernel >= _height -2) ? _height-2 : (quad.y +
+            kernel);
+
+    int data2Size = 4 * (quadXmax - quadXmin + 1) *(quadYmax - quadYmin + 1);
+
+    GLfloat data2[data2Size];
+
+    cout << "quad.x: " << quad.x << endl;
+    cout << "quadXmin: " << quadXmin << endl;
+    cout << "quadXmax: " << quadXmax << endl;
+
+    int offset = 0;
+    for(int y = quadYmin; y <=quadYmax; y++) {
+        for(int x = quadXmin; x <= quadXmax; x++) {
+            float localX = quadXmin + x;
+            float localY = quadYmin + y;
+            localX = x - quad.x;
+            localY = y - quad.y;
+
+            data2[offset++] = 2.0 + (-(localX * localX + localY * localY)/float
+                    (100.0));
+            data2[offset++] = 0.0;
+            data2[offset++] = 0.0;
+            data2[offset++] = 0.0;
+        }
+    }
+
     glTexSubImage2D(GL_TEXTURE_2D,
                     0,
-                    quad.x,
-                    quad.y,
-                    1,
-                    1,
+                    quadXmin,
+                    quadYmin,
+                    quadXmax - quadXmin,
+                    quadYmax - quadYmin,
                     GL_RGBA,
                     GL_FLOAT,
-                    data);
+                    data2);
 
     _tex0->unbind();
 }
