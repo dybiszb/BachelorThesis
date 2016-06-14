@@ -19,6 +19,8 @@ CAtwGui::CAtwGui(Settings& settings, CCustomCamera* camera)
             };
     _modelBoxesOn = _settings.modelBoxes;
     _emptyBoxesOn = _settings.emptyBoxes;
+    _kernelSize = _settings.manualDisturbanceKernel;
+    _flatness = _settings.manualDisturbanceFlatness;
 }
 
 void CAtwGui::initializeATW() {
@@ -53,6 +55,27 @@ void CAtwGui::initializeWaterBar() {
             .setStep(0.1)
             .setGroup("Manual_Disturbance")
             .build();
+
+    CAtwVarBuilder()
+            .setOwner(_waterBar)
+            .setId("kernelSize")
+            .setDataType(TW_TYPE_INT32)
+            .setObservableData(&_kernelSize)
+            .setLabel("Kernel:")
+            .setStep(1)
+            .setGroup("Manual_Disturbance")
+            .build();
+
+    CAtwVarBuilder()
+            .setOwner(_waterBar)
+            .setId("flatness")
+            .setDataType(TW_TYPE_FLOAT)
+            .setObservableData(&_flatness)
+            .setLabel("Flatness:")
+            .setStep(0.1)
+            .setGroup("Manual_Disturbance")
+            .build();
+
     CAtwVarBuilder()
             .setOwner(_waterBar)
             .setId("isRaining")
@@ -264,6 +287,14 @@ void CAtwGui::terminateATW() {
 
 float CAtwGui::getDisturbanceHeight() {
     return _disturbanceHeight;
+}
+
+int CAtwGui::getKernelSize() {
+    return _kernelSize;
+}
+
+float CAtwGui::getFlatness() {
+    return _flatness;
 }
 
 bool CAtwGui::getIsRaining() {

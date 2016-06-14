@@ -46,7 +46,8 @@ public:
     void animationStep();
     void bindTexture();
     void unbindTexture();
-    void disturbSurface(vec2& quad, float amount);
+    void pointDisturbance(vec2& quad, float amount);
+    void areaDisturbance(vec2& quad, float amount, int kernel, float flatness);
     void updateTime(float deltaT);
 private:
     GLsizei _width;

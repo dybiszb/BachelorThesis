@@ -110,8 +110,8 @@ void CWaterGrid::setLightDirections(vec3 &lightDirection) {
     _lightDirection.z = lightDirection.z;
 }
 
-void CWaterGrid::intersect(vec2 &viewportCoordinates, CCustomCamera &camera,
-                           float amount) {
+void CWaterGrid::areaIntersect(vec2 &viewportCoordinates, CCustomCamera &camera,
+                           float amount, int kernel, float flatness) {
 
     /* ----- Clip Coordinates ----- */
     vec3 rayNormalizedDeviceSpace = toNormalizedDeviceCoordinates(
@@ -147,15 +147,20 @@ void CWaterGrid::intersect(vec2 &viewportCoordinates, CCustomCamera &camera,
             float spaceBetweenQuads = _gridSizeOnX / (float) _quadsOnX;
             quad.x = (int) (quad.x / spaceBetweenQuads);
             quad.y = (int) (quad.y / spaceBetweenQuads);
-            _wavesDeformer.disturbSurface(quad, amount);
+            _wavesDeformer.areaDisturbance(quad, amount, kernel, flatness);
         }
 
 
     }
 }
 
-void CWaterGrid::intersect(vec2 &quadCoordinates, float amount) {
-    _wavesDeformer.disturbSurface(quadCoordinates, amount);
+void CWaterGrid::pointIntersect(vec2 &quadCoordinates, float amount) {
+    _wavesDeformer.pointDisturbance(quadCoordinates, amount);
+}
+
+void CWaterGrid::pointIntersect(vec2& quadCoordinates, float amount, int
+        kernel, float flatness) {
+    _wavesDeformer.areaDisturbance(quadCoordinates, amount, kernel, flatness);
 }
 
 int CWaterGrid::getVerticesPerSide() {

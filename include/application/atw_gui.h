@@ -65,6 +65,8 @@ public:
 // Access Functions
 //------------------------------------------------------------------------------
     float getDisturbanceHeight();
+    int   getKernelSize();
+    float getFlatness();
     bool  getIsRaining();
     int   getRainingIntensity();
     float getRainDropSize();
@@ -88,11 +90,13 @@ private:
 // Water Properties
 //------------------------------------------------------------------------------
     float    _disturbanceHeight;
+    int      _kernelSize;
+    float   _flatness;
     bool     _isRaining;
     int      _rainIntensity;
     float    _rainDropSize;
     bool     _waterAnimation;
-
+    string   _functionUsed = "amount - (x^2 + y^2)";
 
 //==============================================================================
 // Scene Properties

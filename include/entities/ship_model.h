@@ -23,6 +23,9 @@ public:
 
     virtual void render(const float *view,
                         const float *projection);
+
+    void moveShip(vec3& translation);
+
 private:
     CBoundingGrid* _boundingGrid;
 };

@@ -7,13 +7,17 @@
 #ifndef GLFW_IO_H
 #define GLFW_IO_H
 
+#include <glm/glm.hpp>
+#include "ship_model.h"
 #include <AntTweakBar.h>
 #include <glfw3.h>
 #include <iostream>
 #include <glm/glm.hpp>
 #include "camera.h"
 
+
 using namespace std;
+using namespace glm;
 
 class CGLFWInputOutput {
 public:
@@ -28,14 +32,14 @@ public:
      * will not free its resources.
      */
     void setCamera(CCustomCamera *camera);
-
+    void setShip(CShipModel* ship);
     static void key_callback(GLFWwindow *window, int key, int scancode,
                              int action, int mods);
 
     static void cursor_position_callback(GLFWwindow *window, double xpos,
                                          double ypos);
 
-    void updateCamera(float deltaTime);
+    void updateTime(float deltaTime);
 
     static void mouse_button_callback(GLFWwindow *window, int button,
                                       int action, int mods);
@@ -49,6 +53,7 @@ public:
 private:
     GLFWwindow*    _window;
     CCustomCamera* _camera;
+    CShipModel*    _ship;
     static bool    _rightButtonPressed;
     static double  _mouseX;
     static double  _mouseY;

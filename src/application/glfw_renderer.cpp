@@ -32,7 +32,7 @@ void CGLFWRenderer::runMainLoop() {
 
         /* ----- Update Time ----- */
         _water->updateTime(deltaTime);
-        _inputOutput->updateCamera(deltaTime);
+        _inputOutput->updateTime(deltaTime);
 
         /* ----- Camera Position ----- */
         _skybox->setCameraPosition(_camera.getPosition());
@@ -45,7 +45,9 @@ void CGLFWRenderer::runMainLoop() {
         if (_inputOutput->isIntersectionRequested()) {
             vec2 viewportCoordinates =
                     _inputOutput->getIntersectionCoordinates();
-            _water->intersect(viewportCoordinates, _camera, _gui.getDisturbanceHeight());
+            _water->areaIntersect(viewportCoordinates, _camera,
+                                  _gui.getDisturbanceHeight(), _gui
+                                          .getKernelSize(), _gui.getFlatness());
             _inputOutput->setIntersectionRequested(false);
         }
 
@@ -57,12 +59,14 @@ void CGLFWRenderer::runMainLoop() {
         /* ----- Rain ----- */
         if (_gui.getIsRaining() && _gui.getWaterAnimation()) {
             for (int i = 0; i < _gui.getRainingIntensity(); i++) {
-                int x = utils::randomInteger(2, _water->getVerticesPerSide()
-                                                - 2);
-                int y = utils::randomInteger(2, _water->getVerticesPerSide() -
-                                                2);
+                int x = utils::randomInteger(50, _water->getVerticesPerSide()
+                                                - 50);
+                int y = utils::randomInteger(50, _water->getVerticesPerSide() -
+                                                50);
                 vec2 quadCoordinates(x, y);
-                _water->intersect(quadCoordinates, _gui.getRainDropSize());
+                _water->pointIntersect(quadCoordinates, _gui.getRainDropSize
+                        (),_gui.getKernelSize(), _gui.getFlatness());
+
             }
         }
 
@@ -83,9 +87,10 @@ void CGLFWRenderer::runMainLoop() {
                         &_camera.getProjectionMatrix()[0][0]);
         _water->render(&_camera.getViewMatrix()[0][0],
                        &_camera.getProjectionMatrix()[0][0]);
+//        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         _ship->render(&_camera.getViewMatrix()[0][0],
                       &_camera.getProjectionMatrix()[0][0]);
-
+//        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         TwDraw();
         glfwSwapBuffers(_window);
         glfwPollEvents();
@@ -165,7 +170,7 @@ void CGLFWRenderer::_initRenderableObjects() {
 }
 
 void CGLFWRenderer::_initGLGlobalSettings() {
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 }

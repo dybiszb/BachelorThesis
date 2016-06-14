@@ -34,3 +34,7 @@ void CShipModel::render(const float *view,
     _boundingGrid->render(view, projection);
     glDisable(GL_BLEND);
 }
+
+void CShipModel::moveShip(vec3& translation) {
+    _modelMatrix = glm::translate(_modelMatrix, translation);
+}

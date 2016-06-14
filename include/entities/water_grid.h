@@ -52,9 +52,11 @@ namespace entities {
          */
         void setCameraPosition(vec3 cameraPosition);
         void setLightDirections(vec3& lightDirection);
-        void intersect(vec2& viewportCoordinates, CCustomCamera& camera,
-                       float amount);
-        void intersect(vec2& quadCoordinates, float amount);
+        void areaIntersect(vec2& viewportCoordinates, CCustomCamera& camera,
+                       float amount, int kernel, float flatness);
+        void pointIntersect(vec2& quadCoordinates, float amount);
+        void pointIntersect(vec2& quadCoordinates, float amount, int kernel, float flatness);
+
         int getVerticesPerSide();
         void setAnimation(bool animation);
         bool getAnimation();

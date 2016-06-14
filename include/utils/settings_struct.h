@@ -53,6 +53,8 @@ namespace utils {
 //------------------------------------------------------------------------------
         bool animation;
         float manualDisturbanceStrength;
+        int manualDisturbanceKernel;
+        float manualDisturbanceFlatness;
         bool rain;
         float rainStrength;
         int rainIntensity;
