@@ -96,7 +96,6 @@ private:
     int      _rainIntensity;
     float    _rainDropSize;
     bool     _waterAnimation;
-    string   _functionUsed = "amount - (x^2 + y^2)";
 
 //==============================================================================
 // Scene Properties
