@@ -8,7 +8,7 @@
 // author: dybisz
 //------------------------------------------------------------------------------
 #version 330 core
-
+precision highp float;
 struct BoundingBox{
     vec3 boxMin;
     vec3 boxMax;
@@ -19,6 +19,7 @@ struct BoundingBox{
 //------------------------------------------------------------------------------
 in vec3             v_position;
 in vec3             v_normal;
+in vec3             v_noiseNormal;
 in vec2             v_textureCoords;
 
 //==============================================================================
@@ -26,6 +27,7 @@ in vec2             v_textureCoords;
 //------------------------------------------------------------------------------
 uniform sampler2D   u_heightFieldTexture;
 uniform samplerCube u_skyboxTexture;
+uniform sampler2D   u_noiseTexture;
 uniform BoundingBox u_box;
 uniform vec3        u_cameraPosition;
 uniform float       u_sideSize;
@@ -127,6 +129,8 @@ void main()
     // Plane Skybox Check
     } else {
         gl_FragColor = vec4(mix(reflectedColor, refractedColor, w), 1.0);
+//          gl_FragColor = vec4(texture(u_noiseTexture, v_textureCoords));
     }
+
 
 }

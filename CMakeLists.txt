@@ -97,8 +97,8 @@ set(
         src/entities/ship_model.cpp
         src/utils/obj_model.cpp
         include/rendering/bindable_object.h
-        src/entities/bounding/bounding_box.cpp
-        src/entities/bounding/bounding_grid.cpp
+        src/entities/bounding/computational_cell.cpp
+        src/entities/bounding/computational_grid.cpp
         src/geometry/cuboid.cpp
 )
 

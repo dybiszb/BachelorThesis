@@ -32,6 +32,8 @@ namespace rendering {
         CVertexArray();
         ~CVertexArray();
 
+        void setCaller(string callerName);
+
         /**
          * Bind the object to the active OpenGl context.
          */
@@ -63,7 +65,7 @@ namespace rendering {
         void setBuffer(string name, GLenum type);
 
         /**
-         * Allows to acces some particular buffer by its name.
+         * Allows to access some particular buffer by its name.
          *
          * @param name Name of a buffer one wants to access.
          *
@@ -84,6 +86,7 @@ namespace rendering {
 
     private:
         map<string, CBuffer *> _buffers;
+        string _callerName = "";
     };
 
 }

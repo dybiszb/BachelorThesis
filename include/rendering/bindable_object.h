@@ -15,6 +15,9 @@
 #define BINDABLE_OBJECT_H
 
 #include <GL/glew.h>
+#include "string"
+
+using namespace std;
 
 namespace rendering {
 

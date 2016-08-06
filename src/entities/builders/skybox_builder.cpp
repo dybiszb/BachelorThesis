@@ -6,13 +6,21 @@ using namespace entities;
 
 const float CSkyboxBuilder::defaultSideSize = 32.0f;
 
+//const char* CSkyboxBuilder::defaultFaces[6]= {
+//        "./res/textures/skybox/front.jpg",
+//        "./res/textures/skybox/back.jpg",
+//        "./res/textures/skybox/up.jpg",
+//        "./res/textures/skybox/down.jpg",
+//        "./res/textures/skybox/right.jpg",
+//        "./res/textures/skybox/left.jpg"
+//};
 const char* CSkyboxBuilder::defaultFaces[6]= {
-        "./res/textures/skybox/front.jpg",
-        "./res/textures/skybox/back.jpg",
-        "./res/textures/skybox/up.jpg",
-        "./res/textures/skybox/down.jpg",
-        "./res/textures/skybox/right.jpg",
-        "./res/textures/skybox/left.jpg"
+        "./res/textures/hip_miramar/miramar_ft.tga",
+        "./res/textures/hip_miramar/miramar_bk.tga",
+        "./res/textures/hip_miramar/miramar_up.tga",
+        "./res/textures/hip_miramar/miramar_dn.tga",
+        "./res/textures/hip_miramar/miramar_rt.tga",
+        "./res/textures/hip_miramar/miramar_lf.tga"
 };
 
 

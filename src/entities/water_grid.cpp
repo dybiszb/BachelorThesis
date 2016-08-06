@@ -26,6 +26,7 @@ CWaterGrid::CWaterGrid(
     float halfSide = _sideSize / 2.0f;
     _box[0] = vec3(-halfSide, -halfSide, -halfSide);
     _box[1] = vec3(halfSide, halfSide, halfSide);
+    _vao.setCaller("CWaterGrid");
 
     _vao.bind();
     _vao.setBuffer("vertices", GL_ARRAY_BUFFER);
@@ -52,11 +53,12 @@ CWaterGrid::~CWaterGrid() {
 
 void CWaterGrid::render(const float *view,
                         const float *projection) {
-    glActiveTexture(GL_TEXTURE0);
+
     if (_animation) {
         _wavesDeformer.animationStep();
     }
-    _wavesDeformer.bindTexture();
+    glActiveTexture(GL_TEXTURE0);
+    _wavesDeformer.bindNoiseTexture();
     glViewport(0, 0, _viewportWidth, _viewportHeight);
 
     _shader.Use();
@@ -65,6 +67,7 @@ void CWaterGrid::render(const float *view,
 
     glUniform1iARB(_shader("u_heightFieldTexture"), 0);
     glUniform1iARB(_shader("u_skyboxTexture"), 1);
+    glUniform1iARB(_shader("u_noiseTexture"), 2);
 
     // Sampler of cubemap
     checkErrorCubemapId("CWaterGrid::render", _cubemapId);
@@ -72,7 +75,11 @@ void CWaterGrid::render(const float *view,
     glBindTexture(GL_TEXTURE_CUBE_MAP, _cubemapId);
     checkErrorOpenGL("CWaterGrid::render");
 
+    glActiveTexture(GL_TEXTURE0 + 2);
+    _wavesDeformer.bindNoiseTexture();
+
     glUniform1f(_shader("u_sideSize"), _sideSize);
+    glUniform1f(_shader("u_time"), this->_totalTime);
     glUniform1i(_shader("u_verticesPerSide"), _verticesPerSide);
     glUniform3fv(_shader("u_cameraPosition"), 1, &_cameraPosition[0]);
     glUniform3fv(_shader("u_lightDirection"), 1, &_lightDirection[0]);
@@ -88,14 +95,19 @@ void CWaterGrid::render(const float *view,
     glDrawElements(GL_TRIANGLES, CGrid::getTotalIndices(), GL_UNSIGNED_INT, 0);
     checkErrorOpenGL("CWaterGrid::render");
 
-    _wavesDeformer.unbindTexture();
+    _wavesDeformer.unbindDisturbanceTexture();
     _vao.unbind();
     _shader.UnUse();
 }
 
+GLfloat* CWaterGrid::getHeightfieldAsArray() {
+    return _wavesDeformer.getCurrentTextureAsVector();
+}
+
 void CWaterGrid::updateTime(float deltaTime) {
     _currentTime = (GLfloat) deltaTime;
-//    _wavesDeformer.updateTime(deltaTime);
+    _totalTime += _currentTime;
+    _wavesDeformer.updateTime(deltaTime);
 }
 
 void CWaterGrid::setCameraPosition(vec3 cameraPosition) {
@@ -196,6 +208,7 @@ void CWaterGrid::_initShader(bool modernShaders) {
     _shader.AddUniform("u_projectionMatrix");
     _shader.AddUniform("u_heightFieldTexture");
     _shader.AddUniform("u_skyboxTexture");
+    _shader.AddUniform("u_noiseTexture");
     _shader.AddUniform("u_cameraPosition");
     _shader.AddUniform("u_sideSize");
     _shader.AddUniform("u_verticesPerSide");
@@ -203,5 +216,6 @@ void CWaterGrid::_initShader(bool modernShaders) {
     _shader.AddUniform("u_box.boxMax");
     _shader.AddUniform("u_lightDirection");
     _shader.AddUniform("u_lightOn");
+    _shader.AddUniform("u_time");
     _shader.UnUse();
 }

@@ -11,7 +11,12 @@
 
 #include <GL/glew.h>
 #include "vertex.h"
+#include <vector>
+#include <glm/glm.hpp>
 #include "geometry_object.h"
+
+using namespace glm;
+using namespace std;
 
 namespace geometry {
 
@@ -21,7 +26,14 @@ namespace geometry {
          *
          * @param Size of the cube's edges.
          */
-        CCube(int size);
+        CCube(float size);
+
+        /**
+         *
+         * @param 8 vertices
+         */
+        CCube(vec3 centerVertex, float size=1.0);
+
         /**
          * TODO
          *
@@ -46,9 +58,12 @@ namespace geometry {
          */
         virtual int getTotalIndices();
 
+    protected:
+        vec3 _vertices = vec3(0.0);
+        float _size;
+
     private:
-        int   _totalIndices;
-        int   _size;
+        int _totalIndices;
     };
 
 }

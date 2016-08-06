@@ -1,12 +1,12 @@
 //==============================================================================
-// The shader simply assigns appropriate part of the texture to the fragment.
+// TODO
 //==============================================================================
 // author: dybisz
 //------------------------------------------------------------------------------
 #version 330 core
 precision highp float;
-
+uniform float u_immersion;
 void main()
 {
-    gl_FragColor = vec4(0.0, 0.0, 0.7, 0.3);
+    gl_FragColor = vec4(0.0, 0.0, u_immersion, 0.3);
 }

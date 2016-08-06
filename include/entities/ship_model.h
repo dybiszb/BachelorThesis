@@ -8,7 +8,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include "obj_model.h"
-#include "bounding_grid.h"
+#include "computational_grid.h"
 #include "settings_struct.h"
 
 using namespace rendering;
@@ -19,7 +19,10 @@ public:
     CShipModel(Settings& settings);
     ~CShipModel();
 
-    void updateBoundingGrid(bool modelBoxesVisible, bool emptyBoxesVisible);
+    void updateComputationalGrid(GLfloat *textureAsArray,
+                                 float width,
+                                 float height,
+                                 float edgeSize);
 
     virtual void render(const float *view,
                         const float *projection);
@@ -27,7 +30,7 @@ public:
     void moveShip(vec3& translation);
 
 private:
-    CBoundingGrid* _boundingGrid;
+    CComputationalGrid _computationalGrid;
 };
 
 

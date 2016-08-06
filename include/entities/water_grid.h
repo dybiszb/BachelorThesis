@@ -41,7 +41,7 @@ namespace entities {
 
         virtual void render(const float *view,
                             const float *projection);
-
+        GLfloat* getHeightfieldAsArray();
         void updateTime(float currentTime);
 
         /**
@@ -65,6 +65,7 @@ namespace entities {
     private:
         CWavesDeformer _wavesDeformer;
         GLfloat        _currentTime;
+        GLfloat        _totalTime;
         vec3           _cameraPosition;
         vec3           _lightDirection;
         float          _cameraAngle;
@@ -78,6 +79,7 @@ namespace entities {
         bool           _lightOn;
 
         void _initShader(bool modernShaders);
+
     };
 
 }

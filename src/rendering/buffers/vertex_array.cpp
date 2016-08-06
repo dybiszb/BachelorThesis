@@ -12,7 +12,11 @@ CVertexArray::CVertexArray(){
 CVertexArray::~ CVertexArray() {
     for (auto &pair : _buffers) delete pair.second;
     glDeleteVertexArrays(1, &_id);
-    checkErrorOpenGL("CVertexArray::~ CVertexArray");
+    checkErrorOpenGL(_callerName + ": CVertexArray::~ CVertexArray");
+}
+
+void CVertexArray::setCaller(string callerName) {
+    _callerName = callerName;
 }
 
 void CVertexArray::bind() {

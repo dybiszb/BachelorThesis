@@ -44,28 +44,40 @@ public:
      *
      */
     void animationStep();
-    void bindTexture();
-    void unbindTexture();
+    void bindDisturbanceTexture();
+    void unbindDisturbanceTexture();
     void pointDisturbance(vec2& quad, float amount);
+    void bindNoiseTexture();
+    void unbindNoiseTexture();
     void areaDisturbance(vec2& quad, float amount, int kernel, float flatness);
     void updateTime(float deltaT);
+    /**
+     * NOTE: Returned object must be deleted by the caller.
+     */
+    GLfloat* getCurrentTextureAsVector();
 private:
     GLsizei _width;
     GLsizei _height;
     GLuint _verticesPerSide;
     CFrameBuffer *_fbo0;
     CFrameBuffer *_fbo1;
+    CFrameBuffer *_fbo2;
+    CFrameBuffer *_fbo3;
     CTexture2D *_tex0;
     CTexture2D *_tex1;
+    CTexture2D *_tex2;
+    CTexture2D *_tex3;
     GLSLShader _shader;
     CVertexArray _vao;
     CQuad _quad;
     GLfloat _h;
     GLfloat _c;
     GLfloat _dt;
+    GLfloat _dtOverall;
     void _initShaders();
     void _initVao();
     void _initMembraneCoefficients();
+
 };
 
 

@@ -1,6 +1,8 @@
 // author: dybisz
 
 #include "glfw_renderer.h"
+#include <time.h>
+#include <unistd.h>
 
 CGLFWRenderer::CGLFWRenderer(Settings& settings) :
         _settings(settings),
@@ -29,7 +31,7 @@ void CGLFWRenderer::runMainLoop() {
     do {
         /* ----- Calculate Time ----- */
         float deltaTime = _timer.tick();
-
+        float renderTimeStart = glfwGetTime();
         /* ----- Update Time ----- */
         _water->updateTime(deltaTime);
         _inputOutput->updateTime(deltaTime);
@@ -71,8 +73,7 @@ void CGLFWRenderer::runMainLoop() {
         }
 
         /* ----- Check Bounding ----- */
-        _ship->updateBoundingGrid(_gui.getModelBoxesOn(), _gui
-                .getEmptyBoxesOn());
+
 
         /* ----- Check Stop Scene ----- */
         if (_gui.getWaterAnimation() != _water->getAnimation()) {
@@ -85,15 +86,24 @@ void CGLFWRenderer::runMainLoop() {
         /* ----- Render Scene ----- */
         _skybox->render(&_camera.getViewMatrix()[0][0],
                         &_camera.getProjectionMatrix()[0][0]);
+//        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         _water->render(&_camera.getViewMatrix()[0][0],
                        &_camera.getProjectionMatrix()[0][0]);
-//        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+//        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        _ship->updateComputationalGrid(_water->getHeightfieldAsArray(),
+                                       _settings.quads,
+                                       _settings.quads, _settings.edgeSize);
         _ship->render(&_camera.getViewMatrix()[0][0],
                       &_camera.getProjectionMatrix()[0][0]);
-//        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
         TwDraw();
         glfwSwapBuffers(_window);
         glfwPollEvents();
+
+        float renderTimeEnd = glfwGetTime();
+        float waitTime = (1000.0/ 60.0 - (renderTimeEnd - renderTimeStart));
+//        cout << waitTime << endl;
+//        sleep(waitTime * 0.1);
     }
     while (glfwGetKey(_window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
            glfwWindowShouldClose(_window) == 0);

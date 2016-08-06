@@ -11,8 +11,11 @@ CWavesDeformer::CWavesDeformer(int width, int height)
 
     _fbo0 = new CFrameBuffer();
     _fbo1 = new CFrameBuffer();
+    _fbo2 = new CFrameBuffer();
+
     _tex0 = new CTexture2D(width, height);
     _tex1 = new CTexture2D(width, height);
+    _tex2 = new CTexture2D(width, height);
 
     _fbo0->bind();
     _fbo0->setColorAttachment(*_tex0);
@@ -22,12 +25,16 @@ CWavesDeformer::CWavesDeformer(int width, int height)
     _fbo1->setColorAttachment(*_tex1);
     _fbo1->unbind();
 
+    _fbo2->bind();
+    _fbo2->setColorAttachment(*_tex2);
+    _fbo2->unbind();
+
     _initMembraneCoefficients();
     _initShaders();
     _initVao();
 }
 
-void CWavesDeformer::pointDisturbance(vec2& quad, float amount){
+void CWavesDeformer::pointDisturbance(vec2 &quad, float amount) {
     _tex0->bind();
 
     GLfloat data[4] = {amount, 0, 0, 0};
@@ -44,57 +51,65 @@ void CWavesDeformer::pointDisturbance(vec2& quad, float amount){
     _tex0->unbind();
 }
 
-void CWavesDeformer::areaDisturbance(vec2& quad, float amount, int kernel,
+void CWavesDeformer::areaDisturbance(vec2 &quad, float amount, int kernel,
                                      float flatness) {
     _tex0->bind();
+    cout << "disturbance (" << quad.x << ", " << quad.y << ")\n";
+    int quadXmin = (quad.x - kernel < 0) ? 0 : (quad.x - kernel);
+    int quadXmax = (quad.x + kernel >= _width - 2) ? _width - 2 : (quad.x +
+                                                                   kernel);
+    int quadYmin = (quad.y - kernel < 0) ? 0 : (quad.y - kernel);
+    int quadYmax = (quad.y + kernel >= _height - 2) ? _height - 2 : (quad.y +
+                                                                     kernel);
 
-    int quadXmin = (quad.x - kernel < 0 ) ? 0 : (quad.x - kernel);
-    int quadXmax = (quad.x + kernel >= _width-2 ) ? _width-2 : (quad.x +
-                                                                kernel);
-    int quadYmin = (quad.y - kernel < 0 ) ? 0 : (quad.y - kernel);
-    int quadYmax = (quad.y + kernel >= _height -2) ? _height-2 : (quad.y +
-                                                                  kernel);
-
-    int data2Size = 4 * (quadXmax - quadXmin + 1) *(quadYmax - quadYmin + 1);
+    int data2Size = 4 * (quadXmax - quadXmin + 1) * (quadYmax - quadYmin + 1);
 
     GLfloat data2[data2Size];
 
     int offset = 0;
-    for(int y = quadYmin; y <=quadYmax; y++) {
-        for(int x = quadXmin; x <= quadXmax; x++) {
+    for (int y = quadYmin; y <= quadYmax; y++) {
+        for (int x = quadXmin; x <= quadXmax; x++) {
             float localX = x - quad.x;
             float localY = y - quad.y;
-            data2[offset++] = amount +  flatness * (-(localX * localX + localY *
-                                                                         localY)
-                                         /float(2 * (kernel+1) * 2 * (kernel+1) + 2 * (kernel+1) * 2 * (kernel+1)));
+            data2[offset++] = amount + flatness * (-(localX * localX + localY *
+                                                                       localY)
+                                                   /
+                                                   float(2 * (kernel + 1) * 2 *
+                                                         (kernel + 1) +
+                                                         2 * (kernel + 1) * 2 *
+                                                         (kernel + 1)));
             data2[offset++] = 0.0;
             data2[offset++] = 0.0;
             data2[offset++] = 0.0;
         }
     }
-    if(quadXmin + kernel*2 + 1 < _width && quadYmin + kernel*2 + 1 < _height)
-    glTexSubImage2D(GL_TEXTURE_2D,
-                    0,
-                    quadXmin,
-                    quadYmin,
-                    kernel*2 + 1,
-                    kernel*2 + 1,
-                    GL_RGBA,
-                    GL_FLOAT,
-                    data2);
+    if (quadXmin + kernel * 2 + 1 < _width &&
+        quadYmin + kernel * 2 + 1 < _height)
+        glTexSubImage2D(GL_TEXTURE_2D,
+                        0,
+                        quadXmin,
+                        quadYmin,
+                        kernel * 2 + 1,
+                        kernel * 2 + 1,
+                        GL_RGBA,
+                        GL_FLOAT,
+                        data2);
 
     _tex0->unbind();
 }
 
 void CWavesDeformer::updateTime(float deltaTime) {
-    _dt = deltaTime;
+//    _dt = deltaTime;
+    _dtOverall += deltaTime;
 }
 
 CWavesDeformer::~CWavesDeformer() {
     delete _fbo0;
     delete _fbo1;
+    delete _fbo2;
     delete _tex0;
     delete _tex1;
+    delete _tex2;
 
     _shader.DeleteShaderProgram();
 }
@@ -105,7 +120,6 @@ void CWavesDeformer::animationStep() {
     _shader.Use();
     _vao.bind();
     _vao.bindBuffers();
-
     glUniform1iARB(_shader("u_heightFieldTexture"), 0);
     glUniform1f(_shader("u_sideSize"), _width);
     glUniform1i(_shader("u_verticesPerSide"), _verticesPerSide);
@@ -113,7 +127,12 @@ void CWavesDeformer::animationStep() {
     glUniform1f(_shader("u_membraneProperties.h"), _h);
     glUniform1f(_shader("u_membraneProperties.c"), _c);
     glUniform1f(_shader("u_membraneProperties.dt"), _dt);
+    glUniform1f(_shader("u_membraneProperties.dtOverall"), _dtOverall);
 
+
+
+    // Water Disturbance Pass
+    glUniform1i(_shader("u_isPerlinNoiseCalculations"), 0);
     _tex0->bind();
     _fbo1->bind();
     glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
@@ -124,18 +143,34 @@ void CWavesDeformer::animationStep() {
     glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
     checkErrorOpenGL("CWavesDeformer::renderStep");
     _fbo0->unbind();
+//    _tex0->bind();
+    // Perlin Noise Pass
+    glUniform1i(_shader("u_isPerlinNoiseCalculations"), 1);
+    _tex0->bind();
+    _fbo2->bind();
+    glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
+    checkErrorOpenGL("CWavesDeformer::renderStep");
+    _fbo2->unbind();
 
     _vao.unbind();
     _shader.UnUse();
 }
 
 
-void CWavesDeformer::bindTexture() {
+void CWavesDeformer::bindDisturbanceTexture() {
     _tex0->bind();
 }
 
-void CWavesDeformer::unbindTexture() {
+void CWavesDeformer::unbindDisturbanceTexture() {
     _tex0->unbind();
+}
+
+void CWavesDeformer::bindNoiseTexture() {
+    _tex2->bind();
+}
+
+void CWavesDeformer::unbindNoiseTexture() {
+    _tex2->unbind();
 }
 
 void CWavesDeformer::_initShaders() {
@@ -155,6 +190,8 @@ void CWavesDeformer::_initShaders() {
     _shader.AddUniform("u_membraneProperties.h");
     _shader.AddUniform("u_membraneProperties.c");
     _shader.AddUniform("u_membraneProperties.dt");
+    _shader.AddUniform("u_membraneProperties.dtOverall");
+    _shader.AddUniform("u_isPerlinNoiseCalculations");
     _shader.UnUse();
 }
 
@@ -168,7 +205,8 @@ void CWavesDeformer::_initVao() {
     _vao.setBuffer("indices", GL_ELEMENT_ARRAY_BUFFER);
     _vao.bind();
     _vao.bindBuffers();
-    _vao.getBuffer("vertices")->setDataStatic(_quad.getTotalVertices() * sizeof(Vertex), &vertices[0]);
+    _vao.getBuffer("vertices")->setDataStatic(
+            _quad.getTotalVertices() * sizeof(Vertex), &vertices[0]);
     _vao.assignFloatAttribute(_shader["a_position"], 3, stride, 0);
     _vao.assignFloatAttribute(_shader["a_heightFieldTexCoords"], 2, stride,
                               (const GLvoid *) offsetof(Vertex, texCoord));
@@ -184,6 +222,16 @@ void CWavesDeformer::_initVao() {
 void CWavesDeformer::_initMembraneCoefficients() {
     float N = (float) _verticesPerSide;
     _h = 2. / (N - 1.);
-    _c = 1.;
-    _dt = 1. / (N);
+    _c = 0.3;
+    _dt = (1. / (N));
+    _dtOverall = 0;
+}
+
+GLfloat* CWavesDeformer::getCurrentTextureAsVector() {
+    GLfloat* textureAsArray = new GLfloat[_width * _height * 8];
+    _tex2->bind();
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT, textureAsArray);
+    _tex2->unbind();
+    return textureAsArray;
 }

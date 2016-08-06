@@ -8,7 +8,7 @@
 // author: dybisz
 //------------------------------------------------------------------------------
 #version 330 core
-
+//precision highp float;
 //==============================================================================
 // In
 //------------------------------------------------------------------------------
@@ -20,18 +20,46 @@ in vec2           a_heightFieldTexCoords;
 //------------------------------------------------------------------------------
 out vec3          v_position;
 out vec3          v_normal;
+out vec3          v_noiseNormal;
 out vec2          v_textureCoords;
 
 //==============================================================================
 // Uniforms
 //------------------------------------------------------------------------------
 uniform sampler2D u_heightFieldTexture;
+uniform sampler2D u_noiseTexture;
 uniform mat4      u_modelMatrix;
 uniform mat4      u_viewMatrix;
 uniform mat4      u_projectionMatrix;
 uniform vec3      u_cameraPosition;
 uniform int       u_verticesPerSide;
 uniform float     u_sideSize;
+uniform float     u_time;
+
+/**
+ * TODO
+ */
+float hash( vec2 p ) {
+    float h = dot(p,vec2(127.1,311.7));
+    return fract(sin(h)*43758.5453123);
+}
+
+/**
+ * TODO
+ */
+float noise( in vec2 p ) {
+    vec2 i = floor( p );
+    vec2 f = fract( p );
+    vec2 u = f*f*(3.0-2.0*f);
+    return -1.0+2.0*mix(
+                mix( hash( i + vec2(0.0,0.0) ),
+                     hash( i + vec2(1.0,0.0) ),
+                        u.x),
+                mix( hash( i + vec2(0.0,1.0) ),
+                     hash( i + vec2(1.0,1.0) ),
+                        u.x),
+                u.y);
+}
 
 /**
  * For considered vertex procedure reads height of its neighbors. Based on them
@@ -40,56 +68,56 @@ uniform float     u_sideSize;
  *
  * @return Normal to the current vertex.
  */
-vec3 calculateNormal() {
+vec3 calculateNormal(sampler2D textureSampler, vec2 coordinates) {
   float step    = 1. / float(u_verticesPerSide);
 
   float current = texture
                   (
-                      u_heightFieldTexture,
+                      textureSampler,
                       vec2
                       (
-                          a_heightFieldTexCoords.x,
-                          a_heightFieldTexCoords.y
+                          coordinates.x,
+                          coordinates.y
                       )
                   ).r;
 
   float up      = texture
                   (
-                      u_heightFieldTexture,
+                      textureSampler,
                       vec2
                       (
-                          a_heightFieldTexCoords.x,
-                          a_heightFieldTexCoords.y + step
+                          coordinates.x,
+                          coordinates.y + step
                       )
                   ).r;
 
   float down    = texture
                   (
-                      u_heightFieldTexture,
+                      textureSampler,
                       vec2
                       (
-                          a_heightFieldTexCoords.x,
-                          a_heightFieldTexCoords.y - step
+                          coordinates.x,
+                          coordinates.y - step
                       )
                   ).r;
 
   float right   = texture
                   (
-                      u_heightFieldTexture,
+                      textureSampler,
                       vec2
                       (
-                          a_heightFieldTexCoords.x + step,
-                          a_heightFieldTexCoords.y
+                          coordinates.x + step,
+                          coordinates.y
                       )
                   ).r;
 
   float left    = texture
                   (
-                      u_heightFieldTexture,
+                      textureSampler,
                       vec2
                       (
-                          a_heightFieldTexCoords.x - step,
-                          a_heightFieldTexCoords.y
+                          coordinates.x - step,
+                          coordinates.y
                       )
                   ).r;
 
@@ -102,10 +130,30 @@ vec3 calculateNormal() {
 
 void main()
 {
+
+    float c = noise(250.0 * a_heightFieldTexCoords+u_time);
+    float noiseHeight = texture(u_noiseTexture, a_heightFieldTexCoords).r;
+    float disturbHeight = texture(u_heightFieldTexture, a_heightFieldTexCoords).r * 0.6;
+
     // Read the vertex height
     vec3 position = a_position;
-    position.y    = texture(u_heightFieldTexture, a_heightFieldTexCoords).r;
-
+//    if(abs(disturbHeight) > abs(noiseHeight)) {
+            position.y = disturbHeight;
+            v_normal = calculateNormal(u_heightFieldTexture, a_heightFieldTexCoords);
+//
+//    } else {
+//        position.y =  noiseHeight + disturbHeight;
+//        v_normal = calculateNormal(u_noiseTexture, a_heightFieldTexCoords);
+//    }
+//    if(disturbHeight < noiseHeight && disturbHeight < 0 && disturbHeight < 0) {
+//        position.y =  disturbHeight;
+//        v_normal = calculateNormal(u_noiseTexture, a_heightFieldTexCoords);
+//    } else if(disturbHeight > noiseHeight && disturbHeight > 0 && disturbHeight > 0){
+//        position.y = disturbHeight + noiseHeight;
+//        v_normal = calculateNormal(u_heightFieldTexture, a_heightFieldTexCoords);
+//    }
+//    position.y =  disturbHeight + noiseHeight;
+//    v_normal = calculateNormal(u_noiseTexture, a_heightFieldTexCoords) + calculateNormal(u_heightFieldTexture, a_heightFieldTexCoords);
     // Update its position according to transformations
     gl_Position   = u_projectionMatrix *
                     u_viewMatrix       *
@@ -113,7 +161,6 @@ void main()
                     vec4(position, 1.0);
 
     // Pass values to the next shader
-    v_normal      = calculateNormal();
     v_position    = position;
     v_textureCoords = a_heightFieldTexCoords;
 }
