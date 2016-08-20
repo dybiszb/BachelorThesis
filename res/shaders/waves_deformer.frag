@@ -33,6 +33,11 @@ uniform float                u_sideSize;
 uniform int                  u_verticesPerSide;
 uniform MembraneEqProperties u_membraneProperties;
 uniform int                  u_isPerlinNoiseCalculations;
+uniform float                u_wavesAmplitude;
+uniform float                u_wavesFrequency;
+uniform float                u_wavesChoppiness;
+uniform float                u_wavesResoulutionX;
+uniform float                u_wavesResoulutionY;
 
 /**
  * Calculates damping according to distance between the fragment and closest
@@ -115,11 +120,12 @@ float sea_octave(vec2 uv, float choppy) {
 
 float map_detailed() {
     mat2 octave_m = mat2(1.6,1.2,-1.2,1.6);
-    float freq = 10.16;
-    float amp = 0.6;
-    float choppy = 2.0;
+    float freq = u_wavesFrequency;
+    float amp = u_wavesAmplitude;
+    float choppy = u_wavesChoppiness;
     vec2 uv = v_heightFieldTexCoords;
-    uv.x *= 0.75;
+    uv.x *= u_wavesResoulutionX;
+    uv.y *= u_wavesResoulutionY;
 
     float d, h = 0.0;
     for(int i = 0; i < 5; i++) {

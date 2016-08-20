@@ -7,6 +7,8 @@
 #ifndef BOUNDING_GRID_H
 #define BOUNDING_GRID_H
 
+#pragma comment(lib,PhysX3Gpu_x64.lib)
+
 #include <glm/glm.hpp>
 #include <vector>
 #include <iostream>

@@ -58,6 +58,14 @@ namespace utils {
         bool rain;
         float rainStrength;
         int rainIntensity;
+        int rainKernelSize;
+        float rainFlatness;
+        bool waves;
+        float wavesAmplitude;
+        float wavesFrequency;
+        float wavesChoppiness;
+        float wavesResolutionX;
+        float wavesResolutionY;
     };
 }
 

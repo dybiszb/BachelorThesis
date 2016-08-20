@@ -195,6 +195,25 @@ bool CWaterGrid::getLightOn() {
     return _lightOn;
 }
 
+void CWaterGrid::setWavesOn(bool wavesOn) {
+    _wavesDeformer.setWavesOn(wavesOn);
+}
+
+void CWaterGrid::setWavesAmplitude(float wavesAmplitude) {
+    _wavesDeformer.setWavesAmplitude(wavesAmplitude);
+}
+void CWaterGrid::setWavesFrequency(float wavesFrequency) {
+    _wavesDeformer.setWavesFrequency(wavesFrequency);
+}
+void CWaterGrid::setWavesChoppiness(float wavesChoppiness) {
+    _wavesDeformer.setWavesChoppiness(wavesChoppiness);
+}
+void CWaterGrid::setWavesResolutionX(float wavesResolutionX) {
+    _wavesDeformer.setWavesResolutionX(wavesResolutionX);
+}
+void CWaterGrid::setWavesResolutionY(float wavesResolutionY) {
+    _wavesDeformer.setWavesResolutionY(wavesResolutionY);
+}
 void CWaterGrid::_initShader(bool modernShaders) {
     _shader.LoadFromFile(GL_VERTEX_SHADER, "res/shaders/water.vert");
     _shader.LoadFromFile(GL_FRAGMENT_SHADER, "res/shaders/water.frag");

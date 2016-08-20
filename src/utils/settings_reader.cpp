@@ -21,7 +21,7 @@ Settings utils::readFromINI(string pathToINI) {
     settings.windowHeight =
             reader.GetInteger("Scene", "window_height", 600);
     settings.edgeSize =
-            reader.GetReal("Scene", "edge_size", 32.0);
+            (float) reader.GetReal("Scene", "edge_size", 32.0);
     settings.quads =
             reader.GetInteger("Scene", "quads", 256);
     settings.modelBoxes =
@@ -33,49 +33,67 @@ Settings utils::readFromINI(string pathToINI) {
     settings.lightOn =
             reader.GetBoolean("Light", "on", false);
     settings.lightDirectionX =
-            reader.GetReal("Light", "direction_x", -1);
+            (float) reader.GetReal("Light", "direction_x", -1);
     settings.lightDirectionY =
-            reader.GetReal("Light", "direction_y", -1);
+            (float) reader.GetReal("Light", "direction_y", -1);
     settings.lightDirectionZ =
-            reader.GetReal("Light", "direction_z", -1);
+            (float) reader.GetReal("Light", "direction_z", -1);
 
     /* ----- GUI ----- */
     settings.guiMargin =
-            reader.GetReal("GUI", "margin", 10.0);
+            (float) reader.GetReal("GUI", "margin", 10.0);
 
     /* ----- Camera ----- */
     settings.cameraStartPositionX =
-            reader.GetReal("Camera", "start_position_x", 0.0);
+            (float) reader.GetReal("Camera", "start_position_x", 0.0);
     settings.cameraStartPositionY =
-            reader.GetReal("Camera", "start_position_y", 0.0);
+            (float) reader.GetReal("Camera", "start_position_y", 0.0);
     settings.cameraStartPositionZ =
-            reader.GetReal("Camera", "start_position_z", 0.0);
+            (float) reader.GetReal("Camera", "start_position_z", 0.0);
     settings.cameraHorizontalAngle =
-            reader.GetReal("Camera", "horizontal_angle", 0.0);
+            (float) reader.GetReal("Camera", "horizontal_angle", 0.0);
     settings.cameraVerticalAngle =
-            reader.GetReal("Camera", "vertical_angle", 0.0);
+            (float) reader.GetReal("Camera", "vertical_angle", 0.0);
     settings.cameraFov =
-            reader.GetReal("Camera", "fov", 45.0);
+            (float) reader.GetReal("Camera", "fov", 45.0);
     settings.cameraMovementSpeed =
-            reader.GetReal("Camera", "movement_speed", 10.0);
+            (float) reader.GetReal("Camera", "movement_speed", 10.0);
     settings.cameraAngularSpeed =
-            reader.GetReal("Camera", "angular_speed", 0.5);
+            (float) reader.GetReal("Camera", "angular_speed", 0.5);
 
     /* ----- Water ----- */
     settings.animation =
             reader.GetBoolean("Water", "animation", true);
     settings.manualDisturbanceStrength =
-            reader.GetReal("Water", "manual_disturbance_strength", 0.3);
+            (float) reader.GetReal("Water", "manual_disturbance_strength", 0.3);
     settings.manualDisturbanceKernel =
             reader.GetInteger("Water", "manual_disturbance_kernel", 4);
     settings.manualDisturbanceFlatness =
-            reader.GetReal("Water", "manual_disturbance_flatness", 0.2);
+            (float) reader.GetReal("Water", "manual_disturbance_flatness", 0.2);
+
     settings.rain =
             reader.GetBoolean("Water", "rain", false);
     settings.rainStrength =
-            reader.GetReal("Water", "rain_strength", 1.0);
+            (float) reader.GetReal("Water", "rain_strength", 1.0);
     settings.rainIntensity =
             reader.GetInteger("Water", "rain_intensity", 1);
+    settings.rainKernelSize =
+            reader.GetInteger("Water", "rain_kernel", 1);
+    settings.rainFlatness =
+            (float) reader.GetReal("Water", "rain_flatness", 0.2);
+
+    settings.waves =
+            reader.GetBoolean("Water", "waves", true);
+    settings.wavesAmplitude =
+            (float) reader.GetReal("Water", "waves_amplitude", 0.6);
+    settings.wavesFrequency =
+            (float) reader.GetReal("Water", "waves_frequency", 10.16);
+    settings.wavesChoppiness =
+            (float) reader.GetReal("Water", "waves_choppiness", 2.0);
+    settings.wavesResolutionX =
+            (float) reader.GetReal("Water", "waves_resolution_x", 0.75);
+    settings.wavesResolutionY =
+            (float) reader.GetReal("Water", "waves_resolution_y", 1.0);
 
     return settings;
 }

@@ -62,6 +62,12 @@ namespace entities {
         bool getAnimation();
         bool getLightOn();
         void setLightOn(bool lightOn);
+        void setWavesOn(bool wavesOn);
+        void setWavesAmplitude(float wavesAmplitude);
+        void setWavesFrequency(float wavesFrequency);
+        void setWavesChoppiness(float wavesChoppiness);
+        void setWavesResolutionX(float wavesResolution);
+        void setWavesResolutionY(float wavesResolution);
     private:
         CWavesDeformer _wavesDeformer;
         GLfloat        _currentTime;

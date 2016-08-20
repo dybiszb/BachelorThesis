@@ -2,9 +2,8 @@
 
 #include "atw_gui.h"
 
-CAtwGui::CAtwGui(Settings& settings, CCustomCamera* camera)
+CAtwGui::CAtwGui(Settings &settings, CCustomCamera *camera)
         : _settings(settings), _camera(camera), _emptyBoxesOn(false) {
-
     _disturbanceHeight = _settings.manualDisturbanceStrength;
     _isRaining = _settings.rain;
     _rainIntensity = _settings.rainIntensity;
@@ -13,14 +12,22 @@ CAtwGui::CAtwGui(Settings& settings, CCustomCamera* camera)
     _lightOn = _settings.lightOn;
     _lightDirection = vec3
             {
-                _settings.lightDirectionX,
-                _settings.lightDirectionY,
-                _settings.lightDirectionZ
+                    _settings.lightDirectionX,
+                    _settings.lightDirectionY,
+                    _settings.lightDirectionZ
             };
     _modelBoxesOn = _settings.modelBoxes;
     _emptyBoxesOn = _settings.emptyBoxes;
     _kernelSize = _settings.manualDisturbanceKernel;
     _flatness = _settings.manualDisturbanceFlatness;
+    _rainKernel = _settings.rainKernelSize;
+    _rainFlatness = _settings.rainFlatness;
+    _wavesOn = _settings.waves;
+    _wavesAmplitude = _settings.wavesAmplitude;
+    _wavesFrequency = _settings.wavesFrequency;
+    _wavesResolutionX = _settings.wavesResolutionX;
+    _wavesResolutionY = _settings.wavesResolutionY;
+    _wavesChoppiness = _settings.wavesChoppiness;
 }
 
 void CAtwGui::initializeATW() {
@@ -31,10 +38,10 @@ void CAtwGui::initializeATW() {
 void CAtwGui::initializeWaterBar() {
     _waterBar = CAtwBarBuilder()
             .setLabel("Water")
-            .setPosition(_settings.guiMargin, _settings.guiMargin)
+            .setPosition((int) _settings.guiMargin, (int) _settings.guiMargin)
             .setContained(true)
             .setColor(0, 128, 128)
-            .setSize(240, 210)
+            .setSize(240, 350)
             .build();
 
     CAtwVarBuilder()
@@ -97,12 +104,91 @@ void CAtwGui::initializeWaterBar() {
 
     CAtwVarBuilder()
             .setOwner(_waterBar)
+            .setId("rainKernelSize")
+            .setDataType(TW_TYPE_INT32)
+            .setObservableData(&_rainKernel)
+            .setLabel("Kernel:")
+            .setStep(1)
+            .setGroup("Rain")
+            .build();
+
+    CAtwVarBuilder()
+            .setOwner(_waterBar)
+            .setId("rainFlatness")
+            .setDataType(TW_TYPE_FLOAT)
+            .setObservableData(&_rainFlatness)
+            .setLabel("Flatness:")
+            .setStep(0.1)
+            .setGroup("Rain")
+            .build();
+
+    CAtwVarBuilder()
+            .setOwner(_waterBar)
             .setId("rainIntensity")
             .setDataType(TW_TYPE_INT32)
             .setObservableData(&_rainIntensity)
             .setLabel("Intensity:")
             .setStep(1.0)
             .setGroup("Rain")
+            .build();
+
+    CAtwVarBuilder()
+            .setOwner(_waterBar)
+            .setId("wavesOn")
+            .setDataType(TW_TYPE_BOOL32)
+            .setObservableData(&_wavesOn)
+            .setLabel("On / Off:")
+            .setGroup("Waves")
+            .build();
+
+    CAtwVarBuilder()
+            .setOwner(_waterBar)
+            .setId("wavesFrequency")
+            .setDataType(TW_TYPE_FLOAT)
+            .setObservableData(&_wavesFrequency)
+            .setLabel("Frequency:")
+            .setStep(0.01)
+            .setGroup("Waves")
+            .build();
+
+    CAtwVarBuilder()
+            .setOwner(_waterBar)
+            .setId("wavesAmplitude")
+            .setDataType(TW_TYPE_FLOAT)
+            .setObservableData(&_wavesAmplitude)
+            .setLabel("Amplitude:")
+            .setStep(0.01)
+            .setGroup("Waves")
+            .build();
+
+    CAtwVarBuilder()
+            .setOwner(_waterBar)
+            .setId("wavesChoppiness")
+            .setDataType(TW_TYPE_FLOAT)
+            .setObservableData(&_wavesChoppiness)
+            .setLabel("Choppiness:")
+            .setStep(0.1)
+            .setGroup("Waves")
+            .build();
+
+    CAtwVarBuilder()
+            .setOwner(_waterBar)
+            .setId("wavesResolutionX")
+            .setDataType(TW_TYPE_FLOAT)
+            .setObservableData(&_wavesResolutionX)
+            .setLabel("Resolution (X):")
+            .setStep(0.01)
+            .setGroup("Waves")
+            .build();
+
+    CAtwVarBuilder()
+            .setOwner(_waterBar)
+            .setId("wavesResolutionY")
+            .setDataType(TW_TYPE_FLOAT)
+            .setObservableData(&_wavesResolutionY)
+            .setLabel("Resolution (Y):")
+            .setStep(0.01)
+            .setGroup("Waves")
             .build();
 }
 
@@ -111,12 +197,12 @@ void CAtwGui::initializeSceneBar() {
             .setLabel("Scene")
             .setPosition
                     (
-                            _settings.windowWidth- 195 - _settings.guiMargin,
+                            _settings.windowWidth - 195 - _settings.guiMargin,
                             0 + _settings.guiMargin
                     )
             .setContained(true)
             .setColor(0, 128, 128)
-            .setSize(240, 450)
+            .setSize(240, 470)
             .setRefresh(0.1)
             .build();
 
@@ -180,9 +266,9 @@ void CAtwGui::initializeSceneBar() {
             .build();
 
     TwStructMember pointMembers[] = {
-            { "X", TW_TYPE_FLOAT, offsetof(vec3, x), "step=0.1"},
-            { "Y", TW_TYPE_FLOAT, offsetof(vec3, y), "step=0.1"},
-            { "Z", TW_TYPE_FLOAT, offsetof(vec3, z), "step=0.1"}
+            {"X", TW_TYPE_FLOAT, offsetof(vec3, x), "step=0.1"},
+            {"Y", TW_TYPE_FLOAT, offsetof(vec3, y), "step=0.1"},
+            {"Z", TW_TYPE_FLOAT, offsetof(vec3, z), "step=0.1"}
     };
     TwType pointType = TwDefineStruct("POINT", pointMembers, 3, sizeof(vec3),
                                       NULL, NULL);
@@ -249,12 +335,16 @@ void CAtwGui::initializeSceneBar() {
 }
 
 void CAtwGui::initializeControlsBar() {
-
+    int width = 240;
+    int height = 105;
     _controlsBar = CAtwBarBuilder()
             .setLabel("Controls")
-            .setSize(200, 105)
+            .setSize(width, height)
             .setContained(true)
-            .setPosition(625, 510)
+            .setPosition(
+                    (int) (_settings.windowWidth - 195 - _settings.guiMargin),
+                    (int) (_settings.windowHeight - _settings.guiMargin -
+                           height))
             .setAlpha(0)
             .setFontsize(1)
             .setColor(0, 128, 128)
@@ -327,4 +417,36 @@ bool CAtwGui::getModelBoxesOn() {
 
 bool CAtwGui::getEmptyBoxesOn() {
     return _emptyBoxesOn;
+}
+
+int   CAtwGui::getRainKernel() {
+    return _rainKernel;
+}
+
+float CAtwGui::getRainFlatness() {
+    return _rainFlatness;
+}
+
+bool CAtwGui::getWavesOn() {
+    return _wavesOn;
+}
+
+float CAtwGui::getWavesAmplitude() {
+    return _wavesAmplitude;
+}
+
+float CAtwGui::getWavesFrequency() {
+    return _wavesFrequency;
+}
+
+float CAtwGui::getWavesChoppiness() {
+    return _wavesChoppiness;
+}
+
+float CAtwGui::getWavesResolutionX() {
+    return _wavesResolutionX;
+}
+
+float CAtwGui::getWavesResolutionY() {
+    return _wavesResolutionY;
 }

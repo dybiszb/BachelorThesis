@@ -36,6 +36,14 @@ void CGLFWRenderer::runMainLoop() {
         _water->updateTime(deltaTime);
         _inputOutput->updateTime(deltaTime);
 
+        /* ----- Update Waves ----- */
+        _water->setWavesOn(_gui.getWavesOn());
+        _water->setWavesAmplitude(_gui.getWavesAmplitude());
+        _water->setWavesFrequency(_gui.getWavesFrequency());
+        _water->setWavesChoppiness(_gui.getWavesChoppiness());
+        _water->setWavesResolutionX(_gui.getWavesResolutionX());
+        _water->setWavesResolutionY(_gui.getWavesResolutionY());
+
         /* ----- Camera Position ----- */
         _skybox->setCameraPosition(_camera.getPosition());
         _water->setCameraPosition(_camera.getPosition());
@@ -61,19 +69,17 @@ void CGLFWRenderer::runMainLoop() {
         /* ----- Rain ----- */
         if (_gui.getIsRaining() && _gui.getWaterAnimation()) {
             for (int i = 0; i < _gui.getRainingIntensity(); i++) {
-                int x = utils::randomInteger(50, _water->getVerticesPerSide()
-                                                - 50);
-                int y = utils::randomInteger(50, _water->getVerticesPerSide() -
-                                                50);
+                int x = (int)
+                        utils::randomInteger(50,
+                                             _water->getVerticesPerSide() - 50);
+                int y = (int) utils::randomInteger(50, _water->getVerticesPerSide() -
+                                                       50);
                 vec2 quadCoordinates(x, y);
-                _water->pointIntersect(quadCoordinates, _gui.getRainDropSize
-                        (),_gui.getKernelSize(), _gui.getFlatness());
+                _water->pointIntersect(quadCoordinates, _gui.getRainDropSize()
+                        ,_gui.getRainKernel(), _gui.getRainFlatness());
 
             }
         }
-
-        /* ----- Check Bounding ----- */
-
 
         /* ----- Check Stop Scene ----- */
         if (_gui.getWaterAnimation() != _water->getAnimation()) {

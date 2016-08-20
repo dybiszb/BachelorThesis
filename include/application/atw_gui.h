@@ -75,6 +75,14 @@ public:
     bool  getLightOn();
     bool  getModelBoxesOn();
     bool  getEmptyBoxesOn();
+    int   getRainKernel();
+    float getRainFlatness();
+    bool  getWavesOn();
+    float getWavesAmplitude();
+    float getWavesFrequency();
+    float getWavesChoppiness();
+    float getWavesResolutionX();
+    float getWavesResolutionY();
 
 private:
 //==============================================================================
@@ -91,11 +99,19 @@ private:
 //------------------------------------------------------------------------------
     float    _disturbanceHeight;
     int      _kernelSize;
-    float   _flatness;
+    float    _flatness;
     bool     _isRaining;
     int      _rainIntensity;
     float    _rainDropSize;
     bool     _waterAnimation;
+    int      _rainKernel;
+    float    _rainFlatness;
+    bool     _wavesOn;
+    float    _wavesFrequency;
+    float    _wavesAmplitude;
+    float    _wavesChoppiness;
+    float    _wavesResolutionX;
+    float    _wavesResolutionY;
 
 //==============================================================================
 // Scene Properties

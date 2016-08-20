@@ -54,7 +54,6 @@ void CWavesDeformer::pointDisturbance(vec2 &quad, float amount) {
 void CWavesDeformer::areaDisturbance(vec2 &quad, float amount, int kernel,
                                      float flatness) {
     _tex0->bind();
-    cout << "disturbance (" << quad.x << ", " << quad.y << ")\n";
     int quadXmin = (quad.x - kernel < 0) ? 0 : (quad.x - kernel);
     int quadXmax = (quad.x + kernel >= _width - 2) ? _width - 2 : (quad.x +
                                                                    kernel);
@@ -103,6 +102,30 @@ void CWavesDeformer::updateTime(float deltaTime) {
     _dtOverall += deltaTime;
 }
 
+void CWavesDeformer::setWavesOn(bool wavesOn) {
+    _wavesOn = wavesOn;
+}
+
+void CWavesDeformer::setWavesAmplitude(float wavesAmplitude) {
+    _wavesAmplitude = wavesAmplitude;
+}
+
+void CWavesDeformer::setWavesFrequency(float wavesFrequency) {
+    _wavesFrequency = wavesFrequency;
+}
+
+void CWavesDeformer::setWavesChoppiness(float wavesChoppiness) {
+    _wavesChoppiness = wavesChoppiness;
+}
+
+void CWavesDeformer::setWavesResolutionX(float wavesResolutionX) {
+    _wavesResolutionX = wavesResolutionX;
+}
+
+void CWavesDeformer::setWavesResolutionY(float wavesResolutionY) {
+    _wavesResolutionY = wavesResolutionY;
+}
+
 CWavesDeformer::~CWavesDeformer() {
     delete _fbo0;
     delete _fbo1;
@@ -129,6 +152,11 @@ void CWavesDeformer::animationStep() {
     glUniform1f(_shader("u_membraneProperties.dt"), _dt);
     glUniform1f(_shader("u_membraneProperties.dtOverall"), _dtOverall);
 
+    glUniform1f(_shader("u_wavesAmplitude"), _wavesAmplitude);
+    glUniform1f(_shader("u_wavesFrequency"), _wavesFrequency);
+    glUniform1f(_shader("u_wavesChoppiness"), _wavesChoppiness);
+    glUniform1f(_shader("u_wavesResoulutionX"), _wavesResolutionX);
+    glUniform1f(_shader("u_wavesResoulutionY"), _wavesResolutionY);
 
 
     // Water Disturbance Pass
@@ -143,14 +171,16 @@ void CWavesDeformer::animationStep() {
     glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
     checkErrorOpenGL("CWavesDeformer::renderStep");
     _fbo0->unbind();
-//    _tex0->bind();
+
     // Perlin Noise Pass
-    glUniform1i(_shader("u_isPerlinNoiseCalculations"), 1);
-    _tex0->bind();
-    _fbo2->bind();
-    glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
-    checkErrorOpenGL("CWavesDeformer::renderStep");
-    _fbo2->unbind();
+    if(_wavesOn) {
+        glUniform1i(_shader("u_isPerlinNoiseCalculations"), 1);
+        _tex0->bind();
+        _fbo2->bind();
+        glDrawElements(GL_TRIANGLES, _quad.getTotalIndices(), GL_UNSIGNED_INT, 0);
+        checkErrorOpenGL("CWavesDeformer::renderStep");
+        _fbo2->unbind();
+    }
 
     _vao.unbind();
     _shader.UnUse();
@@ -166,7 +196,11 @@ void CWavesDeformer::unbindDisturbanceTexture() {
 }
 
 void CWavesDeformer::bindNoiseTexture() {
-    _tex2->bind();
+    if(_wavesOn) {
+        _tex2->bind();
+    } else {
+        bindDisturbanceTexture();
+    }
 }
 
 void CWavesDeformer::unbindNoiseTexture() {
@@ -192,6 +226,11 @@ void CWavesDeformer::_initShaders() {
     _shader.AddUniform("u_membraneProperties.dt");
     _shader.AddUniform("u_membraneProperties.dtOverall");
     _shader.AddUniform("u_isPerlinNoiseCalculations");
+    _shader.AddUniform("u_wavesAmplitude");
+    _shader.AddUniform("u_wavesFrequency");
+    _shader.AddUniform("u_wavesChoppiness");
+    _shader.AddUniform("u_wavesResoulutionX");
+    _shader.AddUniform("u_wavesResoulutionY");
     _shader.UnUse();
 }
 
@@ -227,8 +266,8 @@ void CWavesDeformer::_initMembraneCoefficients() {
     _dtOverall = 0;
 }
 
-GLfloat* CWavesDeformer::getCurrentTextureAsVector() {
-    GLfloat* textureAsArray = new GLfloat[_width * _height * 8];
+GLfloat *CWavesDeformer::getCurrentTextureAsVector() {
+    GLfloat *textureAsArray = new GLfloat[_width * _height * 8];
     _tex2->bind();
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
     glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT, textureAsArray);

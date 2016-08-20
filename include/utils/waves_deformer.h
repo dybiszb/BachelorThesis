@@ -51,6 +51,12 @@ public:
     void unbindNoiseTexture();
     void areaDisturbance(vec2& quad, float amount, int kernel, float flatness);
     void updateTime(float deltaT);
+    void setWavesOn(bool wavesOn);
+    void setWavesAmplitude(float wavesAmplitude);
+    void setWavesFrequency(float wavesFrequency);
+    void setWavesChoppiness(float wavesChoppiness);
+    void setWavesResolutionX(float wavesResolutionX);
+    void setWavesResolutionY(float wavesResolutionY);
     /**
      * NOTE: Returned object must be deleted by the caller.
      */
@@ -74,6 +80,12 @@ private:
     GLfloat _c;
     GLfloat _dt;
     GLfloat _dtOverall;
+    GLfloat _wavesOn;
+    GLfloat _wavesAmplitude;
+    GLfloat _wavesFrequency;
+    GLfloat _wavesChoppiness;
+    GLfloat _wavesResolutionX;
+    GLfloat _wavesResolutionY;
     void _initShaders();
     void _initVao();
     void _initMembraneCoefficients();

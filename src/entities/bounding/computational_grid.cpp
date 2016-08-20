@@ -77,8 +77,8 @@ void CComputationalGrid::updateHeightField(GLfloat *textureAsArray,
         b_z += b_z_map[i] * oceanWaterDensity * ( 0.1 * i);
     }
     float b_force = oceanWaterDensity * immersedMass * 9.81f;
-    cout << "force: " << b_force << " at point: "
-    << b_x / _mass << " " << b_y / _mass << " " << b_z /_mass
-    << endl;
+//    cout << "force: " << b_force << " at point: "
+//    << b_x / _mass << " " << b_y / _mass << " " << b_z /_mass
+//    << endl;
     delete textureAsArray;
 }

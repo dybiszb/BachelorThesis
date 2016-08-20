@@ -120,9 +120,9 @@ void main()
     if(u_lightOn) {
         vec3 diffuse = vec3(0.0);
         vec3 specular = vec3(0.0);
-        vec3 sunColor = vec3(1.0, 1.0, 1.0);
+        vec3 sunColor = vec3(0.7, 0.7, 0.7);
         sunLight(100.0, 2.0, 0.5, sunColor, diffuse, specular);
-        vec3 mixed = mix(reflectedColor * 0.9 + specular, diffuse * refractedColor, w);
+        vec3 mixed = mix(reflectedColor + specular, refractedColor, w);
         mixed = mixed + specular;
         gl_FragColor = vec4(mixed, 1.0);
 
