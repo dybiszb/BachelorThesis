@@ -9,7 +9,7 @@ mkdir [project directory]
 cd [project directory]
 cmake ..
 ```
-- Open [repository main folder]\[project directory]\BachelorThesis.sln, choose 'Release' and Build->Build Soulution.
+- Open [repository main folder]\\[project directory]\BachelorThesis.sln, choose 'Release' and Build->Build Soulution.
 
 ## Installation
 Note: In order to create the installer you have to have Inno Setup Compiler.
