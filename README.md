@@ -1,7 +1,7 @@
 # Bachelor Thesis
 
 ## Building<a name="build"></a>
-Note: Currently only Windows platform is supported. Sources have been checked on Windows 10 64b.
+Note: Currently only Windows platform is supported. Sources have been checked on Windows 10 64bit.
 Please let me know about any issues.
 - In repository main folder call following commands:
 
