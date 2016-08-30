@@ -1,35 +1,55 @@
 # Bachelor Thesis
 
-## Building
+## Building<a name="build"></a>
 Note: Currently only Windows platform is supported. Sources have been checked on Windows 10 64b.
 Please let me know about any issues.
 - In repository main folder call following commands:
-```
-    function fancyAlert(arg) {
-      if(arg) {
-        $.facebox({div:'#foo'})
-      }
-    }
-mkdir [project directory]
-cd [project directory]
-cmake ..
-```
-- Open `[repository main folder]\\[project directory]\BachelorThesis.sln`, choose 'Release' and Build->Build Soulution.
 
-## Installator
-It is is possible to create setup executable for the application from the repository sources. Please first build the app and then make use of the following steps:
+    ```
+   mkdir [project directory]
+   cd [project directory]
+   cmake ..
+    ```
+- Open 
+   ```
+   [repository main folder]\\[project directory]\BachelorThesis.sln
+    ```
+ - Change *Debug* to *Release* and click Build->Build Soulution.
+
+## Setup.exe<a name="setup"></a>
+It is is possible to create setup executable for the application from the repository sources. Please first [build](#build) the app and then make use of the following steps:
 - Install [Inno Setup Compiler](http://www.jrsoftware.org/isinfo.php)
-- Go to `[repository main folder]\\[project directory]\\Release\\win_isntaller`
-- Open and compile `[repository main folder]\\[project directory]\\Release\\win_installer\\win_installer.iss`
-- Setup executable lies in `[repository main folder]\\[project directory]\\Release\\win_installer\\Output`
+- Go to 
+   ```
+   [repository main folder]\\[project directory]\\Release\\win_installer
+   ```
+- Open and compile
+   ```
+   [repository main folder]\\[project directory]\\Release\\win_installer\\win_installer.iss
+   ```
+- Setup executable resides in:
+   ```
+   [repository main folder]\\[project directory]\\Release\\win_installer\\Output
+   ```
 
 ## Usage
-- Run [repository main folder]\[project directory]\Release\bachelor_water.exe to open the application
-- File [repository main folder]\[project directory]\Release\config.ini allows to change any settings related to the simulation. Some of the entries (e.g. resolution, fullscreen or number of quads) are not mutable during runtime.
-- 
+To run the application either use [setup executable](#setup) or [build](#build) it and run:
+```
+[repository main folder]\[project directory]\Release\bachelor_water.exe 
+```
+Window with the simulation should pop up along with a console.
 
-## History
-TODO: Write history
+Any configuration can be done via modifying:
+```
+[repository main folder]\[project directory]\Release\config.ini
+```
+or 
+```
+[installation directory]\config.ini
+```
+(depending on the previous steps). Some of the entries (e.g. resolution, fullscreen or number of quads) are not mutable during runtime, hence the file is the only way to set them.
+
+
 
 ## License
 Copyright (c) 2016 Bartłomiej Dybisz
