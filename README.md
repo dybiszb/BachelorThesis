@@ -1,17 +1,26 @@
-# ${1:Bachelor Thesis}
-TODO: Write a project description
-## Installation
+# Bachelor Thesis
+
+## Building
 NOTE: Currently only Windows platform is supported. Sources have been checked on Windows 10 64b.
 Please let me know about any issues.
 - In repository main folder call following commands:
 ```
-mkdir vc15proj
-cd vc15proj
+mkdir [project directory]
+cd [project directory]
 cmake ..
 ```
-Then open vc15proj\BachelorThesis.sln, choose 'Release' and Build->Build Soulution.
+- Open [repository main folder]\[project directory]\BachelorThesis.sln, choose 'Release' and Build->Build Soulution.
+
+## Installation
+Note: In order to create the installer you have to have Inno Setup Compiler.
+- Go to [repository main folder]\[project directory]\Release\win_isntaller
+- Open and compile [repository main folder]\[project directory]\Release\win_installer\win_installer.iss
+- Setup executable lies in [repository main folder]\[project directory]\Release\win_installer\Output 
+
 ## Usage
-TODO: Write usage instructions
+- Run [repository main folder]\[project directory]\Release\bachelor_water.exe to open the application
+- File [repository main folder]\[project directory]\Release\config.ini allows to change any settings related to the simulation. Some of the entries (e.g. resolution, fullscreen or number of quads) are not mutable during runtime.
+- 
 
 ## History
 TODO: Write history
