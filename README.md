@@ -5,11 +5,11 @@ TODO: Write a project description
 ## Installation
 NOTE: Currently only Windows platform is supported. Sources have been checked on Windows 10 64b.
 Please let me know about any issues.
-'''
+```
 mkdir vc15proj
 cd vc15proj
 cmake ..
-'''
+```
 ## Usage
 TODO: Write usage instructions
 ## Contributing
