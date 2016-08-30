@@ -1,7 +1,7 @@
 # Bachelor Thesis
 
 ## Building
-NOTE: Currently only Windows platform is supported. Sources have been checked on Windows 10 64b.
+Note: Currently only Windows platform is supported. Sources have been checked on Windows 10 64b.
 Please let me know about any issues.
 - In repository main folder call following commands:
 ```
@@ -11,11 +11,12 @@ cmake ..
 ```
 - Open [repository main folder]\\[project directory]\BachelorThesis.sln, choose 'Release' and Build->Build Soulution.
 
-## Installation
-Note: In order to create the installer you have to have Inno Setup Compiler.
-- Go to [repository main folder]\[project directory]\Release\win_isntaller
-- Open and compile [repository main folder]\[project directory]\Release\win_installer\win_installer.iss
-- Setup executable lies in [repository main folder]\[project directory]\Release\win_installer\Output 
+## Installator
+It is is possible to create setup executable for the application from the repository sources. Please first build the app and then make use of the following steps:
+- Install [Inno Setup Compiler](http://www.jrsoftware.org/isinfo.php)
+- Go to [repository main folder]\\[project directory]\\Release\\win_isntaller
+- Open and compile [repository main folder]\\[project directory]\\Release\\win_installer\\win_installer.iss
+- Setup executable lies in [repository main folder]\\[project directory]\\Release\\win_installer\\Output 
 
 ## Usage
 - Run [repository main folder]\[project directory]\Release\bachelor_water.exe to open the application
