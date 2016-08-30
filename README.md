@@ -9,14 +9,14 @@ mkdir [project directory]
 cd [project directory]
 cmake ..
 ```
-- Open [repository main folder]\\[project directory]\BachelorThesis.sln, choose 'Release' and Build->Build Soulution.
+- Open `[repository main folder]\\[project directory]\BachelorThesis.sln`, choose 'Release' and Build->Build Soulution.
 
 ## Installator
 It is is possible to create setup executable for the application from the repository sources. Please first build the app and then make use of the following steps:
 - Install [Inno Setup Compiler](http://www.jrsoftware.org/isinfo.php)
-- Go to [repository main folder]\\[project directory]\\Release\\win_isntaller
-- Open and compile [repository main folder]\\[project directory]\\Release\\win_installer\\win_installer.iss
-- Setup executable lies in [repository main folder]\\[project directory]\\Release\\win_installer\\Output 
+- Go to `[repository main folder]\\[project directory]\\Release\\win_isntaller`
+- Open and compile `[repository main folder]\\[project directory]\\Release\\win_installer\\win_installer.iss`
+- Setup executable lies in `[repository main folder]\\[project directory]\\Release\\win_installer\\Output`
 
 ## Usage
 - Run [repository main folder]\[project directory]\Release\bachelor_water.exe to open the application
