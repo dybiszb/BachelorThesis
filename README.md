@@ -5,6 +5,11 @@ Note: Currently only Windows platform is supported. Sources have been checked on
 Please let me know about any issues.
 - In repository main folder call following commands:
 ```
+    function fancyAlert(arg) {
+      if(arg) {
+        $.facebox({div:'#foo'})
+      }
+    }
 mkdir [project directory]
 cd [project directory]
 cmake ..
