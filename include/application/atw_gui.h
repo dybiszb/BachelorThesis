@@ -43,6 +43,12 @@ public:
     void initializeWaterBar();
 
     /**
+     * Creates a window within the interface, which will be used to manage
+     * ship simulation.
+     */
+    void initializeShipBar();
+
+    /**
      * Creates a window, withing the interface context, which will be in charge
      * of the scene settings.
      */
@@ -73,8 +79,6 @@ public:
     vec3& getLightDirection();
     bool  getWaterAnimation();
     bool  getLightOn();
-    bool  getModelBoxesOn();
-    bool  getEmptyBoxesOn();
     int   getRainKernel();
     float getRainFlatness();
     bool  getWavesOn();
@@ -83,12 +87,23 @@ public:
     float getWavesChoppiness();
     float getWavesResolutionX();
     float getWavesResolutionY();
+    float getLinearDamping();
+    float getAngularDamping();
+    vec3& getModelLocalTranslation();
+    float getModelScale();
+    bool getGridVisibility();
+
+//==============================================================================
+// Update Functions
+//------------------------------------------------------------------------------
+    void setMovementForce(const vec3& force);
 
 private:
 //==============================================================================
 // Interface Properties
 //------------------------------------------------------------------------------
     TwBar *        _waterBar;
+    TwBar *        _shipBar;
     TwBar *        _sceneBar;
     TwBar *        _controlsBar;
     Settings       _settings;
@@ -119,8 +134,17 @@ private:
     bool     _lightOn;
     vec3     _lightDirection;
     vec3     _cameraPosition;
-    bool     _modelBoxesOn;
-    bool     _emptyBoxesOn;
+
+//==============================================================================
+// Simulation Properties
+//------------------------------------------------------------------------------
+    float    _linearDamping;
+    float    _angularDamping;
+    vec3     _modelLocalTranslation;
+    float    _modelScale;
+    bool     _gridVisibility;
+    vec3     _movementForce;
+    vec3     _enginesPosition;
 };
 
 #endif

@@ -63,7 +63,7 @@ void CWavesDeformer::areaDisturbance(vec2 &quad, float amount, int kernel,
 
     int data2Size = 4 * (quadXmax - quadXmin + 1) * (quadYmax - quadYmin + 1);
 
-    GLfloat data2[data2Size];
+    GLfloat* data2 = new GLfloat[data2Size];
 
     int offset = 0;
     for (int y = quadYmin; y <= quadYmax; y++) {
@@ -93,7 +93,7 @@ void CWavesDeformer::areaDisturbance(vec2 &quad, float amount, int kernel,
                         GL_RGBA,
                         GL_FLOAT,
                         data2);
-
+	delete[] data2;
     _tex0->unbind();
 }
 

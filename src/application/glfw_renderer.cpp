@@ -2,7 +2,7 @@
 
 #include "glfw_renderer.h"
 #include <time.h>
-#include <unistd.h>
+//#include <unistd.h>
 
 CGLFWRenderer::CGLFWRenderer(Settings& settings) :
         _settings(settings),
@@ -28,10 +28,13 @@ CGLFWRenderer::~CGLFWRenderer() {
 }
 
 void CGLFWRenderer::runMainLoop() {
+    vec3 forceMove(0.0, 0.0, 0.0);
+    _inputOutput->setForceMove(&forceMove);
     do {
         /* ----- Calculate Time ----- */
         float deltaTime = _timer.tick();
-        float renderTimeStart = glfwGetTime();
+        float renderTimeStart = (float) glfwGetTime();
+
         /* ----- Update Time ----- */
         _water->updateTime(deltaTime);
         _inputOutput->updateTime(deltaTime);
@@ -80,6 +83,15 @@ void CGLFWRenderer::runMainLoop() {
 
             }
         }
+
+        /* ----- Ship Simulation Settings ----- */
+        _gui.setMovementForce(forceMove);
+        _ship->setMovementForce(forceMove);
+        _ship->setComputationalGridVisibility(_gui.getGridVisibility());
+        _ship->setModelLocalTranslation(_gui.getModelLocalTranslation());
+        _ship->setModelScale(_gui.getModelScale());
+        _ship->setModelLinearDamping(_gui.getLinearDamping());
+        _ship->setModelAngularDamping(_gui.getAngularDamping());
 
         /* ----- Check Stop Scene ----- */
         if (_gui.getWaterAnimation() != _water->getAnimation()) {
@@ -153,6 +165,7 @@ void CGLFWRenderer::_initGLEW() {
 void CGLFWRenderer::_initATWBar() {
     _gui.initializeATW();
     _gui.initializeWaterBar();
+    _gui.initializeShipBar();
     _gui.initializeSceneBar();
     _gui.initializeControlsBar();
 }

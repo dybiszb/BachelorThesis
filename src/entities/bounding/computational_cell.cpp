@@ -34,8 +34,6 @@ CComputationalCell::~CComputationalCell() {
 
 
 void CComputationalCell::render(const float *view, const float *projection) {
-    if(!_isVisible) return;
-
     _shader.Use();
     _vao.bind();
 
@@ -61,9 +59,6 @@ void CComputationalCell::setWireframe(bool isWireframe) {
     _isWireframe = isWireframe;
 }
 
-void CComputationalCell::setVisible(bool isVisible) {
-    _isVisible = isVisible;
-}
 bool CComputationalCell::isImmersed() {
     return (_immersion != 0.0);
 }

@@ -18,6 +18,10 @@ void CGLFWInputOutput::setCamera(CCustomCamera *camera) {
     _camera = camera;
 }
 
+void CGLFWInputOutput::setForceMove(vec3 *forceMove) {
+    _forceMove = forceMove;
+}
+
 void CGLFWInputOutput::setShip(CShipModel* ship) {
     _ship = ship;
 }
@@ -115,9 +119,12 @@ void CGLFWInputOutput::_handleKeyboard(double deltaTime) {
         _camera->moveDown(deltaTime);
     }
 
-//    if(glfwGetKey(_window, GLFW_KEY_UP )){
-//        _ship->moveShip(vec3())
-//    }
+    if(glfwGetKey(_window, GLFW_KEY_UP )){
+        (*_forceMove).x += 100;
+    }
+    if(glfwGetKey(_window, GLFW_KEY_DOWN )){
+        (*_forceMove).x -= 100;
+    }
 
     if (glfwGetKey(_window, GLFW_KEY_SPACE)) {
         _stopAnimationRequested = true;

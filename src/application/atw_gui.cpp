@@ -3,7 +3,7 @@
 #include "atw_gui.h"
 
 CAtwGui::CAtwGui(Settings &settings, CCustomCamera *camera)
-        : _settings(settings), _camera(camera), _emptyBoxesOn(false) {
+        : _settings(settings), _camera(camera) {
     _disturbanceHeight = _settings.manualDisturbanceStrength;
     _isRaining = _settings.rain;
     _rainIntensity = _settings.rainIntensity;
@@ -16,8 +16,7 @@ CAtwGui::CAtwGui(Settings &settings, CCustomCamera *camera)
                     _settings.lightDirectionY,
                     _settings.lightDirectionZ
             };
-    _modelBoxesOn = _settings.modelBoxes;
-    _emptyBoxesOn = _settings.emptyBoxes;
+
     _kernelSize = _settings.manualDisturbanceKernel;
     _flatness = _settings.manualDisturbanceFlatness;
     _rainKernel = _settings.rainKernelSize;
@@ -28,6 +27,18 @@ CAtwGui::CAtwGui(Settings &settings, CCustomCamera *camera)
     _wavesResolutionX = _settings.wavesResolutionX;
     _wavesResolutionY = _settings.wavesResolutionY;
     _wavesChoppiness = _settings.wavesChoppiness;
+
+    _linearDamping = _settings.linearDamping;
+    _angularDamping = settings.angularDamping;
+    _modelLocalTranslation = vec3
+            {
+                    settings.modelLocalTranslationX,
+                    settings.modelLocalTranslationY,
+                    settings.modelLocalTranslationZ
+            };
+    _modelScale = settings.modelScale;
+    _gridVisibility = settings.gridVisibility;
+    _movementForce = vec3(0.0, 0.0, 0.0);
 }
 
 void CAtwGui::initializeATW() {
@@ -192,6 +203,100 @@ void CAtwGui::initializeWaterBar() {
             .build();
 }
 
+void CAtwGui::initializeShipBar() {
+    int width = 240;
+    int height = 340;
+    _shipBar = CAtwBarBuilder()
+            .setLabel("Ship")
+            .setPosition((int) _settings.guiMargin, (int) (_settings.windowHeight - _settings.guiMargin -
+                                                           height))
+            .setPosition(
+                    (int) (_settings.windowWidth - 195 - _settings.guiMargin),
+                    (int) 370)
+            .setContained(true)
+            .setColor(0, 128, 128)
+            .setSize(width, height)
+            .build();
+
+    CAtwVarBuilder()
+            .setOwner(_shipBar)
+            .setId("computationalGridVisibility")
+            .setDataType(TW_TYPE_BOOL32)
+            .setObservableData(&_gridVisibility)
+            .setLabel("Grid visible:")
+            .setGroup("Simulation")
+            .build();
+
+    TwStructMember pointMembers[] = {
+            {"X", TW_TYPE_FLOAT, offsetof(vec3, x), "step=0.1"},
+            {"Y", TW_TYPE_FLOAT, offsetof(vec3, y), "step=0.1"},
+            {"Z", TW_TYPE_FLOAT, offsetof(vec3, z), "step=0.1"}
+    };
+    TwType pointType = TwDefineStruct("POINT2", pointMembers, 3, sizeof(vec3),
+                                      NULL, NULL);
+
+    CAtwVarBuilder()
+            .setOwner(_shipBar)
+            .setId("shipLocalTranslation")
+            .setDataType(pointType)
+            .setObservableData(&_modelLocalTranslation)
+            .setLabel("Local Translation")
+            .setGroup("Simulation")
+            .build();
+    TwDefine("Ship/shipLocalTranslation opened=true");
+
+    CAtwVarBuilder()
+            .setOwner(_shipBar)
+            .setId("movementDirection")
+            .setDataType(TW_TYPE_DIR3F)
+            .setObservableData(&_movementForce)
+            .setLabel("Direction")
+            .setGroup("Movement")
+            .setOpened(true)
+            .setShowVal(true)
+            .build();
+
+    CAtwVarBuilder()
+            .setOwner(_shipBar)
+            .setId("shipMovementForce")
+            .setDataType(pointType)
+            .setObservableData(&_movementForce)
+            .setLabel("Force")
+            .setGroup("Movement")
+            .build();
+    TwDefine("Ship/shipLocalTranslation opened=true");
+
+    CAtwVarBuilder()
+            .setOwner(_shipBar)
+            .setId("shipScale")
+            .setDataType(TW_TYPE_FLOAT)
+            .setObservableData(&_modelScale)
+            .setStep(0.001)
+            .setLabel("Model Scale")
+            .setGroup("Simulation")
+            .build();
+
+    CAtwVarBuilder()
+            .setOwner(_shipBar)
+            .setId("linearDamping")
+            .setDataType(TW_TYPE_FLOAT)
+            .setObservableData(&_linearDamping)
+            .setStep(0.01)
+            .setLabel("Linear Damping")
+            .setGroup("Simulation")
+            .build();
+
+    CAtwVarBuilder()
+            .setOwner(_shipBar)
+            .setId("angularDamping")
+            .setDataType(TW_TYPE_FLOAT)
+            .setObservableData(&_angularDamping)
+            .setStep(0.01)
+            .setLabel("Angular Damping")
+            .setGroup("Simulation")
+            .build();
+}
+
 void CAtwGui::initializeSceneBar() {
     _sceneBar = CAtwBarBuilder()
             .setLabel("Scene")
@@ -202,7 +307,7 @@ void CAtwGui::initializeSceneBar() {
                     )
             .setContained(true)
             .setColor(0, 128, 128)
-            .setSize(240, 470)
+            .setSize(240, 430)
             .setRefresh(0.1)
             .build();
 
@@ -225,25 +330,6 @@ void CAtwGui::initializeSceneBar() {
             .setGroup("Window")
             .setReadOnly(true)
             .build();
-
-    CAtwVarBuilder()
-            .setOwner(_sceneBar)
-            .setId("emptyBoxesOnOff")
-            .setDataType(TW_TYPE_BOOL32)
-            .setObservableData(&_modelBoxesOn)
-            .setLabel("Empty Boxes On / Off")
-            .setGroup("Bounding")
-            .build();
-
-    CAtwVarBuilder()
-            .setOwner(_sceneBar)
-            .setId("modelBoxesOnOff")
-            .setDataType(TW_TYPE_BOOL32)
-            .setObservableData(&_emptyBoxesOn)
-            .setLabel("Model Boxes On / Off")
-            .setGroup("Bounding2")
-            .build();
-
 
     CAtwVarBuilder()
             .setOwner(_sceneBar)
@@ -411,14 +497,6 @@ bool CAtwGui::getLightOn() {
     return _lightOn;
 }
 
-bool CAtwGui::getModelBoxesOn() {
-    return _modelBoxesOn;
-}
-
-bool CAtwGui::getEmptyBoxesOn() {
-    return _emptyBoxesOn;
-}
-
 int   CAtwGui::getRainKernel() {
     return _rainKernel;
 }
@@ -449,4 +527,28 @@ float CAtwGui::getWavesResolutionX() {
 
 float CAtwGui::getWavesResolutionY() {
     return _wavesResolutionY;
+}
+
+float CAtwGui::getLinearDamping() {
+    return _linearDamping;
+}
+
+float CAtwGui::getAngularDamping() {
+    return _angularDamping;
+}
+
+vec3 &CAtwGui::getModelLocalTranslation() {
+    return _modelLocalTranslation;
+}
+
+float CAtwGui::getModelScale() {
+    return _modelScale;
+}
+
+bool CAtwGui::getGridVisibility() {
+    return _gridVisibility;
+}
+
+void CAtwGui::setMovementForce(const vec3& force) {
+    _movementForce = force;
 }

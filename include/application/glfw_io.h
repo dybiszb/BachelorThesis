@@ -32,6 +32,7 @@ public:
      * will not free its resources.
      */
     void setCamera(CCustomCamera *camera);
+    void setForceMove(vec3 *forceMove);
     void setShip(CShipModel* ship);
     static void key_callback(GLFWwindow *window, int key, int scancode,
                              int action, int mods);
@@ -54,6 +55,7 @@ private:
     GLFWwindow*    _window;
     CCustomCamera* _camera;
     CShipModel*    _ship;
+    vec3*          _forceMove;
     static bool    _rightButtonPressed;
     static double  _mouseX;
     static double  _mouseY;

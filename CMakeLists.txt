@@ -31,6 +31,21 @@ include_directories(
         external/inih/
         external/SOIL_/
         external/tinyobjloader/
+        external/PhysX/include/
+        external/PhysX/include/characterkinematic/
+        external/PhysX/include/cloth/
+        external/PhysX/include/common/
+        external/PhysX/include/cooking/
+        external/PhysX/include/extensions/
+        external/PhysX/include/foundation/
+        external/PhysX/include/geometry/
+        external/PhysX/include/gpu/
+        external/PhysX/include/particles/
+        external/PhysX/include/physxprofilesdk/
+        external/PhysX/include/physxvisualdebuggersdk/
+        external/PhysX/include/pvd/
+        external/PhysX/include/pxtask/
+        external/PhysX/include/vehicle/
 )
 
 set(EXTERNAL_LIBS
@@ -100,11 +115,13 @@ set(
         src/entities/bounding/computational_cell.cpp
         src/entities/bounding/computational_grid.cpp
         src/geometry/cuboid.cpp
+        src/utils/physx_simulation.cpp
 )
 
 #===============================================================================
 # Executable
 #-------------------------------------------------------------------------------
+link_directories(${CMAKE_SOURCE_DIR}/external/PhysX/lib/vc15_x86/)
 add_executable(bachelor_water ${SOURCE_FILES})
 
 #===============================================================================
@@ -141,5 +158,17 @@ foreach(ConfigFiles ${ConfigFiles})
     add_custom_command(
             TARGET bachelor_water PRE_BUILD COMMAND ${CMAKE_COMMAND} -E
             copy  ${ConfigFiles} $<TARGET_FILE_DIR:bachelor_water>
+    )
+endforeach()
+
+#===============================================================================
+# Copy Dlls
+#-------------------------------------------------------------------------------
+file(GLOB DllFiles ${CMAKE_SOURCE_DIR}/external/PhysX/bin/vc15_x86/*.dll)
+
+foreach(DllFiles ${DllFiles})
+    add_custom_command(
+            TARGET bachelor_water PRE_BUILD COMMAND ${CMAKE_COMMAND} -E
+            copy  ${DllFiles} $<TARGET_FILE_DIR:bachelor_water>
     )
 endforeach()

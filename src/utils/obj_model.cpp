@@ -2,6 +2,7 @@
 
 #include <tiny_obj_loader.h>
 #include "obj_model.h"
+#include <functional>
 
 using namespace rendering;
 

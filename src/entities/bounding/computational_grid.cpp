@@ -1,15 +1,14 @@
 // author: dybisz
-
 #include <glm/gtc/matrix_transform.hpp>
 #include "computational_grid.h"
 
 
 CComputationalGrid::CComputationalGrid() :
-        _modelMatrix(scale(mat4(1.0), vec3(0.1, 0.1, 0.1))),
-        _cellsVisibility(true) {
+        _modelMatrix(mat4(1.0)) {
 
     for (auto cell : mediumAccuracyFishingBoat) {
         _mass += 1.0;
+        simulation.addBox(cell);
         _cells.push_back(new CComputationalCell(cell));
     }
 }
@@ -18,28 +17,15 @@ CComputationalGrid::~CComputationalGrid() {
     for (auto cell : _cells) delete cell;
 }
 
-void CComputationalGrid::updateModelMatrix() {
-    mat4 rotationMatrix = mat4(1.0);
-
-}
-
 void CComputationalGrid::render(const float *view, const float *projection) {
-    updateModelMatrix();
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     for (auto cell : _cells) {
-        cell->setVisible(_cellsVisibility);
         cell->setModelMatrix(_modelMatrix);
         cell->render(view, projection);
     }
+    glDisable(GL_BLEND);
 }
-
-void CComputationalGrid::setModelMatrix(mat4 &modelMatrix) {
-    _modelMatrix = modelMatrix;
-}
-
-void CComputationalGrid::setCellsVisibility(bool modelBoxesVisibility) {
-    _cellsVisibility = modelBoxesVisibility;
-}
-
 
 void CComputationalGrid::updateHeightField(GLfloat *textureAsArray,
                                            float width,
@@ -76,9 +62,27 @@ void CComputationalGrid::updateHeightField(GLfloat *textureAsArray,
         b_y += b_y_map[i] * oceanWaterDensity * ( 0.1 * i);
         b_z += b_z_map[i] * oceanWaterDensity * ( 0.1 * i);
     }
-    float b_force = oceanWaterDensity * immersedMass * 9.81f;
-//    cout << "force: " << b_force << " at point: "
-//    << b_x / _mass << " " << b_y / _mass << " " << b_z /_mass
-//    << endl;
+    float b_force = 25.0f * oceanWaterDensity * immersedMass * 9.81f;
     delete textureAsArray;
+    vec3 pointB = vec3(b_x / _mass, b_y / _mass, b_z /_mass);
+    simulation.update(pointB, b_force, _moveForce, _movePoint);
+    _modelMatrix = simulation.getTransformation();
+}
+
+mat4 CComputationalGrid::getTransformation() {
+    return simulation.getTransformation();
+}
+
+void CComputationalGrid::setLinearDamping(float linearDamping) {
+    simulation.setLinearDamping(linearDamping);
+}
+void CComputationalGrid::setAngularDamping(float angularDamping) {
+    simulation.setAngularDamping(angularDamping);
+}
+
+void CComputationalGrid::setMovementForce(const vec3& movementForce) {
+    _moveForce = movementForce;
+}
+void CComputationalGrid::setMovementPoint(const vec3& movementPoint) {
+    _movePoint = movementPoint;
 }

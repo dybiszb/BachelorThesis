@@ -20,8 +20,20 @@ namespace utils {
         int windowHeight;
         float edgeSize;
         int quads;
-        bool modelBoxes;
-        bool emptyBoxes;
+
+//==============================================================================
+// Simulation Properties
+//------------------------------------------------------------------------------
+        float linearDamping;
+        float angularDamping;
+        float modelLocalTranslationX;
+        float modelLocalTranslationY;
+        float modelLocalTranslationZ;
+        float modelScale;
+        bool gridVisibility;
+        float enginesPointX;
+        float enginesPointY;
+        float enginesPointZ;
 
 //==============================================================================
 // Light Properties

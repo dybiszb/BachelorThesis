@@ -23,18 +23,22 @@ void CAtwButtonBuilder::build() {
 
 CAtwButtonBuilder &CAtwButtonBuilder::setOwner(const TwBar *owner) {
     _owner = (TwBar *) owner;
+	return *this;
 }
 
 CAtwButtonBuilder &CAtwButtonBuilder::setId(const string name) {
     _id = name;
+	return *this;
 }
 
 CAtwButtonBuilder &CAtwButtonBuilder::setCallback(TwButtonCallback callback) {
     _callback = callback;
+	return *this;
 }
 
 CAtwButtonBuilder &CAtwButtonBuilder::setData(const void *data) {
     _data = (void *) data;
+	return *this;
 }
 
 CAtwButtonBuilder &CAtwButtonBuilder::setLabel(const string label) {

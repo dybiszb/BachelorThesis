@@ -24,20 +24,38 @@ Settings utils::readFromINI(string pathToINI) {
             (float) reader.GetReal("Scene", "edge_size", 32.0);
     settings.quads =
             reader.GetInteger("Scene", "quads", 256);
-    settings.modelBoxes =
-            reader.GetBoolean("Scene", "model_boxes", false);
-    settings.emptyBoxes =
-            reader.GetBoolean("Scene", "empty_boxes", false);
+
+    /* ----- Ship ----- */
+    settings.linearDamping =
+            (float) reader.GetReal("Ship", "linear_damping", 2.0);
+    settings.angularDamping =
+            (float) reader.GetReal("Ship", "angular_damping", 6.0);
+    settings.modelLocalTranslationX =
+            (float) reader.GetReal("Ship", "model_local_translation_x", 13.0);
+    settings.modelLocalTranslationY =
+            (float) reader.GetReal("Ship", "model_local_translation_y", 2.5);
+    settings.modelLocalTranslationZ =
+            (float) reader.GetReal("Ship", "model_local_translation_z", 3.0);
+    settings.modelScale =
+            (float) reader.GetReal("Ship", "model_scale", 0.2);
+    settings.gridVisibility =
+            reader.GetBoolean("Ship", "grid_visibility", true);
+    settings.enginesPointX =
+            (float) reader.GetReal("Ship", "engines_point_x", 10.0);
+    settings.enginesPointY =
+            (float) reader.GetReal("Ship", "engines_point_y", 0.0);
+    settings.enginesPointZ =
+            (float) reader.GetReal("Ship", "engines_point_z", 0.0);
 
     /* ----- Light ----- */
     settings.lightOn =
             reader.GetBoolean("Light", "on", false);
     settings.lightDirectionX =
-            (float) reader.GetReal("Light", "direction_x", -1);
+            (float) reader.GetReal("Light", "direction_x", -0.1);
     settings.lightDirectionY =
-            (float) reader.GetReal("Light", "direction_y", -1);
+            (float) reader.GetReal("Light", "direction_y", -1.7);
     settings.lightDirectionZ =
-            (float) reader.GetReal("Light", "direction_z", -1);
+            (float) reader.GetReal("Light", "direction_z", -0.3);
 
     /* ----- GUI ----- */
     settings.guiMargin =

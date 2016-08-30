@@ -29,8 +29,6 @@ public:
 
     void setWireframe(bool wireframe);
 
-    void setVisible(bool visible);
-
     bool isImmersed();
 
     void setImmersion(float waterHeight, float scaledCenterY);
@@ -45,7 +43,6 @@ private:
     vec3 _localTranslation;
     float _immersion = 0;
     bool _isWireframe;
-    bool _isVisible;
 
     void _initShader();
 };

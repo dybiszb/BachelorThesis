@@ -5,7 +5,7 @@
 // author: dybisz
 //------------------------------------------------------------------------------
 #version 330 core
-//precision highp float;
+precision highp float;
 
 #define NONE                 0
 #define UP_NEIGHBOUR         1.0
