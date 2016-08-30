@@ -12,7 +12,7 @@ Please let me know about any issues.
     ```
 - Open 
    ```
-   [repository main folder]\\[project directory]\BachelorThesis.sln
+   [repository main folder]\[project directory]\BachelorThesis.sln
     ```
 - Change *Debug* to *Release* and click Build->Build Soulution.
 
@@ -21,15 +21,15 @@ It is is possible to create setup executable for the application from the reposi
 - Install [Inno Setup Compiler](http://www.jrsoftware.org/isinfo.php)
 - Go to 
    ```
-   [repository main folder]\\[project directory]\\Release\\win_installer
+   [repository main folder]\[project directory]\Release\win_installer
    ```
 - Open and compile
    ```
-   [repository main folder]\\[project directory]\\Release\\win_installer\\win_installer.iss
+   [repository main folder]\[project directory]\Release\win_installer\win_installer.iss
    ```
 - Setup executable resides in:
    ```
-   [repository main folder]\\[project directory]\\Release\\win_installer\\Output
+   [repository main folder]\[project directory]\Release\win_installer\Output
    ```
 
 ## Usage
