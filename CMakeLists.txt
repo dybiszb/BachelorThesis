@@ -12,8 +12,18 @@ cmake_minimum_required(VERSION 2.8.4)
 project(BachelorThesis)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -std=gnu++0x")
 
-#set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/lib)
-#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib)
+
+#===============================================================================
+# Definitions
+#-------------------------------------------------------------------------------
+add_definitions(
+        -DTW_STATIC
+        -DTW_NO_LIB_PRAGMA
+        -DTW_NO_DIRECT3D
+        -DGLEW_STATIC
+        -D_CRT_SECURE_NO_WARNINGS
+)
+
 
 #===============================================================================
 # External Libraries
@@ -46,6 +56,7 @@ include_directories(
         external/PhysX/include/pvd/
         external/PhysX/include/pxtask/
         external/PhysX/include/vehicle/
+        external/googletest/googletest/include/
 )
 
 set(EXTERNAL_LIBS
@@ -57,7 +68,9 @@ set(EXTERNAL_LIBS
         INIH
 #        assimp
         tinyobjloader
-)
+#        gtest
+#        gtest_main
+        )
 
 #===============================================================================
 # Project's Includes
@@ -130,16 +143,34 @@ add_executable(bachelor_water ${SOURCE_FILES})
 target_link_libraries (bachelor_water ${EXTERNAL_LIBS})
 
 #===============================================================================
-# Definitions
+# Testing
 #-------------------------------------------------------------------------------
-add_definitions(
-        -DTW_STATIC
-        -DTW_NO_LIB_PRAGMA
-        -DTW_NO_DIRECT3D
-        -DGLEW_STATIC
-        -D_CRT_SECURE_NO_WARNINGS
-)
+enable_testing()
+include_directories(
+        external/googletest/googletest/include/
+        external/googletest/googletest/)
 
+set(TEST_SOURCES tests/utilities_unittest.cpp )
+add_executable(unit_tests ${TEST_SOURCES})
+target_link_libraries(unit_tests gtest gtest_main)
+target_link_libraries(unit_tests ${EXTERNAL_LIBS})
+add_test(NAME test COMMAND unit_tests)
+set_target_properties(unit_tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY $<TARGET_FILE_DIR:bachelor_water>/tests)
+add_custom_command(
+        TARGET unit_tests
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/tests/run_tests.bat
+        $<TARGET_FILE_DIR:bachelor_water>/tests)
+
+#===============================================================================
+# Copy Installer Sources
+#-------------------------------------------------------------------------------
+add_custom_command(
+        TARGET bachelor_water POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/win_installer
+        $<TARGET_FILE_DIR:bachelor_water>/win_installer
+)
 #===============================================================================
 # Copy Resources
 #-------------------------------------------------------------------------------

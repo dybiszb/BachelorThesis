@@ -11,6 +11,8 @@ add_definitions(
 		-D_CRT_SECURE_NO_WARNINGS
 )
 
+
+
 ### GLFW ###
 
 add_subdirectory (glfw-3.1.2)
@@ -184,3 +186,12 @@ target_link_libraries(ANTTWEAKBAR_116_OGLCORE_GLFW
 #add_subdirectory( bullet-2.81-rev2613/src/BulletCollision )
 #add_subdirectory( bullet-2.81-rev2613/src/BulletDynamics )
 #add_subdirectory( bullet-2.81-rev2613/src/LinearMath )
+### GOOGLE TESTS ###
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    # force this option to ON so that Google Test will use /MD instead of /MT
+    # /MD is now the default for Visual Studio, so it should be our default, too
+    option(gtest_force_shared_crt
+            "Use shared (DLL) run-time lib even when Google Test is built as static lib."
+            ON)
+endif()
+add_subdirectory(googletest/googletest)
