@@ -14,7 +14,7 @@ Please let me know about any issues.
    ```
    [repository main folder]\\[project directory]\BachelorThesis.sln
     ```
- - Change *Debug* to *Release* and click Build->Build Soulution.
+- Change *Debug* to *Release* and click Build->Build Soulution.
 
 ## Setup.exe<a name="setup"></a>
 It is is possible to create setup executable for the application from the repository sources. Please first [build](#build) the app and then make use of the following steps:
