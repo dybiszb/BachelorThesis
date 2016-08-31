@@ -13,7 +13,7 @@
 #include <glfw3.h>
 #include <iostream>
 #include <glm/glm.hpp>
-#include "camera.h"
+#include "custom_camera.h"
 
 
 using namespace std;

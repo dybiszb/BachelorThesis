@@ -17,7 +17,7 @@
 #include "error_handling.h"
 #include "textures/texture_2D.h"
 #include "waves_deformer.h"
-#include "camera.h"
+#include "custom_camera.h"
 #include "rays_functions.h"
 
 using namespace rendering;

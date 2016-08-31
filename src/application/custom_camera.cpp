@@ -1,6 +1,6 @@
 // author: dybisz
 
-#include "camera.h"
+#include "custom_camera.h"
 
 CCustomCamera::CCustomCamera(Settings& settings) : _settings(settings) {
     _position = vec3

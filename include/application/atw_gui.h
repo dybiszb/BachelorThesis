@@ -14,7 +14,7 @@
 #include "builders/atw_button_builder.h"
 #include "builders/atw_var_builder.h"
 #include "settings_struct.h"
-#include "camera.h"
+#include "custom_camera.h"
 
 using namespace glm;
 using namespace utils;

@@ -2,6 +2,7 @@
 
 #include "glfw_renderer.h"
 #include <time.h>
+#include <model_loading/model.h>
 //#include <unistd.h>
 
 CGLFWRenderer::CGLFWRenderer(Settings& settings) :
@@ -30,6 +31,7 @@ CGLFWRenderer::~CGLFWRenderer() {
 void CGLFWRenderer::runMainLoop() {
     vec3 forceMove(0.0, 0.0, 0.0);
     _inputOutput->setForceMove(&forceMove);
+    CModel model((GLchar *) "res/models/decent_ship/Medieval Boat.obj");
     do {
         /* ----- Calculate Time ----- */
         float deltaTime = _timer.tick();
@@ -113,6 +115,9 @@ void CGLFWRenderer::runMainLoop() {
                                        _settings.quads, _settings.edgeSize);
         _ship->render(&_camera.getViewMatrix()[0][0],
                       &_camera.getProjectionMatrix()[0][0]);
+
+        model.render(&_camera.getViewMatrix()[0][0],
+                     &_camera.getProjectionMatrix()[0][0]);
 
         TwDraw();
         glfwSwapBuffers(_window);

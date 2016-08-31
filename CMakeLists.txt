@@ -33,7 +33,6 @@ add_subdirectory (external)
 
 include_directories(
         external/AntTweakBar-1.16/include/
-        external/assimp-3.0.1270/include/
         external/glew-1.13.0/include/
         external/glfw-3.1.2/include/GLFW/
         external/glm-0.9.7.1/
@@ -56,7 +55,7 @@ include_directories(
         external/PhysX/include/pvd/
         external/PhysX/include/pxtask/
         external/PhysX/include/vehicle/
-        external/googletest/googletest/include/
+        external/assimp/include/
 )
 
 set(EXTERNAL_LIBS
@@ -66,10 +65,7 @@ set(EXTERNAL_LIBS
         GLEW_1130
         ANTTWEAKBAR_116_OGLCORE_GLFW
         INIH
-#        assimp
         tinyobjloader
-#        gtest
-#        gtest_main
         )
 
 #===============================================================================
@@ -86,6 +82,7 @@ include_directories(
         include/rendering/textures
         include/rendering
         include/utils
+        include/utils/model_loading
         res/
 )
 
@@ -94,7 +91,7 @@ include_directories(
 #-------------------------------------------------------------------------------
 set(
         SOURCE_FILES
-        src/application/camera.cpp
+        src/application/custom_camera.cpp
         src/application/glfw_io.cpp
         src/application/glfw_renderer.cpp
         src/application/glfw_timer.cpp
@@ -129,12 +126,15 @@ set(
         src/entities/bounding/computational_grid.cpp
         src/geometry/cuboid.cpp
         src/utils/physx_simulation.cpp
+        src/utils/model_loading/mesh.cpp
+        src/utils/model_loading/model.cpp
 )
 
 #===============================================================================
 # Executable
 #-------------------------------------------------------------------------------
 link_directories(${CMAKE_SOURCE_DIR}/external/PhysX/lib/vc15_x86/)
+link_directories(${CMAKE_SOURCE_DIR}/external/assimp/lib/)
 add_executable(bachelor_water ${SOURCE_FILES})
 
 #===============================================================================
@@ -195,7 +195,9 @@ endforeach()
 #===============================================================================
 # Copy Dlls
 #-------------------------------------------------------------------------------
-file(GLOB DllFiles ${CMAKE_SOURCE_DIR}/external/PhysX/bin/vc15_x86/*.dll)
+file(GLOB DllFiles
+        ${CMAKE_SOURCE_DIR}/external/PhysX/bin/vc15_x86/*.dll
+        ${CMAKE_SOURCE_DIR}/external/assimp/bin/*.dll)
 
 foreach(DllFiles ${DllFiles})
     add_custom_command(

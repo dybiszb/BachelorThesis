@@ -54,9 +54,8 @@ CWaterGrid::~CWaterGrid() {
 void CWaterGrid::render(const float *view,
                         const float *projection) {
 
-    if (_animation) {
-        _wavesDeformer.animationStep();
-    }
+    if (_animation) _wavesDeformer.animationStep();
+
     glActiveTexture(GL_TEXTURE0);
     _wavesDeformer.bindNoiseTexture();
     glViewport(0, 0, _viewportWidth, _viewportHeight);

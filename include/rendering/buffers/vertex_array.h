@@ -77,7 +77,7 @@ namespace rendering {
 
         /**
          * By default method should be used with Vertex structure but it is
-         * not obligatory. Basically the procedure wraps process of assigning
+         * not obligatory. Basically the procedure wraps up process of assigning
          * shader's attribute to the VAO. The purpose of this is to inform
          * shader how to interpret data stored in buffers.
          */
