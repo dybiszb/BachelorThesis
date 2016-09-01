@@ -3,8 +3,8 @@
 #include "ship_model.h"
 
 CShipModel::CShipModel(Settings &settings) : COBJModel(
-        "res/models/boat_fishing/",
-        "res/models/boat_fishing/boat_fishing_02"
+        "res/models/black_pearl/",
+        "res/models/black_pearl/black_pearl"
                 ".obj"), _modelLocalScale(0.02) {
     _modelMatrix = scale(_modelMatrix, vec3(0.002f, 0.002f, 0.002f));
     _modelMatrix = glm::translate(_modelMatrix, glm::vec3(0.0f, 25.0f, 0.0f));
@@ -25,6 +25,7 @@ void CShipModel::render(const float *view,
     _modelMatrix = _computationalGrid.getTransformation();
     _modelMatrix = glm::translate(_modelMatrix, _modelLocalTranslation);
     _modelMatrix = scale(_modelMatrix, vec3(_modelLocalScale, _modelLocalScale, _modelLocalScale));
+    _modelMatrix = rotate(_modelMatrix, -3.14f/2.0f, vec3(0.0f, 1.0f, 0.0f));
 
     COBJModel::render(view, projection);
 

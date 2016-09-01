@@ -14,15 +14,22 @@ const float CSkyboxBuilder::defaultSideSize = 32.0f;
 //        "./res/textures/skybox/right.jpg",
 //        "./res/textures/skybox/left.jpg"
 //};
+//const char* CSkyboxBuilder::defaultFaces[6]= {
+//        "./res/textures/hip_miramar/miramar_ft.tga",
+//        "./res/textures/hip_miramar/miramar_bk.tga",
+//        "./res/textures/hip_miramar/miramar_up.tga",
+//        "./res/textures/hip_miramar/miramar_dn.tga",
+//        "./res/textures/hip_miramar/miramar_rt.tga",
+//        "./res/textures/hip_miramar/miramar_lf.tga"
+//};
 const char* CSkyboxBuilder::defaultFaces[6]= {
-        "./res/textures/hip_miramar/miramar_ft.tga",
-        "./res/textures/hip_miramar/miramar_bk.tga",
-        "./res/textures/hip_miramar/miramar_up.tga",
-        "./res/textures/hip_miramar/miramar_dn.tga",
-        "./res/textures/hip_miramar/miramar_rt.tga",
-        "./res/textures/hip_miramar/miramar_lf.tga"
+        "./res/textures/hw_nightsky/nightsky_ft.tga",
+        "./res/textures/hw_nightsky/nightsky_bk.tga",
+        "./res/textures/hw_nightsky/nightsky_up.tga",
+        "./res/textures/hw_nightsky/nightsky_dn.tga",
+        "./res/textures/hw_nightsky/nightsky_rt.tga",
+        "./res/textures/hw_nightsky/nightsky_lf.tga"
 };
-
 
 CSkyboxBuilder::CSkyboxBuilder() {
     _sideSize = defaultSideSize;
