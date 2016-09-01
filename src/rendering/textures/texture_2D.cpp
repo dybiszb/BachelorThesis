@@ -24,15 +24,15 @@ CTexture2D::CTexture2D(int width, int height) {
 }
 
 CTexture2D::CTexture2D(string path) {
-//    _id = SOIL_load_OGL_texture
-//            (
-//                    path.c_str(),
-//                    SOIL_LOAD_AUTO,
-//                    SOIL_CREATE_NEW_ID,
-//                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y |
-//                    SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
-//            );
-    _id = _textureFromFile(path);
+    _id = SOIL_load_OGL_texture
+            (
+                    path.c_str(),
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y |
+                    SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+//    _id = _textureFromFile(path);
     checkErrorSOIL(_id);
 }
 
