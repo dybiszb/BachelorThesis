@@ -69,7 +69,8 @@ public:
 
     void setModelLinearDamping(float linearDamping);
     void setModelAngularDamping(float angularDamping);
-
+    void setDirectionalLight(vec3 & directionalLight);
+    void setCameraPosition(vec3& cameraPosition);
 private:
     CComputationalGrid _computationalGrid;
     bool _computationalGridVisibility;

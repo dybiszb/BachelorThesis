@@ -56,6 +56,8 @@ namespace rendering {
          * @param modelMatrix New model matrix entries for .obj model.
          */
         void setModelMatrix(mat4 modelMatrix);
+        void setDirectionalLight(vec3 & directionalLight);
+        void setCameraPosition(vec3& cameraPosition);
         vector<shape_t>& getShapes();
         // TODO move to private
         vec2 _xMinMax;
@@ -73,9 +75,12 @@ namespace rendering {
 
         CBuffer *_verticesBuffer;
         CBuffer *_indicesBuffer;
+        CBuffer *_normalsBuffer;
         CBuffer *_texCoordBuffer;
 
         mat4 _modelMatrix;
+        vec3  _directionalLight;
+        vec3 _cameraPosition;
 
         void _loadShapesAndMaterials();
 

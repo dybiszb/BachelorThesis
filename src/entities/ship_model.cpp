@@ -50,8 +50,16 @@ void CShipModel::setModelScale(float scale) {
 }
 
 void CShipModel::setModelLinearDamping(float linearDamping) {
-
+    _computationalGrid.setLinearDamping(linearDamping);
 }
 void CShipModel::setModelAngularDamping(float angularDamping) {
+    _computationalGrid.setAngularDamping(angularDamping);
+}
+
+void CShipModel::setDirectionalLight(vec3 & directionalLight) {
+    COBJModel::setDirectionalLight(directionalLight);
+}
+
+void CShipModel::setCameraPosition(vec3& cameraPosition) {
 
 }

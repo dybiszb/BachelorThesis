@@ -9,7 +9,9 @@ using namespace rendering;
 COBJModel::COBJModel(string directory, string objName)
         : _directory(directory),
           _objName(objName),
-          _modelMatrix(1.0f) {
+          _modelMatrix(1.0f),
+          _directionalLight(0.0f),
+          _cameraPosition(0.0f) {
     _loadShapesAndMaterials();
     _createTexturesFromImages();
     _createBuffers();
@@ -21,6 +23,7 @@ COBJModel::COBJModel(string directory, string objName)
 COBJModel::~COBJModel() {
     delete _verticesBuffer;
     delete _indicesBuffer;
+    delete _normalsBuffer;
     delete _texCoordBuffer;
     _shader.DeleteShaderProgram();
     for (auto &texture : _textures) delete texture;
@@ -38,11 +41,13 @@ void COBJModel::render(const float *view,
     glUniformMatrix4fv(_shader("view"), 1, GL_FALSE, view);
     glUniformMatrix4fv(_shader("projection"), 1, GL_FALSE, projection);
     glUniform1iARB(_shader("texture_diffuse"), 3);
-
+    glUniform3fv(_shader("u_directionalLight"), 1, &_directionalLight[0]);
+    glUniform3fv(_shader("u_cameraPosition"), 1, &_cameraPosition[0]);
     // Attributes
     size_t verticesOffset = 0;
     size_t texCoordOffset = 0;
     size_t indicesOffset = 0;
+    size_t normalsOffset = 0;
 
     for (int i = 0; i < _shapes.size(); i++) {
         glActiveTexture(GL_TEXTURE0 + 3);
@@ -63,6 +68,13 @@ void COBJModel::render(const float *view,
                               GL_FALSE,
                               0, (void *) texCoordOffset);
 
+        /* ----- Attach Normals(layout = 2) ----- */
+        glEnableVertexAttribArray(2);
+        _normalsBuffer->bind();
+        glVertexAttribPointer(2, 3, GL_FLOAT,
+                              GL_FALSE,
+                              0, (void *) normalsOffset);
+
         /* ----- Draw a Shape ----- */
         glDrawElements(GL_TRIANGLES, _shapes[i].mesh.indices.size(),
                        GL_UNSIGNED_INT, (void *) indicesOffset);
@@ -70,6 +82,7 @@ void COBJModel::render(const float *view,
         verticesOffset += sizeof(float) * _shapes[i].mesh.positions.size();
         texCoordOffset += sizeof(float) * _shapes[i].mesh.texcoords.size();
         indicesOffset += sizeof(unsigned int) * _shapes[i].mesh.indices.size();
+        normalsOffset += sizeof(float) * _shapes[i].mesh.normals.size();
 
         if(texIndex >= 0) _textures[texIndex]->unbind();
         checkErrorOpenGL("COBJModel - draw loop");
@@ -77,6 +90,8 @@ void COBJModel::render(const float *view,
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
+    _normalsBuffer->unbind();
     _texCoordBuffer->unbind();
     _verticesBuffer->unbind();
     _indicesBuffer->unbind();
@@ -87,6 +102,14 @@ void COBJModel::render(const float *view,
 
 void COBJModel::setModelMatrix(mat4 modelMatrix) {
     _modelMatrix = modelMatrix;
+}
+
+void COBJModel::setDirectionalLight(vec3 & directionalLight) {
+    _directionalLight = directionalLight;
+}
+
+void COBJModel::setCameraPosition(vec3& cameraPosition) {
+    _cameraPosition = cameraPosition;
 }
 
 vector<shape_t>& COBJModel::getShapes() {
@@ -162,6 +185,7 @@ void COBJModel::_createBuffers() {
     _vao.setCaller("COBJModel");
     _verticesBuffer = new CBuffer(GL_ARRAY_BUFFER);
     _indicesBuffer = new CBuffer(GL_ELEMENT_ARRAY_BUFFER);
+    _normalsBuffer = new CBuffer(GL_ARRAY_BUFFER);
     _texCoordBuffer = new CBuffer(GL_ARRAY_BUFFER);
 }
 
@@ -169,11 +193,13 @@ void  COBJModel::_loadDataToBuffers() {
     _vao.bind();
     int verticesBufferSize = 0;
     int indicesBufferSize = 0;
+    int normalsBufferSize = 0;
     int texCoordBufferSize = 0;
     int offset = 0;
     for (int i = 0; i < _shapes.size(); i++) {
         verticesBufferSize += sizeof(float) * _shapes[i].mesh.positions.size();
         indicesBufferSize += sizeof(unsigned int) * _shapes[i].mesh.indices.size();
+        normalsBufferSize += sizeof(float) * _shapes[i].mesh.normals.size();
         texCoordBufferSize += sizeof(float) * _shapes[i].mesh.texcoords.size();
     }
 
@@ -188,8 +214,19 @@ void  COBJModel::_loadDataToBuffers() {
         offset += chunkSize;
     }
 
-    _verticesBuffer->unbind();
-    checkErrorOpenGL("COBJModel - uploading vertex data");
+    /* ---- Upload Normals Data ----- */
+    _normalsBuffer->bind();
+    _normalsBuffer->setDataStatic(normalsBufferSize, NULL);
+    offset = 0;
+
+    for (int i = 0; i < _shapes.size(); i++) {
+        int chunkSize = sizeof(float) * _shapes[i].mesh.normals.size();
+        _normalsBuffer->setSubData(offset, chunkSize, &_shapes[i].mesh.normals[0]);
+        offset += chunkSize;
+    }
+
+    _normalsBuffer->unbind();
+    checkErrorOpenGL("COBJModel - uploading normals data");
 
     /* ----- Upload TexCoord Data ----- */
     _texCoordBuffer->bind();
@@ -235,7 +272,10 @@ void COBJModel::_initializeShaderProgram() {
 
     _shader.Use();
     _shader.AddUniform("texture_diffuse");
+    _shader.AddUniform("u_directionalLight");
+    _shader.AddUniform("u_cameraPosition");
     _shader.AddAttribute("position");
+    _shader.AddAttribute("normal");
     _shader.AddUniform("model");
     _shader.AddUniform("view");
     _shader.AddUniform("projection");

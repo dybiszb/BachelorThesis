@@ -137,23 +137,9 @@ void main()
 
     // Read the vertex height
     vec3 position = a_position;
-//    if(abs(disturbHeight) > abs(noiseHeight)) {
-            position.y = disturbHeight;
-            v_normal = calculateNormal(u_heightFieldTexture, a_heightFieldTexCoords);
-//
-//    } else {
-//        position.y =  noiseHeight + disturbHeight;
-//        v_normal = calculateNormal(u_noiseTexture, a_heightFieldTexCoords);
-//    }
-//    if(disturbHeight < noiseHeight && disturbHeight < 0 && disturbHeight < 0) {
-//        position.y =  disturbHeight;
-//        v_normal = calculateNormal(u_noiseTexture, a_heightFieldTexCoords);
-//    } else if(disturbHeight > noiseHeight && disturbHeight > 0 && disturbHeight > 0){
-//        position.y = disturbHeight + noiseHeight;
-//        v_normal = calculateNormal(u_heightFieldTexture, a_heightFieldTexCoords);
-//    }
-//    position.y =  disturbHeight + noiseHeight;
-//    v_normal = calculateNormal(u_noiseTexture, a_heightFieldTexCoords) + calculateNormal(u_heightFieldTexture, a_heightFieldTexCoords);
+    position.y = disturbHeight;
+    v_normal = calculateNormal(u_heightFieldTexture, a_heightFieldTexCoords);
+
     // Update its position according to transformations
     gl_Position   = u_projectionMatrix *
                     u_viewMatrix       *
