@@ -71,6 +71,8 @@ public:
     void setModelAngularDamping(float angularDamping);
     void setDirectionalLight(vec3 & directionalLight);
     void setCameraPosition(vec3& cameraPosition);
+
+    vec3 getShipPosition();
 private:
     CComputationalGrid _computationalGrid;
     bool _computationalGridVisibility;

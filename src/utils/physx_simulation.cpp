@@ -23,7 +23,7 @@ PhysXSimulation::PhysXSimulation() : _timeStamp(1.0f / 60.0f) {
     _movementForce = new PxVec3(0.0, 0.0, 0.0);
     _movementPosition = new PxVec3((PxReal) -15.0, 1.0, 0);
     _material = _sdk->createMaterial(0.05, 0.05, 0.05);
-    _actor = _sdk->createRigidDynamic(PxTransform(PxVec3(0.f, -3.0f, 0.f)));
+    _actor = _sdk->createRigidDynamic(PxTransform(PxVec3(-40.f, -2.0f, 0.f)));
     _actor->setMass(0.0f);
     _actor->setLinearDamping(2.0);
     _actor->setAngularDamping(6.0);
@@ -49,22 +49,41 @@ void PhysXSimulation::update(vec3 &pointB, float forceB, vec3 &forceMove, vec3& 
     (*_movementForce).x = forceMove.x;
     (*_movementForce).y = forceMove.y;
     (*_movementForce).z = forceMove.z;
-    (*_movementPosition).x = movePoint.x;
-    (*_movementPosition).y = movePoint.y;
-    (*_movementPosition).z = movePoint.z;
+
+    (*_movementPosition).x = 15.0f;
+    (*_movementPosition).y = 0.0f;
+    (*_movementPosition).z = 0.0f;
+
+    // Contra Force
+    PxVec3 cForce;
+    cForce.x = - 15.0f;
+    cForce.y = 0.0f;
+    cForce.z = 0.0f;
+
+
 
     // Apply Forces
     PxRigidBodyExt::updateMassAndInertia(*_actor, 10.5f);
-    PxRigidBodyExt::addForceAtPos(*_actor, *_buyoancyForce, *_buyoancyPosition, PxForceMode::eFORCE, true);
-    PxRigidBodyExt::addForceAtPos(*_actor, *_movementForce, *_movementPosition, PxForceMode::eFORCE, true);
+    PxRigidBodyExt::addForceAtLocalPos(*_actor, *_buyoancyForce,
+                                  *_buyoancyPosition, PxForceMode::eFORCE, true);
+    PxRigidBodyExt::addLocalForceAtLocalPos(*_actor, *_movementForce,
+                                            *_movementPosition,
+                                            PxForceMode::eFORCE, true);
+    PxRigidBodyExt::addLocalForceAtLocalPos(*_actor, PxVec3(0.0f,
+            0.0f, -forceMove.z),
+                                  cForce,
+                                  PxForceMode::eFORCE, true);
+
 
     // Simulate Scene
     _scene->simulate(_timeStamp);
     _scene->fetchResults(true);
+
+
 }
 
 void PhysXSimulation::addBox(vec3& position) {
-    _actor->createShape(PxBoxGeometry(0.55, 0.55, 0.55), *_material, PxTransform
+    _actor->createShape(PxBoxGeometry(0.57, 0.57, 0.57), *_material, PxTransform
             (position.x, position.y, position.z));
     _actor->setMass(_actor->getMass() + 10.0f);
 }
@@ -79,8 +98,18 @@ mat4 PhysXSimulation::getTransformation() {
 void PhysXSimulation::setLinearDamping(float linearDamping) {
     _actor->setLinearDamping(linearDamping);
 }
+
 void PhysXSimulation::setAngularDamping(float angularDamping) {
     _actor->setAngularDamping(angularDamping);
+}
+
+vec3 PhysXSimulation::getActorPose() {
+    PxTransform actorPose = _actor->getGlobalPose();
+    vec3 pose;
+    pose.x = actorPose.p.x;
+    pose.y = actorPose.p.y;
+    pose.z = actorPose.p.z;
+    return pose;
 }
 
 void PhysXSimulation::_physXMat4ToGlmMat4(const PxMat44 &mat4, glm::mat4 &newMat) {

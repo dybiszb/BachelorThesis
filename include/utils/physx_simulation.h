@@ -34,6 +34,7 @@ public:
     mat4 getTransformation();
     void setLinearDamping(float linearDamping);
     void setAngularDamping(float angularDamping);
+    vec3 getActorPose();
 private:
     PxFoundation* _foundation;
     PxPhysics* _sdk;

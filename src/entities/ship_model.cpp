@@ -63,3 +63,7 @@ void CShipModel::setDirectionalLight(vec3 & directionalLight) {
 void CShipModel::setCameraPosition(vec3& cameraPosition) {
 
 }
+
+vec3 CShipModel::getShipPosition() {
+    return _computationalGrid.getShipPosition();
+}

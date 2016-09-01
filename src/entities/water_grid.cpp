@@ -121,6 +121,26 @@ void CWaterGrid::setLightDirections(vec3 &lightDirection) {
     _lightDirection.z = lightDirection.z;
 }
 
+void CWaterGrid::strictWaterGridDisturbance(vec2& intersectionPoint,
+                                            float amount, int kernel,
+                                            float flatness) {
+
+    intersectionPoint = intersectionPoint - _bottomCorner;
+
+    /* ----- Inside Water Surface ----- */
+    if (intersectionPoint.x > 0 && intersectionPoint.x <= _gridSizeOnX &&
+            intersectionPoint.y > 0 && intersectionPoint.y <= _gridSizeOnZ) {
+
+        /* ----- Which Quad ----- */
+        float spaceBetweenQuads = _gridSizeOnX / (float) _quadsOnX;
+        intersectionPoint.x = (int) (intersectionPoint.x / spaceBetweenQuads);
+        intersectionPoint.y = (int) (intersectionPoint.y / spaceBetweenQuads);
+        _wavesDeformer.areaDisturbance(intersectionPoint, amount, kernel, flatness);
+    }
+
+
+}
+
 void CWaterGrid::areaIntersect(vec2 &viewportCoordinates, CCustomCamera &camera,
                            float amount, int kernel, float flatness) {
 

@@ -33,6 +33,7 @@ public:
                            float width,
                            float height, float edgeSize);
 	mat4 getTransformation();
+	vec3 getShipPosition();
 	void setLinearDamping(float linearDamping);
 	void setAngularDamping(float angularDamping);
 	void setMovementForce(const vec3& movementForce);

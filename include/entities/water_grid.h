@@ -52,6 +52,9 @@ namespace entities {
          */
         void setCameraPosition(vec3 cameraPosition);
         void setLightDirections(vec3& lightDirection);
+        void strictWaterGridDisturbance(vec2& intersectionPoint,
+                                                    float amount, int kernel,
+                                                    float flatness);
         void areaIntersect(vec2& viewportCoordinates, CCustomCamera& camera,
                        float amount, int kernel, float flatness);
         void pointIntersect(vec2& quadCoordinates, float amount);

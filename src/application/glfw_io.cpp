@@ -120,12 +120,19 @@ void CGLFWInputOutput::_handleKeyboard(double deltaTime) {
     }
 
     if(glfwGetKey(_window, GLFW_KEY_UP )){
-        (*_forceMove).x += 100;
+        (*_forceMove).x += 2000;
     }
     if(glfwGetKey(_window, GLFW_KEY_DOWN )){
-        (*_forceMove).x -= 100;
+        (*_forceMove).x -= 2000;
+        if((*_forceMove).x < 0.0f) (*_forceMove).x = 0.0f;
     }
 
+    if(glfwGetKey(_window, GLFW_KEY_RIGHT)){
+        (*_forceMove).z += 500;
+    }
+    if(glfwGetKey(_window, GLFW_KEY_LEFT)){
+        (*_forceMove).z -= 500;
+    }
     if (glfwGetKey(_window, GLFW_KEY_SPACE)) {
         _stopAnimationRequested = true;
     }

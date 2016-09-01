@@ -73,6 +73,10 @@ mat4 CComputationalGrid::getTransformation() {
     return simulation.getTransformation();
 }
 
+vec3 CComputationalGrid::getShipPosition() {
+    return simulation.getActorPose();
+}
+
 void CComputationalGrid::setLinearDamping(float linearDamping) {
     simulation.setLinearDamping(linearDamping);
 }
