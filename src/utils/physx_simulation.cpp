@@ -83,7 +83,7 @@ void PhysXSimulation::update(vec3 &pointB, float forceB, vec3 &forceMove, vec3& 
 }
 
 void PhysXSimulation::addBox(vec3& position) {
-    _actor->createShape(PxBoxGeometry(0.57, 0.57, 0.57), *_material, PxTransform
+    _actor->createShape(PxBoxGeometry(0.55, 0.55, 0.55), *_material, PxTransform
             (position.x, position.y, position.z));
     _actor->setMass(_actor->getMass() + 10.0f);
 }

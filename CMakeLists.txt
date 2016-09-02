@@ -30,7 +30,6 @@ add_definitions(
 #-------------------------------------------------------------------------------
 add_subdirectory (external)
 
-
 include_directories(
         external/AntTweakBar-1.16/include/
         external/glew-1.13.0/include/
@@ -121,14 +120,13 @@ set(
         src/utils/settings_reader.cpp
         src/entities/ship_model.cpp
         src/utils/obj_model.cpp
-        include/rendering/bindable_object.h
         src/entities/bounding/computational_cell.cpp
         src/entities/bounding/computational_grid.cpp
         src/geometry/cuboid.cpp
         src/utils/physx_simulation.cpp
         src/utils/model_loading/mesh.cpp
         src/utils/model_loading/model.cpp
-)
+        src/utils/initialize.cpp)
 
 #===============================================================================
 # Executable
@@ -150,7 +148,16 @@ include_directories(
         external/googletest/googletest/include/
         external/googletest/googletest/)
 
-set(TEST_SOURCES tests/utilities_unittest.cpp )
+set(TEST_SOURCES
+        tests/utils_unittest.cpp
+        src/utils/settings_reader.cpp
+        src/utils/rays_functions.cpp
+        src/application/custom_camera.cpp
+        src/utils/rand_functions.cpp
+        src/utils/error_handling.cpp
+        src/utils/initialize.cpp
+        src/rendering/textures/cubemap_texture.cpp)
+
 add_executable(unit_tests ${TEST_SOURCES})
 target_link_libraries(unit_tests gtest gtest_main)
 target_link_libraries(unit_tests ${EXTERNAL_LIBS})
@@ -161,6 +168,19 @@ add_custom_command(
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/tests/run_tests.bat
         $<TARGET_FILE_DIR:bachelor_water>/tests)
+# Config Files
+add_custom_command(
+        TARGET unit_tests
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_SOURCE_DIR}/tests/test_config.ini
+        $<TARGET_FILE_DIR:bachelor_water>/tests)
+# Resources
+add_custom_command(
+        TARGET unit_tests PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory   # Copy resources
+        ${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:unit_tests>/res
+)
 
 #===============================================================================
 # Copy Installer Sources

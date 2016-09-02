@@ -129,35 +129,22 @@ void CGLFWRenderer::runMainLoop() {
         TwDraw();
         glfwSwapBuffers(_window);
         glfwPollEvents();
-
-        float renderTimeEnd = glfwGetTime();
-        float waitTime = (1000.0/ 60.0 - (renderTimeEnd - renderTimeStart));
-//        cout << waitTime << endl;
-//        sleep(waitTime * 0.1);
     }
     while (glfwGetKey(_window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
            glfwWindowShouldClose(_window) == 0);
 }
 
 void CGLFWRenderer::_initGLFW() {
-    if (!glfwInit()) {
+    if (!initGLFW()) {
         fprintf(stderr, "Failed to initialize GLFW\n");
         getchar();
     }
 }
 
 void CGLFWRenderer::_initWindow() {
-    _window = glfwCreateWindow(_settings.windowWidth, _settings.windowHeight,
-                               "Bachelor Thesis - Bartlomiej Dybisz",
-                               _settings.fullScreen ? glfwGetPrimaryMonitor() : NULL,
-                               NULL);
-    if (_window == NULL) {
-        fprintf(stderr, "Failed to open GLFW window.\n");
-        getchar();
-        glfwTerminate();
-    }
-    glfwMakeContextCurrent(_window);
-    glfwSetInputMode(_window, GLFW_STICKY_KEYS, 1);
+    _window = initGLFWWindow(_settings.windowWidth, _settings.windowHeight,
+                             "Bachelor Thesis - Bartlomiej Dybisz",
+                             _settings.fullScreen ? glfwGetPrimaryMonitor() : NULL);
 }
 
 void CGLFWRenderer::_initInputOutput() {
@@ -166,8 +153,7 @@ void CGLFWRenderer::_initInputOutput() {
 }
 
 void CGLFWRenderer::_initGLEW() {
-    glewExperimental = true;
-    if (glewInit() != GLEW_OK) {
+    if(!utils::initGLEW()) {
         fprintf(stderr, "Failed to initialize GLEW\n");
         getchar();
         glfwTerminate();

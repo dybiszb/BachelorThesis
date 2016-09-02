@@ -10,6 +10,7 @@ void utils::seed() {
         seeded = true;
     }
 }
+
 float utils::randomInteger(int lBoundary, int rBoundary) {
     return rand() % rBoundary + lBoundary;
 
@@ -23,15 +24,15 @@ float utils::randomFloat(float lBoundary, float rBoundary) {
 }
 
 vec3 utils::randomPointInSphere(vec3 center, float R) {
-    float pi = 3.14159265;
+    float pi = (float) 3.14159265;
     vec3 randomPoint(0.0f, 0.0f, 0.0f);
 
     /* ----- Randomize Parameters ----- */
-    float phi      = utils::randomFloat(0.0f, 2.0f * pi);
+    float phi = utils::randomFloat(0.0f, 2.0f * pi);
     float cosTheta = utils::randomFloat(-1.0f, 1.0f);
-    float u        = utils::randomFloat(0.0f, 1.0f);
-    float theta    = acos(cosTheta);
-    float r        = R * cbrt(u);
+    float u = utils::randomFloat(0.0f, 1.0f);
+    float theta = acos(cosTheta);
+    float r = (float) (R * cbrt(u));
 
     /* ----- Convert to Cartesian ----- */
     randomPoint.x = r * sin(theta) * cos(phi);

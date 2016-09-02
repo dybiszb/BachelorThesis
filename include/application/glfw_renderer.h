@@ -24,6 +24,7 @@
 #include "atw_gui.h"
 #include "settings_struct.h"
 #include "ship_model.h"
+#include "initialize.h"
 
 using namespace entities;
 using namespace utils;
