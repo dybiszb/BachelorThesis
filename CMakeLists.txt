@@ -146,7 +146,8 @@ target_link_libraries (bachelor_water ${EXTERNAL_LIBS})
 enable_testing()
 include_directories(
         external/googletest/googletest/include/
-        external/googletest/googletest/)
+        external/googletest/googletest/
+        tests/)
 
 set(TEST_SOURCES
         tests/utils_unittest.cpp
@@ -156,7 +157,14 @@ set(TEST_SOURCES
         src/utils/rand_functions.cpp
         src/utils/error_handling.cpp
         src/utils/initialize.cpp
-        src/rendering/textures/cubemap_texture.cpp)
+        src/rendering/textures/cubemap_texture.cpp
+        src/utils/obj_model.cpp
+        src/rendering/buffers/buffer.cpp
+        src/rendering/buffers/frame_buffer.cpp
+        src/rendering/buffers/vertex_array.cpp
+        src/rendering/textures/texture_2D.cpp
+        src/rendering/glsl_shader.cpp
+        src/rendering/renderable_object.cpp)
 
 add_executable(unit_tests ${TEST_SOURCES})
 target_link_libraries(unit_tests gtest gtest_main)
@@ -179,7 +187,8 @@ add_custom_command(
 add_custom_command(
         TARGET unit_tests PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory   # Copy resources
-        ${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:unit_tests>/res
+        ${CMAKE_SOURCE_DIR}/tests/test_resources
+        $<TARGET_FILE_DIR:unit_tests>/resources
 )
 
 #===============================================================================

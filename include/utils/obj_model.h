@@ -36,8 +36,12 @@ namespace rendering {
         /**
          * @param directory Path to the directory where obj file is located.
          * @param objName   Name of the .obj file that one wants to load.
+         * @param loadData  If true all material and shapes from specified
+         *                  object will be loaded. Otherwise - not.
          */
-        COBJModel(string directory, string objName);
+        COBJModel(string directory, string objName, bool loadData = true);
+
+
 
         /**
          * Obj model along with its textures is render with usage of shipped
@@ -56,9 +60,13 @@ namespace rendering {
          * @param modelMatrix New model matrix entries for .obj model.
          */
         void setModelMatrix(mat4 modelMatrix);
-        void setDirectionalLight(vec3 & directionalLight);
-        void setCameraPosition(vec3& cameraPosition);
-        vector<shape_t>& getShapes();
+
+        void setDirectionalLight(vec3 &directionalLight);
+
+        void setCameraPosition(vec3 &cameraPosition);
+
+        vector<shape_t> &getShapes();
+
         // TODO move to private
         vec2 _xMinMax;
         vec2 _yMinMax;
@@ -66,7 +74,6 @@ namespace rendering {
     protected:
         string _directory;
         string _objName;
-
 
 
         vector<CTexture2D *> _textures;
@@ -79,7 +86,7 @@ namespace rendering {
         CBuffer *_texCoordBuffer;
 
         mat4 _modelMatrix;
-        vec3  _directionalLight;
+        vec3 _directionalLight;
         vec3 _cameraPosition;
 
         void _loadShapesAndMaterials();
@@ -98,6 +105,7 @@ namespace rendering {
                               int *texCoordSize);
 
         void _initializeShaderProgram();
+        void _loadData();
     };
 }
 

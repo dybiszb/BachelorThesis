@@ -1,4 +1,3 @@
-//==============================================================================
 // Following source file contains all tests related to functions located in
 // [Project Dir]\src\utilities. Google tests framework used.
 // Be careful with error handling functions tests - its order has meaning and
@@ -18,6 +17,7 @@
 #include "error_handling.h"
 #include "initialize.h"
 #include "cubemap_texture.h"
+#include "wrappers.h"
 
 // TEMPORARY: for vectors/matrices print outs
 #include <iostream>
@@ -36,9 +36,10 @@ class UtilitiesTest : public ::testing::Test {
 protected:
     Settings settings = utils::readFromINI("test_config.ini");
     CCustomCamera camera;
-    GLFWwindow* window;
+    GLFWwindow *window;
+
     UtilitiesTest() : camera(settings) {
-        if(!utils::initGLFW()) return;
+        if (!utils::initGLFW()) return;
         window = initGLFWWindow(settings.windowWidth, settings.windowHeight,
                                 "Bachelor Thesis - Unit Tests");
         if (!utils::initGLEW()) return;
@@ -174,17 +175,23 @@ TEST_F(UtilitiesTest, ErrorHandling_checkErrorOpenGL_Error) {
 }
 
 TEST_F(UtilitiesTest, ErrorHandling_checkErrorCubemapId_NoError) {
-    const char* testFaces[6]= {
-            "./res/textures/hw_nightsky/nightsky_ft.tga",
-            "./res/textures/hw_nightsky/nightsky_bk.tga",
-            "./res/textures/hw_nightsky/nightsky_up.tga",
-            "./res/textures/hw_nightsky/nightsky_dn.tga",
-            "./res/textures/hw_nightsky/nightsky_rt.tga",
-            "./res/textures/hw_nightsky/nightsky_lf.tga"
+    const char *testFaces[6] = {
+            "./resources/test_skybox/nightsky_ft.tga",
+            "./resources/test_skybox/nightsky_bk.tga",
+            "./resources/test_skybox/nightsky_up.tga",
+            "./resources/test_skybox/nightsky_dn.tga",
+            "./resources/test_skybox/nightsky_rt.tga",
+            "./resources/test_skybox/nightsky_lf.tga"
     };
     testing::internal::CaptureStdout();
     CCubemapTexture cubemapTexture(testFaces);
     checkErrorCubemapId("unit-tests", cubemapTexture.getId());
     std::string outputCorrect = testing::internal::GetCapturedStdout();
     EXPECT_EQ(outputCorrect.size(), (unsigned int) 0);
+}
+
+TEST_F(UtilitiesTest, ObjModelClass_loadingData) {
+    // TODO shaders must be copied to the Release\tests
+//    UnitTests_ObjModelWrapper w_objModel("./resources/test_obj/",
+//            "./resources/test_obj/boat_fishing_02.obj", false);
 }

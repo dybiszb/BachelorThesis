@@ -6,18 +6,13 @@
 
 using namespace rendering;
 
-COBJModel::COBJModel(string directory, string objName)
+COBJModel::COBJModel(string directory, string objName, bool loadData)
         : _directory(directory),
           _objName(objName),
           _modelMatrix(1.0f),
           _directionalLight(0.0f),
           _cameraPosition(0.0f) {
-    _loadShapesAndMaterials();
-    _createTexturesFromImages();
-    _createBuffers();
-    _loadDataToBuffers();
-    _initializeShaderProgram();
-    _findMinMax();
+    if(loadData) this->_loadData();
 }
 
 COBJModel::~COBJModel() {
@@ -27,6 +22,15 @@ COBJModel::~COBJModel() {
     delete _texCoordBuffer;
     _shader.DeleteShaderProgram();
     for (auto &texture : _textures) delete texture;
+}
+
+void COBJModel::_loadData() {
+    _loadShapesAndMaterials();
+    _createTexturesFromImages();
+    _createBuffers();
+    _loadDataToBuffers();
+    _initializeShaderProgram();
+    _findMinMax();
 }
 
 void COBJModel::render(const float *view,
