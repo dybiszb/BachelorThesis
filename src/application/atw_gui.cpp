@@ -2,8 +2,13 @@
 
 #include "atw_gui.h"
 
+
+void TW_CALL _myErrorHandler(const char *errorMessage) {
+
+}
 CAtwGui::CAtwGui(Settings &settings, CCustomCamera *camera)
         : _settings(settings), _camera(camera) {
+    TwHandleErrors(_myErrorHandler);
     _disturbanceHeight = _settings.manualDisturbanceStrength;
     _isRaining = _settings.rain;
     _rainIntensity = _settings.rainIntensity;
@@ -422,15 +427,15 @@ void CAtwGui::initializeSceneBar() {
 
 void CAtwGui::initializeControlsBar() {
     int width = 240;
-    int height = 105;
+    int height = 135;
     _controlsBar = CAtwBarBuilder()
             .setLabel("Controls")
             .setSize(width, height)
             .setContained(true)
             .setPosition(
                     (int) (_settings.windowWidth - 195 - _settings.guiMargin),
-                    (int) (_settings.windowHeight - _settings.guiMargin -
-                           height))
+                    (int) (_settings.windowHeight -
+                           height + 15))
             .setAlpha(0)
             .setFontsize(1)
             .setColor(0, 128, 128)
@@ -454,6 +459,16 @@ void CAtwGui::initializeControlsBar() {
     CAtwButtonBuilder()
             .setOwner(_controlsBar)
             .setLabel("RMB         - look around")
+            .build();
+
+    CAtwButtonBuilder()
+            .setOwner(_controlsBar)
+            .setLabel("up/down    - add/remove front force")
+            .build();
+
+    CAtwButtonBuilder()
+            .setOwner(_controlsBar)
+            .setLabel("left/right     - turn left/right")
             .build();
 }
 

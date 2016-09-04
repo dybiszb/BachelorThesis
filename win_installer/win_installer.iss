@@ -1,27 +1,22 @@
 ;==============================================================================
-; Script initializes setup wizard, which checks whether DirectX 9.0c and MSVC 
-; Redist 2012 are present. If not, appropriate files are extracted to the 
-; temporary directory and installers are started. In addition, system version 
-; (32b/64b) is considered. All installers are built in the .exe file.
-; According to official sources 'c' version of DirectX 9.0 includes following
-; registry version entries: 4.09.00.0903 and 4.09.00.0904.
-; In addition, script introduces a feature, which search all files starting 
-; with 'd3dx9' sequence (upper/lower case combinations considered). It prevents 
-; the situation when registry entry is correct but there are no files related
-; to DirectX 9.0.
+;
 ;==============================================================================
 ; author: dybisz
 ;------------------------------------------------------------------------------
 
 [Setup]
-AppName=Dybisz Bachelor Thesis
+AppName=Dybisz's Bachelor Thesis
 AppVersion=1.0
-DefaultDirName={pf}\Dybisz Bachelor Thesis
-DefaultGroupName=Dybisz Bachelor Thesis
+DefaultDirName={pf}\Dybisz's Bachelor Thesis
+DefaultGroupName=Dybisz's Bachelor Thesis
 UninstallDisplayIcon={app}\bachelor_water.exe
 Compression=lzma2
 SolidCompression=yes
 SetupIconFile="..\res\icon.ico"
+DisableWelcomePage=no
+WizardImageFile=welcome_page_img.bmp
+WizardSmallImageFile=pw_logo.bmp
+LicenseFile=license.txt
 
 [Files]
 Source: "..\bachelor_water.exe"; DestDir: "{app}"; Flags: replacesameversion
@@ -108,15 +103,20 @@ end;
 // @return True when MSVC 2015 Redist needs to be installed, 
 //         otherwise false.
 function MSVCNeedsInstalling() : Boolean;
+var
+  dll64b : String;
+  dll32b : String;
 begin
+  dll64b := 'C:\\Windows\\SysWOW64\\msvcp140.dll';
+  dll32b := 'C:\\Windows\\System32\\msvcp140.dll'
   if IsWin64 then
     begin
-      gMSVCMissing := not (VCVersionInstalled(VC_2015_REDIST_X86_ADD));
+      gMSVCMissing := not(VCVersionInstalled(VC_2015_REDIST_X64_ADD) or FileExists(dll64b)) ;
       Result := gMSVCMissing;
     end
   else
     begin
-      gMSVCMissing := not (VCVersionInstalled(VC_2015_REDIST_X86_ADD));
+      gMSVCMissing := not(VCVersionInstalled(VC_2015_REDIST_X86_ADD) or FileExists(dll32b));
       Result := gMSVCMissing;
     end;
 end;
@@ -180,8 +180,10 @@ begin
   if CurStep = ssPostInstall then
     begin
       if(gMSVCMissing and g64BitOS) then
-        InstallMissingDependency('vc_redist.x64.exe');
-        InstallMissingDependency('vc_redist.x86.exe');
+        begin
+          InstallMissingDependency('vc_redist.x64.exe');
+          InstallMissingDependency('vc_redist.x86.exe');
+        end
       if(gMSVCMissing and (not g64BitOS)) then
         InstallMissingDependency('vc_redist.x86.exe');
     end; 
@@ -201,14 +203,14 @@ var
   MSVCConfirmationMarkBitmap    : TBitmapImage;
   Spacing                       : Integer;
 begin  
-  Page := CreateCustomPage(wpWelcome, 'Dependencies', 'Wizard will check if MSVC Redist 2015 is present in the system,'+
-                                       'provide it when needed and install the application.');
+  Page := CreateCustomPage(wpWelcome, 'Dependencies', 'Wizard will check if appropriate redistributables are present.');
   Spacing := 8;
+  GetOSVersion();
 
   (* ----- MSVC Check ----- *)
   MSVCCurrentVersion          := TNewStaticText.Create(Page);
   MSVCCurrentVersion.Top      := ScaleY(Spacing);
-  MSVCCurrentVersion.Caption  := 'MSVC 2015 Redist: ';
+  MSVCCurrentVersion.Caption  := 'MSVC Redistributable: ';
   MSVCCurrentVersion.AutoSize := True;
   MSVCCurrentVersion.Parent   := Page.Surface;
 
@@ -236,7 +238,7 @@ begin
       MissingDependencies            := TLabel.Create(Page);
       MissingDependencies.Top        := Page.SurfaceHeight - 70 //OSCurrentVersion.Top + OSCurrentVersion.Height + ScaleY(106);
       MissingDependencies.Caption    := 'WARNING: Some dependencies are missing.' +
-                                        ' Appropriate setups will run after following installation proces will finish.' +
+                                        ' Appropriate setups will run after following installation process will finish.' +
                                         ' One can simply cancel them if manual installation is preferred.';
       MissingDependencies.Font.Color := clRed;
       MissingDependencies.Width      := Page.SurfaceWidth; 

@@ -25,7 +25,7 @@ void CShipModel::render(const float *view,
     _modelMatrix = _computationalGrid.getTransformation();
     _modelMatrix = glm::translate(_modelMatrix, _modelLocalTranslation);
     _modelMatrix = scale(_modelMatrix, vec3(_modelLocalScale, _modelLocalScale, _modelLocalScale));
-    _modelMatrix = rotate(_modelMatrix, -3.14f/2.0f, vec3(0.0f, 1.0f, 0.0f));
+    _modelMatrix = rotate(_modelMatrix, 3.14f/2.0f, vec3(0.0f, 1.0f, 0.0f));
 
     COBJModel::render(view, projection);
 

@@ -23,7 +23,7 @@ PhysXSimulation::PhysXSimulation() : _timeStamp(1.0f / 60.0f) {
     _movementForce = new PxVec3(0.0, 0.0, 0.0);
     _movementPosition = new PxVec3((PxReal) -15.0, 1.0, 0);
     _material = _sdk->createMaterial(0.05, 0.05, 0.05);
-    _actor = _sdk->createRigidDynamic(PxTransform(PxVec3(-40.f, -2.0f, 0.f)));
+    _actor = _sdk->createRigidDynamic(PxTransform(PxVec3(-10.f, -2.0f, 0.f)));
     _actor->setMass(0.0f);
     _actor->setLinearDamping(2.0);
     _actor->setAngularDamping(6.0);
@@ -83,7 +83,7 @@ void PhysXSimulation::update(vec3 &pointB, float forceB, vec3 &forceMove, vec3& 
 }
 
 void PhysXSimulation::addBox(vec3& position) {
-    _actor->createShape(PxBoxGeometry(0.55, 0.55, 0.55), *_material, PxTransform
+    _actor->createShape(PxBoxGeometry(0.57, 0.57, 0.57), *_material, PxTransform
             (position.x, position.y, position.z));
     _actor->setMass(_actor->getMass() + 10.0f);
 }

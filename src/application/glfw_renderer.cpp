@@ -94,15 +94,14 @@ void CGLFWRenderer::runMainLoop() {
         _ship->setModelScale(_gui.getModelScale());
         _ship->setModelLinearDamping(_gui.getLinearDamping());
         _ship->setModelAngularDamping(_gui.getAngularDamping());
-        if(forceMove.x > 0.0f) {
-            cout << "Applying movement disturbance" << endl;
-            vec3 shipPosition = _ship->getShipPosition();
-            vec2 shipPositionOnGrid(shipPosition.x + 5.0f, shipPosition.z
-                                                           + 5.0f);
-            _water->strictWaterGridDisturbance(shipPositionOnGrid,
-                                  _gui.getDisturbanceHeight(), _gui
-                                          .getKernelSize(), _gui.getFlatness());
-        }
+//        if(forceMove.x > 0.0f) {
+//            vec3 shipPosition = _ship->getShipPosition();
+//            vec2 shipPositionOnGrid(shipPosition.x + 5.0f, shipPosition.z
+//                                                           + 5.0f);
+//            _water->strictWaterGridDisturbance(shipPositionOnGrid,
+//                                  _gui.getDisturbanceHeight(), _gui
+//                                          .getKernelSize(), _gui.getFlatness());
+//        }
 
 
         /* ----- Check Stop Scene ----- */

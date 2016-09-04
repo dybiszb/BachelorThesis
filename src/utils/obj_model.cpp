@@ -164,8 +164,8 @@ bool COBJModel::_moreThanOneMaterialPerShape(string &errorMessage) {
                           shape.mesh.material_ids.end(),
                           std::not_equal_to<int>())
             != shape.mesh.material_ids.end()) {
-            errorMessage +=
-                    "There is more than one material assigned to a shape";
+//            errorMessage +=
+//                    "There is more than one material assigned to a shape";
             return true;
         }
     }
