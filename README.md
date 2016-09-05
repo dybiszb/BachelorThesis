@@ -1,4 +1,13 @@
 # Bachelor Thesis
+The thesis task was to create a simple ship simulator, that will model a unit floating on a water surface.
+To accomplish that, water has been interpreted as a finite grid of vertices with different heights.
+The ship's hull on the other hand, is simulated with usage of three dimensional grid, that
+based on its cells immersion level with respect to the heightfield, calculates both: a point and a force of buoyancy.
+At each frame PhysX library, supplied with all the information, computes the ship transformations in a current step of
+the simulation. The application allows one to tweak all parameters via its extensive graphical user interface and
+freely move around the scene. What is more, the ship can be controlled by applying different forces at the front
+of its hull.
+
     ![alt tag](https://raw.githubusercontent.com/dybiszb/BachelorThesis/master/doc/screens/app_1.png)                       |![alt tag](https://raw.githubusercontent.com/dybiszb/BachelorThesis/master/doc/screens/app_2.jpg)
 :-------------------------:|:-------------------------:
 ![alt tag](https://raw.githubusercontent.com/dybiszb/BachelorThesis/master/doc/screens/app_3.png)  |   ![alt tag](https://raw.githubusercontent.com/dybiszb/BachelorThesis/master/doc/screens/app_4.png)
