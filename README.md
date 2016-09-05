@@ -1,5 +1,4 @@
 # Bachelor Thesis
-Solarized dark             |  Solarized Ocean
 :-------------------------:|:-------------------------:
 ![alt tag](https://raw.githubusercontent.com/dybiszb/BachelorThesis/master/doc/screens/app_1.png)  |   ![alt tag](https://raw.githubusercontent.com/dybiszb/BachelorThesis/master/doc/screens/app_2.jpg)
 
