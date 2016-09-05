@@ -1,6 +1,6 @@
 # Bachelor Thesis
 ![alt tag](https://raw.githubusercontent.com/dybiszb/BachelorThesis/master/doc/screens/app_1.png)
-<img src="https://raw.githubusercontent.com/dybiszb/BachelorThesis/master/doc/screens/app_1.png" alt="Drawing" style="width: 50px;"/>
+![](https://raw.githubusercontent.com/dybiszb/BachelorThesis/master/doc/screens/app_1.png =100x20)
 ## Building<a name="build"></a>
 Note: Currently only Windows platform is supported. Sources have been checked on Windows 10 64bit.
 Please let me know about any issues.
