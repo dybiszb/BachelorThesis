@@ -46,17 +46,17 @@ void PhysXSimulation::update(vec3 &pointB, float forceB, vec3 &forceMove, vec3& 
     (*_buyoancyPosition).z = pointB.z;
 
     // Set new movement Force
-    (*_movementForce).x = forceMove.x;
+    (*_movementForce).x = -forceMove.x;
     (*_movementForce).y = forceMove.y;
-    (*_movementForce).z = forceMove.z;
+    (*_movementForce).z = -forceMove.z;
 
-    (*_movementPosition).x = 15.0f;
+    (*_movementPosition).x = -15.0f;
     (*_movementPosition).y = 0.0f;
     (*_movementPosition).z = 0.0f;
 
     // Contra Force
     PxVec3 cForce;
-    cForce.x = - 15.0f;
+    cForce.x = 15.0f;
     cForce.y = 0.0f;
     cForce.z = 0.0f;
 
@@ -70,7 +70,7 @@ void PhysXSimulation::update(vec3 &pointB, float forceB, vec3 &forceMove, vec3& 
                                             *_movementPosition,
                                             PxForceMode::eFORCE, true);
     PxRigidBodyExt::addLocalForceAtLocalPos(*_actor, PxVec3(0.0f,
-            0.0f, -forceMove.z),
+            0.0f, forceMove.z),
                                   cForce,
                                   PxForceMode::eFORCE, true);
 

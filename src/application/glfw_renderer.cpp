@@ -115,16 +115,18 @@ void CGLFWRenderer::runMainLoop() {
         /* ----- Render Scene ----- */
         _skybox->render(&_camera.getViewMatrix()[0][0],
                         &_camera.getProjectionMatrix()[0][0]);
-//        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
         _water->render(&_camera.getViewMatrix()[0][0],
                        &_camera.getProjectionMatrix()[0][0]);
-//        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+
         _ship->updateComputationalGrid(_water->getHeightfieldAsArray(),
                                        _settings.quads,
                                        _settings.quads, _settings.edgeSize);
+//        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         _ship->render(&_camera.getViewMatrix()[0][0],
                       &_camera.getProjectionMatrix()[0][0]);
-
+//        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         TwDraw();
         glfwSwapBuffers(_window);
         glfwPollEvents();
