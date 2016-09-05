@@ -1,10 +1,5 @@
 # Bachelor Thesis
-
-## Technology:
-- C++
-- OpenGL
-- PhysX
-
+## Title: Simulation of Movement of a Ship Floating on Water Surface
 ## Abstract
 The thesis task was to create a simple ship simulator, that will model a unit floating on a water surface.
 To accomplish that, water has been interpreted as a finite grid of vertices with different heights.
@@ -14,6 +9,11 @@ At each frame PhysX library, supplied with all the information, computes the shi
 the simulation. The application allows one to tweak all parameters via its extensive graphical user interface and
 freely move around the scene. What is more, the ship can be controlled by applying different forces at the front
 of its hull.
+
+## Technology:
+- C++
+- OpenGL
+- PhysX
 
 ## Screenshots
 
@@ -66,7 +66,7 @@ or
 ```
 [installation directory]\bachelor_water.exe
 ```
-Window with the simulation should pop up along with a console. 
+Window with the simulation should pop up along with a console.
 
 Any configuration can be done via modifying:
 ```
