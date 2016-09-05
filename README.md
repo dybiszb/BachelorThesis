@@ -1,4 +1,11 @@
 # Bachelor Thesis
+
+## Technology:
+- C++
+- OpenGL
+- PhysX
+
+## Abstract
 The thesis task was to create a simple ship simulator, that will model a unit floating on a water surface.
 To accomplish that, water has been interpreted as a finite grid of vertices with different heights.
 The ship's hull on the other hand, is simulated with usage of three dimensional grid, that
@@ -7,6 +14,8 @@ At each frame PhysX library, supplied with all the information, computes the shi
 the simulation. The application allows one to tweak all parameters via its extensive graphical user interface and
 freely move around the scene. What is more, the ship can be controlled by applying different forces at the front
 of its hull.
+
+## Screenshots
 
     ![alt tag](https://raw.githubusercontent.com/dybiszb/BachelorThesis/master/doc/screens/app_1.png)                       |![alt tag](https://raw.githubusercontent.com/dybiszb/BachelorThesis/master/doc/screens/app_2.jpg)
 :-------------------------:|:-------------------------:
@@ -44,12 +53,20 @@ It is is possible to create setup executable for the application from the reposi
    [repository main folder]\[project directory]\Release\win_installer\Output
    ```
 
+## Installation
+To properly install the application, download DybiszBachelorThesisSetup.exe from the latest release and
+simply use it. Alternative way is [building it](#build) from scratch from the repository sources.
+
 ## Usage
-To run the application either use [setup executable](#setup) or [build](#build) it and run:
+Depending on the installation process, one should either run:
 ```
 [repository main folder]\[project directory]\Release\bachelor_water.exe 
 ```
-Window with the simulation should pop up along with a console.
+or
+```
+[installation directory]\bachelor_water.exe
+```
+Window with the simulation should pop up along with a console. 
 
 Any configuration can be done via modifying:
 ```
