@@ -4,12 +4,7 @@
 
 using namespace geometry;
 
-/**
- * stretch between specified points
- */
-CQuad::CQuad() {
-
-}
+CQuad::CQuad() {}
 
 Vertex * CQuad::generateVertices() {
     _totalVertices = 4;

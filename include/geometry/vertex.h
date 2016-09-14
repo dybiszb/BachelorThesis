@@ -1,5 +1,6 @@
 //==============================================================================
-// TODO
+// Base class for all procedures related to sending vertex data into OpenGL.
+// Structure enables neat offsetting due to its consistent memory usage.
 //==============================================================================
 // author: dybisz
 //------------------------------------------------------------------------------

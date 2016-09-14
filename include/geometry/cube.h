@@ -10,9 +10,9 @@
 #define CUBE_H
 
 #include <GL/glew.h>
-#include "vertex.h"
 #include <vector>
 #include <glm/glm.hpp>
+#include "vertex.h"
 #include "geometry_object.h"
 
 using namespace glm;
@@ -23,28 +23,27 @@ namespace geometry {
     class CCube : public IGeometryObject {
     public:
         /**
-         *
-         * @param Size of the cube's edges.
+         * @param size Size of a cube's edges.
          */
         CCube(float size);
 
         /**
-         *
-         * @param 8 vertices
+         * @param center Center of a cube. Vertices will be calculated
+         *               accordingly with usage of side length.
+         * @param size   Size of the cube's edges.
          */
-        CCube(vec3 centerVertex, float size=1.0);
+        CCube(vec3 center, float size=1.0);
 
         /**
-         * TODO
-         *
-         * @return Pointer to the first element of the array.
+         * @return Pointer to the first element of the array containing
+         *         cube vertices packed in Vertex struct.
          */
         virtual Vertex *generateVertices();
 
         /**
-         *  TODO
-         *
-         * @return Pointer to the first element of the array.
+         * @return Pointer to the first element of the array containing
+         *         indices for vertices generated via generateVertices
+         *         procedure.
          */
         virtual GLuint *generateIndices();
 
@@ -59,11 +58,11 @@ namespace geometry {
         virtual int getTotalIndices();
 
     protected:
-        vec3 _vertices = vec3(0.0);
+        vec3  _vertices = vec3(0.0);
         float _size;
 
     private:
-        int _totalIndices;
+        int   _totalIndices;
     };
 
 }

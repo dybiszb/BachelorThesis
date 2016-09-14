@@ -71,12 +71,12 @@ namespace geometry {
         virtual int getTotalIndices();
 
     protected:
-        int _totalIndices;
-        int _totalVertices;
-        int _quadsOnX;
-        int _quadsOnZ;
-        float _gridSizeOnX;
-        float _gridSizeOnZ;
+        int       _totalIndices;
+        int       _totalVertices;
+        int       _quadsOnX;
+        int       _quadsOnZ;
+        float     _gridSizeOnX;
+        float     _gridSizeOnZ;
         glm::vec2 _bottomCorner;
     };
 }
