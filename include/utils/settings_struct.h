@@ -15,11 +15,11 @@ namespace utils {
 //==============================================================================
 // Scene Properties
 //------------------------------------------------------------------------------
-        bool fullScreen;
-        int windowWidth;
-        int windowHeight;
+        bool  fullScreen;
+        int   windowWidth;
+        int   windowHeight;
         float edgeSize;
-        int quads;
+        int   quads;
 
 //==============================================================================
 // Simulation Properties
@@ -30,7 +30,7 @@ namespace utils {
         float modelLocalTranslationY;
         float modelLocalTranslationZ;
         float modelScale;
-        bool gridVisibility;
+        bool  gridVisibility;
         float enginesPointX;
         float enginesPointY;
         float enginesPointZ;
@@ -38,7 +38,7 @@ namespace utils {
 //==============================================================================
 // Light Properties
 //------------------------------------------------------------------------------
-        bool lightOn;
+        bool  lightOn;
         float lightDirectionX;
         float lightDirectionY;
         float lightDirectionZ;
@@ -63,16 +63,16 @@ namespace utils {
 //==============================================================================
 // Water Properties
 //------------------------------------------------------------------------------
-        bool animation;
+        bool  animation;
         float manualDisturbanceStrength;
-        int manualDisturbanceKernel;
+        int   manualDisturbanceKernel;
         float manualDisturbanceFlatness;
-        bool rain;
+        bool  rain;
         float rainStrength;
-        int rainIntensity;
-        int rainKernelSize;
+        int   rainIntensity;
+        int   rainKernelSize;
         float rainFlatness;
-        bool waves;
+        bool  waves;
         float wavesAmplitude;
         float wavesFrequency;
         float wavesChoppiness;

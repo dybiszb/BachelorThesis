@@ -21,7 +21,8 @@ namespace utils {
      * will case checking source of the error and displaying it in stdout
      * stream.
      *
-     * @param TODO
+     * @param errorId Number of SOIL's error to check. Normally it is
+     *                returned by the library functions
      */
     void checkErrorSOIL(int errorId);
 
@@ -35,12 +36,27 @@ namespace utils {
     void checkErrorOpenGL(string errorSource);
 
     /**
-     * TODO
+     * Checks status of OpenGL's frame buffer object. It will display an
+     * appropriate message in case of any errors.
+     *
+     * @param errorSource In order to efficiently localizing bugs, one can
+     *                    specify method (or other source) that is using the
+     *                    following procedure. In that case it will be
+     *                    displayed on the screen along any error that will
+     *                    occur.
      */
     void checkErrorFrameBuffer(string errorSource);
 
     /**
-     * TODO
+     * Encapsulates the process of checking a cubemap id correctness.
+     * Appropriate message is displayed in case of an error.
+     *
+     * @param errorSource In order to efficiently localizing bugs, one can
+     *                    specify method (or other source) that is using the
+     *                    following procedure. In that case it will be
+     *                    displayed on the screen along any error that will
+     *                    occur.
+     * @param cubemapId   If of a cubemap in OpenGL's context.
      */
     void checkErrorCubemapId(string errorSource, int cubemapId);
 }

@@ -1,10 +1,13 @@
 /**
  * Taken from OpenGL Development Cookbook by Muhammad Mobeen Movania.
  * Github: https://github.com/mmmovania/opengl33_dev_cookbook_2013.git
+ *
+ * NOTE: Class presented 'as is' (e.g. no comments added) to preserve the
+ *       original form.
  */
 
-#ifndef BACHELOR_WATER_GLSL_SHADER_H
-#define BACHELOR_WATER_GLSL_SHADER_H
+#ifndef GLSL_SHADER_H
+#define SHADER_H
 
 #include <GL/glew.h>
 #include <map>
@@ -40,4 +43,4 @@ private:
     map<string,GLuint> _attributeList;
     map<string,GLuint> _uniformLocationList;
 };
-#endif //BACHELOR_WATER_GLSL_SHADER_H
+#endif

@@ -115,11 +115,6 @@ void COBJModel::setDirectionalLight(vec3 & directionalLight) {
 void COBJModel::setCameraPosition(vec3& cameraPosition) {
     _cameraPosition = cameraPosition;
 }
-
-vector<shape_t>& COBJModel::getShapes() {
-    return _shapes;
-}
-
 void COBJModel::_loadShapesAndMaterials() {
     string errorMessage;
 
@@ -130,31 +125,6 @@ void COBJModel::_loadShapesAndMaterials() {
 
     if (_moreThanOneMaterialPerShape(errorMessage)) {
         cerr << errorMessage << endl;
-    }
-}
-
-void COBJModel::_findMinMax() {
-    /* ----- Absurd Numbers ----- */
-    _xMinMax = vec2(INT_MAX, INT_MIN);
-    _yMinMax = vec2(INT_MAX, INT_MIN);
-    _zMinMax = vec2(INT_MAX, INT_MIN);
-
-    for(auto shape : _shapes) {
-        for(int i = 0; i < shape.mesh.positions.size(); i+=3) {
-            float x = shape.mesh.positions[i];
-            float y = shape.mesh.positions[i+1];
-            float z = shape.mesh.positions[i+2];
-
-            /* ----- Check Minima ----- */
-            _xMinMax.x = (x <_xMinMax.x) ? x : _xMinMax.x;
-            _yMinMax.x = (y <_yMinMax.x) ? y : _yMinMax.x;
-            _zMinMax.x = (z <_zMinMax.x) ? z : _zMinMax.x;
-
-            /* ----- Check Maxima ----- */
-            _xMinMax.y = (x > _xMinMax.y) ? x : _xMinMax.y;
-            _yMinMax.y = (y > _yMinMax.y) ? y : _yMinMax.y;;
-            _zMinMax.y = (z > _zMinMax.y) ? z : _zMinMax.y;;
-        }
     }
 }
 

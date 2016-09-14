@@ -16,6 +16,14 @@
 using namespace std;
 
 namespace utils {
+    /**
+     * Loads information from the provided .ini file into appropriate structure.
+     *
+     * @param pathToINI A relative or absolute path to the .ini file.
+     *
+     * @return          Settings structure loaded with values from specified
+     *                  .ini file or they alternative defaults.
+     */
     Settings readFromINI(string pathToINI);
 }
 

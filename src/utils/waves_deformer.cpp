@@ -7,7 +7,7 @@ CWavesDeformer::CWavesDeformer(int width, int height)
         : _width(width),
           _height(height) {
 
-    _verticesPerSide = height;
+    _verticesPerSide = (GLuint) height;
 
     _fbo0 = new CFrameBuffer();
     _fbo1 = new CFrameBuffer();
@@ -172,7 +172,7 @@ void CWavesDeformer::animationStep() {
     checkErrorOpenGL("CWavesDeformer::renderStep");
     _fbo0->unbind();
 
-    // Perlin Noise Pass
+    // Noise Pass
     if(_wavesOn) {
         glUniform1i(_shader("u_isPerlinNoiseCalculations"), 1);
         _tex0->bind();

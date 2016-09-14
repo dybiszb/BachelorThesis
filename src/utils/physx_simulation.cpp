@@ -60,8 +60,6 @@ void PhysXSimulation::update(vec3 &pointB, float forceB, vec3 &forceMove, vec3& 
     cForce.y = 0.0f;
     cForce.z = 0.0f;
 
-
-
     // Apply Forces
     PxRigidBodyExt::updateMassAndInertia(*_actor, 10.5f);
     PxRigidBodyExt::addForceAtLocalPos(*_actor, *_buyoancyForce,
@@ -73,7 +71,6 @@ void PhysXSimulation::update(vec3 &pointB, float forceB, vec3 &forceMove, vec3& 
             0.0f, forceMove.z),
                                   cForce,
                                   PxForceMode::eFORCE, true);
-
 
     // Simulate Scene
     _scene->simulate(_timeStamp);

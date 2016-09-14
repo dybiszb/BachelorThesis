@@ -1,9 +1,12 @@
 //==============================================================================
 // Simple loader for .obj file. One is asked just to provide path to the
 // model file and class will handle rest. What is important though, the class
-// is not able to load every existing .obj file. It will throw an error if:
-// > There are more materials than one, assigned to a shape. Term 'shape'
-//   relates to the sub-mesh of the model.
+// is not able to load every existing .obj file. It will throw an error if
+// there are more materials than one, assigned to a shape. Term 'shape' relates
+// to the sub-mesh of the model.
+//
+// NOTE: Private methods, as an internal part of the class rather than public
+//       interface, are not commented.
 //==============================================================================
 // author: dybisz
 //------------------------------------------------------------------------------
@@ -42,7 +45,6 @@ namespace rendering {
         COBJModel(string directory, string objName, bool loadData = true);
 
 
-
         /**
          * Obj model along with its textures is render with usage of shipped
          * matrices.
@@ -61,33 +63,38 @@ namespace rendering {
          */
         void setModelMatrix(mat4 modelMatrix);
 
+        /**
+         * Updates current direction of the light. Shader will automatically
+         * load the vector and use it in shading process.
+         *
+         * @param directionalLight Vector with light direction to be set.
+         */
         void setDirectionalLight(vec3 &directionalLight);
 
+        /**
+         * Updates camera position. Shader will automatically load the point
+         * and use it in shading process.
+         *
+         * @param cameraPosition Vector current camera position.
+         */
         void setCameraPosition(vec3 &cameraPosition);
 
-        vector<shape_t> &getShapes();
-
-        // TODO move to private
-        vec2 _xMinMax;
-        vec2 _yMinMax;
-        vec2 _zMinMax;
     protected:
-        string _directory;
-        string _objName;
+        string              _directory;
+        string              _objName;
 
+        vector<CTexture2D*> _textures;
+        vector<shape_t>     _shapes;
+        vector<material_t>  _materials;
 
-        vector<CTexture2D *> _textures;
-        vector<shape_t> _shapes;
-        vector<material_t> _materials;
+        CBuffer*            _verticesBuffer;
+        CBuffer*            _indicesBuffer;
+        CBuffer*            _normalsBuffer;
+        CBuffer*            _texCoordBuffer;
 
-        CBuffer *_verticesBuffer;
-        CBuffer *_indicesBuffer;
-        CBuffer *_normalsBuffer;
-        CBuffer *_texCoordBuffer;
-
-        mat4 _modelMatrix;
-        vec3 _directionalLight;
-        vec3 _cameraPosition;
+        mat4                _modelMatrix;
+        vec3                _directionalLight;
+        vec3                _cameraPosition;
 
         void _loadShapesAndMaterials();
 
@@ -105,6 +112,7 @@ namespace rendering {
                               int *texCoordSize);
 
         void _initializeShaderProgram();
+
         void _loadData();
     };
 }

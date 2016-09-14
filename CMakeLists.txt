@@ -54,7 +54,6 @@ include_directories(
         external/PhysX/include/pvd/
         external/PhysX/include/pxtask/
         external/PhysX/include/vehicle/
-        external/assimp/include/
 )
 
 set(EXTERNAL_LIBS
@@ -81,7 +80,6 @@ include_directories(
         include/rendering/textures
         include/rendering
         include/utils
-        include/utils/model_loading
         res/
 )
 
@@ -124,8 +122,6 @@ set(
         src/entities/bounding/computational_grid.cpp
         src/geometry/cuboid.cpp
         src/utils/physx_simulation.cpp
-        src/utils/model_loading/mesh.cpp
-        src/utils/model_loading/model.cpp
         src/utils/initialize.cpp)
 
 #===============================================================================
