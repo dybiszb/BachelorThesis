@@ -1,5 +1,5 @@
 //==============================================================================
-// Frame buffers are mainly used to offscreen rendering purposes. It is often
+// Frame buffers are mainly used to off screen rendering purposes. It is often
 // useful to e.g. render some part of the scene to a texture for its further
 // processing. The class encapsulates all features of glFrameBuffer and
 // provides easy to use interface.
@@ -19,6 +19,10 @@ using namespace utils;
 namespace rendering {
     class CFrameBuffer : public IBindableObject {
     public:
+        /**
+         * Creates frame buffer object within OpenGL context and checks for
+         * any errors that may occur.
+         */
         CFrameBuffer();
 
         /**

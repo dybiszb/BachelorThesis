@@ -1,5 +1,5 @@
 //==============================================================================
-// Class constitutes straightforward encapsulation of OpenGl's buffer i.e.
+// Class constitutes straightforward encapsulation of OpenGL's buffer i.e.
 // data structure, which enables sending a chunk of information into the
 // pipeline.
 // =============================================================================

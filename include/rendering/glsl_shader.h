@@ -7,7 +7,7 @@
  */
 
 #ifndef GLSL_SHADER_H
-#define SHADER_H
+#define GLSL_SHADER_H
 
 #include <GL/glew.h>
 #include <map>

@@ -1,5 +1,7 @@
 //==============================================================================
-// TODO
+// The class encapsulates OpenGL methods related to managing two dimensional
+// texture. One can either create empty (black) texture with specified with
+// and height or load it directly from the image.
 // =============================================================================
 // author: dybisz
 //------------------------------------------------------------------------------

@@ -1,12 +1,7 @@
 //==============================================================================
-// However in the current form Vertex Array Object consists of two buffers of
-// types: GL_ELEMENT_ARRAY_BUFFER and GL_ARRAY_BUFFER, it can store additional
-// information (like normals or colors) in the latter one. It can been
-// achieved e.g via introducing Vertex structure, wchich consists of several
-// vectors.
-// In addition, class has all functionality needed to properly used it
-// within OpenGL application. It provides bind/unbind methods, assigning
-// float attributes (shader related) and obviously: filling up the buffers.
+// Class encapsulates OpenGL's vertex array object. One is enabled to assign,
+// bind and unbind buffers of different kinds.In addition, the class has all
+// functionality needed to properly assignin float attributes (shader related).
 // =============================================================================
 // author: dybisz
 //------------------------------------------------------------------------------
@@ -29,9 +24,17 @@ namespace rendering {
 
     class CVertexArray : public IBindableObject {
     public:
-        CVertexArray();
         ~CVertexArray();
 
+        /**
+         * Create vertex array object withing OpenGL context and check for
+         * errors.
+         */
+        CVertexArray();
+
+        /**
+         * The class will remember its caller. It helps in ddebugging process.
+         */
         void setCaller(string callerName);
 
         /**

@@ -2,7 +2,6 @@
 
 #include "glfw_renderer.h"
 #include <time.h>
-#include <model_loading/model.h>
 //#include <unistd.h>
 
 CGLFWRenderer::CGLFWRenderer(Settings& settings) :

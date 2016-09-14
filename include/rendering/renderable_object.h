@@ -19,6 +19,7 @@ namespace rendering {
 
     class CRenderableObject {
     public:
+        virtual ~CRenderableObject();
 
         /**
          * Must be implemented in order to specify how object should be
@@ -32,14 +33,8 @@ namespace rendering {
         virtual void render(const float *view,
                             const float *projection) = 0;
 
-        /**
-         * Manages deleting shader program from OpenGL context. In contrary,
-         * Vertex Array Object takes care of himself.
-         */
-        virtual ~CRenderableObject();
-
     protected:
-        GLSLShader _shader;
+        GLSLShader   _shader;
         CVertexArray _vao;
     };
 

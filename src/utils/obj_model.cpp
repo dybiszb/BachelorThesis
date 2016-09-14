@@ -30,7 +30,6 @@ void COBJModel::_loadData() {
     _createBuffers();
     _loadDataToBuffers();
     _initializeShaderProgram();
-    _findMinMax();
 }
 
 void COBJModel::render(const float *view,
