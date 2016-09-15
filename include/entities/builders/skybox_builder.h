@@ -1,5 +1,5 @@
 //==============================================================================
-// Builder pattern implementation. TODO finish
+// Builder pattern implementation for creating an instance of ship model object.
 //==============================================================================
 // author: dybisz
 //------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ namespace entities {
         CSkyboxBuilder &setFaces(const char* faces[6]);
 
     private:
-        float _sideSize;
+        float       _sideSize;
         const char* _faces[6];
     };
 }

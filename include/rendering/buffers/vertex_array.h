@@ -33,11 +33,6 @@ namespace rendering {
         CVertexArray();
 
         /**
-         * The class will remember its caller. It helps in ddebugging process.
-         */
-        void setCaller(string callerName);
-
-        /**
          * Bind the object to the active OpenGl context.
          */
         virtual void bind();
@@ -89,7 +84,6 @@ namespace rendering {
 
     private:
         map<string, CBuffer *> _buffers;
-        string _callerName = "";
     };
 
 }

@@ -80,7 +80,7 @@ public:
      * Disturbs texture at a specified point. Appropriate pixel will get
      * specified value.
      *
-     * @param quad     (u,v) coordinates of the texture that will be disturbed.
+     * @param quad   (u,v) coordinates of the texture that will be disturbed.
      * @param amount Value that will be saved in the specified pixel.
      */
     void pointDisturbance(vec2& quad, float amount);
@@ -95,7 +95,7 @@ public:
      * @param kernel   Area size. E.g. kernel = 4 will mean that 9x9 area
      *                 will be disturbed (4 to the left of the center and 4
      *                 to the right, and center itself gives 9)
-     * @param flatness Parameter 'a' in the formula. Determines steepnes of a
+     * @param flatness Parameter 'a' in the formula. Determines steepness of a
      *                 particular disturbance.
      */
     void areaDisturbance(vec2& quad, float amount, int kernel, float flatness);
@@ -160,11 +160,9 @@ private:
     CFrameBuffer* _fbo0;
     CFrameBuffer* _fbo1;
     CFrameBuffer* _fbo2;
-    CFrameBuffer* _fbo3;
     CTexture2D*   _tex0;
     CTexture2D*   _tex1;
     CTexture2D*   _tex2;
-    CTexture2D*   _tex3;
 
 //==============================================================================
 // OpenGl Objects

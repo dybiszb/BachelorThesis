@@ -155,7 +155,6 @@ void COBJModel::_createTexturesFromImages() {
 
 void COBJModel::_createBuffers() {
     _vao.bind();
-    _vao.setCaller("COBJModel");
     _verticesBuffer = new CBuffer(GL_ARRAY_BUFFER);
     _indicesBuffer = new CBuffer(GL_ELEMENT_ARRAY_BUFFER);
     _normalsBuffer = new CBuffer(GL_ARRAY_BUFFER);

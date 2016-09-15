@@ -1,7 +1,7 @@
 //==============================================================================
 // The header may hold different computational grids' descriptors for various
 // models. It is nothing more that a bunch of 2D arrays filled with
-// per-cell coordinates.
+// per-cell coordinates. Currently only grid with medium accuracy is supported.
 //==============================================================================
 // author: dybisz
 //------------------------------------------------------------------------------

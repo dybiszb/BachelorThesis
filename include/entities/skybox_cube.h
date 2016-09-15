@@ -6,6 +6,9 @@
 // (for obvious purposes). No movement of the shape is allowed and it is
 // always rendered with its center of gravity in the origin of world's
 // coordinate space.
+//
+// NOTE: Private methods, as an internal part of the class rather than public
+//       interface, are not commented.
 //==============================================================================
 // author: dybisz
 //------------------------------------------------------------------------------
@@ -33,7 +36,6 @@ namespace entities {
          *
          * @param sideSize   How long should be cube's edge?
          * @param facesNames Pointer to vector with faces paths.
-         * @param TODO
          */
         CSkybox(int sideSize, const char* facesNames[6]);
 
@@ -41,7 +43,8 @@ namespace entities {
          * Renders textured cube (skybox) in the center of world's space
          * coordinates.
          *
-         * @param MVP Model-View-Projection matrix of the active camera.
+         * @param view       View matrix for a scene.
+         * @param projection Projection matrix for a scene.
          */
         virtual void render(const float *view,
                             const float *projection);
@@ -61,7 +64,8 @@ namespace entities {
 
     private:
         CCubemapTexture _texture;
-        vec3 _cameraPosition;
+        vec3            _cameraPosition;
+
         void _initShader();
     };
 }

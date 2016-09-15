@@ -58,7 +58,7 @@ namespace geometry {
         virtual int getTotalIndices();
 
     protected:
-        vec3  _vertices = vec3(0.0);
+        vec3  _center = vec3(0.0);
         float _size;
 
     private:

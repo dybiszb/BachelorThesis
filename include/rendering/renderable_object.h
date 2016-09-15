@@ -26,9 +26,8 @@ namespace rendering {
          * render. Normally one wants to inherit after the class and provide
          * OpenGL methods inside the function.
          *
-         * @param model
-         * @param view
-         * @param projection
+         * @param view       View matrix.
+         * @param projection Projection matrix.
          */
         virtual void render(const float *view,
                             const float *projection) = 0;

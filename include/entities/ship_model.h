@@ -1,5 +1,8 @@
 //==============================================================================
-//
+// Following class represents a model of ship that can be rendered on the
+// scene. One is able to move it around via movement force. In addition, the
+// class invlolves computational grid, which calculates ship's buoyancy
+// force and updates its model.
 //==============================================================================
 // author: dybisz
 //------------------------------------------------------------------------------
@@ -16,10 +19,21 @@ using namespace glm;
 
 class CShipModel : public COBJModel {
 public:
-    CShipModel(Settings &settings);
-
     ~CShipModel();
 
+    /**
+     * @param settings Settings struct filled with information loaded from
+     *                 .ini file
+     */
+    CShipModel(Settings &settings);
+
+    /**
+     * Ship model along with its textures is render with usage of shipped
+     * matrices.
+     *
+     * @param view       View matrix of the scene.
+     * @param projection Projection matrix of the scene.
+     */
     virtual void render(const float *view,
                         const float *projection);
 
@@ -41,7 +55,7 @@ public:
      * Act on ship's hull with force. Force will be applied in
      * the front of the model.
      *
-     * @param movementForce
+     * @param movementForce Force acting at the front of the ship hull.
      */
     void setMovementForce(const vec3 &movementForce);
 
@@ -67,18 +81,48 @@ public:
      */
     void setModelScale(float scale);
 
+    /**
+     * Update linear dumping threshold.
+     *
+     * @param linearDumping New value of linear dumping of the ship simulation.
+     */
     void setModelLinearDamping(float linearDamping);
+
+    /**
+     * Update angular dumping threshold.
+     *
+     * @param angularDamping New value of angular dumping of the ship
+     *        simulation.
+     */
     void setModelAngularDamping(float angularDamping);
+
+    /**
+     * Updates current light direction. The ship will be shaded using
+     * the direction.
+     *
+     * @param directionalLight Three dimensional vector with light direction.
+     */
     void setDirectionalLight(vec3 & directionalLight);
+
+    /**
+     * Updates current camera position for correct drawing of the ship.
+     *
+     * @param cameraPosition Current camera position.
+     */
     void setCameraPosition(vec3& cameraPosition);
 
+    /**
+     * @return Three dimensional vector with current ship position in world
+     *         coordinates.
+     */
     vec3 getShipPosition();
+
 private:
     CComputationalGrid _computationalGrid;
-    bool _computationalGridVisibility;
-    vec3 _movementForce;
-    vec3 _modelLocalTranslation;
-    float _modelLocalScale;
+    bool               _computationalGridVisibility;
+    vec3               _movementForce;
+    vec3               _modelLocalTranslation;
+    float              _modelLocalScale;
 };
 
 

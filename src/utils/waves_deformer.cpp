@@ -40,8 +40,8 @@ void CWavesDeformer::pointDisturbance(vec2 &quad, float amount) {
     GLfloat data[4] = {amount, 0, 0, 0};
     glTexSubImage2D(GL_TEXTURE_2D,
                     0,
-                    quad.x,
-                    quad.y,
+                    (GLint) quad.x,
+                    (GLint) quad.y,
                     1,
                     1,
                     GL_RGBA,
@@ -54,12 +54,12 @@ void CWavesDeformer::pointDisturbance(vec2 &quad, float amount) {
 void CWavesDeformer::areaDisturbance(vec2 &quad, float amount, int kernel,
                                      float flatness) {
     _tex0->bind();
-    int quadXmin = (quad.x - kernel < 0) ? 0 : (quad.x - kernel);
-    int quadXmax = (quad.x + kernel >= _width - 2) ? _width - 2 : (quad.x +
-                                                                   kernel);
-    int quadYmin = (quad.y - kernel < 0) ? 0 : (quad.y - kernel);
-    int quadYmax = (quad.y + kernel >= _height - 2) ? _height - 2 : (quad.y +
-                                                                     kernel);
+    int quadXmin = (int) ((quad.x - kernel < 0) ? 0 : (quad.x - kernel));
+    int quadXmax = (int) ((quad.x + kernel >= _width - 2) ? _width - 2 : (quad.x +
+                                                                          kernel));
+    int quadYmin = (int) ((quad.y - kernel < 0) ? 0 : (quad.y - kernel));
+    int quadYmax = (int) ((quad.y + kernel >= _height - 2) ? _height - 2 : (quad.y +
+                                                                            kernel));
 
     int data2Size = 4 * (quadXmax - quadXmin + 1) * (quadYmax - quadYmin + 1);
 

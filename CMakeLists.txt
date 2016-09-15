@@ -120,7 +120,6 @@ set(
         src/utils/obj_model.cpp
         src/entities/bounding/computational_cell.cpp
         src/entities/bounding/computational_grid.cpp
-        src/geometry/cuboid.cpp
         src/utils/physx_simulation.cpp
         src/utils/initialize.cpp)
 

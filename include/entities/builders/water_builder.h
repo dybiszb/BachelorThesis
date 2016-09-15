@@ -1,5 +1,5 @@
 //==============================================================================
-// Builder pattern implementation. TODO finish
+// Builder pattern implementation for creating an instance of water grid object.
 //==============================================================================
 // author: dybisz
 //------------------------------------------------------------------------------

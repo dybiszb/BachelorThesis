@@ -55,10 +55,6 @@ void CComputationalCell::setModelMatrix(mat4 &modelMatrix) {
     _modelMatrix = modelMatrix;
 }
 
-void CComputationalCell::setWireframe(bool isWireframe) {
-    _isWireframe = isWireframe;
-}
-
 bool CComputationalCell::isImmersed() {
     return (_immersion != 0.0);
 }
@@ -78,7 +74,7 @@ float CComputationalCell::getImmersion() {
     return _immersion;
 }
 vec3& CComputationalCell::getCenter() {
-    return CCube::_vertices;
+    return CCube::_center;
 }
 
 void CComputationalCell::_initShader() {

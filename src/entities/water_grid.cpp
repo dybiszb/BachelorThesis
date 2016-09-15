@@ -26,7 +26,6 @@ CWaterGrid::CWaterGrid(
     float halfSide = _sideSize / 2.0f;
     _box[0] = vec3(-halfSide, -halfSide, -halfSide);
     _box[1] = vec3(halfSide, halfSide, halfSide);
-    _vao.setCaller("CWaterGrid");
 
     _vao.bind();
     _vao.setBuffer("vertices", GL_ARRAY_BUFFER);

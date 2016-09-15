@@ -52,7 +52,7 @@ GLuint *CGrid::generateIndices() {
     int indicesIndex = 0;
     for (int y = 0; y < (_quadsOnZ); ++y) {
         for (int x = 0; x < (_quadsOnX); ++x) {
-            GLuint start = y * (_quadsOnX + 1) + x;
+            GLuint start = (GLuint) (y * (_quadsOnX + 1) + x);
             indices[indicesIndex++] = (GLuint) start;
             indices[indicesIndex++] = (GLuint) (start + 1);
             indices[indicesIndex++] = (GLuint) (start + (_quadsOnX + 1));

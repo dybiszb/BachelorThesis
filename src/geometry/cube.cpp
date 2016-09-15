@@ -8,7 +8,7 @@ using namespace std;
 
 CCube::CCube(float size) : _size(size) { }
 
-CCube::CCube(vec3 centerVertex, float size) : _vertices(centerVertex),
+CCube::CCube(vec3 centerVertex, float size) : _center(centerVertex),
                                               _size(size)
         { }
 
@@ -16,30 +16,30 @@ CCube::CCube(vec3 centerVertex, float size) : _vertices(centerVertex),
 Vertex *CCube::generateVertices() {
         Vertex *vertices = new Vertex[8];
         float halfSize = _size / 2;
-        vertices[0].position = glm::vec3(_vertices.x - halfSize,
-                                         _vertices.y - halfSize,
-                                         _vertices.z - halfSize);
-        vertices[1].position = glm::vec3(_vertices.x + halfSize,
-                                         _vertices.y - halfSize,
-                                         _vertices.z - halfSize);
-        vertices[2].position = glm::vec3(_vertices.x + halfSize,
-                                         _vertices.y + halfSize,
-                                         _vertices.z - halfSize);
-        vertices[3].position = glm::vec3(_vertices.x - halfSize,
-                                         _vertices.y + halfSize,
-                                         _vertices.z - halfSize);
-        vertices[4].position = glm::vec3(_vertices.x - halfSize,
-                                         _vertices.y - halfSize,
-                                         _vertices.z + halfSize);
-        vertices[5].position = glm::vec3(_vertices.x + halfSize,
-                                         _vertices.y - halfSize,
-                                         _vertices.z + halfSize);
-        vertices[6].position = glm::vec3(_vertices.x + halfSize,
-                                         _vertices.y + halfSize,
-                                         _vertices.z + halfSize);
-        vertices[7].position = glm::vec3(_vertices.x - halfSize,
-                                         _vertices.y + halfSize,
-                                         _vertices.z + halfSize);
+        vertices[0].position = glm::vec3(_center.x - halfSize,
+                                         _center.y - halfSize,
+                                         _center.z - halfSize);
+        vertices[1].position = glm::vec3(_center.x + halfSize,
+                                         _center.y - halfSize,
+                                         _center.z - halfSize);
+        vertices[2].position = glm::vec3(_center.x + halfSize,
+                                         _center.y + halfSize,
+                                         _center.z - halfSize);
+        vertices[3].position = glm::vec3(_center.x - halfSize,
+                                         _center.y + halfSize,
+                                         _center.z - halfSize);
+        vertices[4].position = glm::vec3(_center.x - halfSize,
+                                         _center.y - halfSize,
+                                         _center.z + halfSize);
+        vertices[5].position = glm::vec3(_center.x + halfSize,
+                                         _center.y - halfSize,
+                                         _center.z + halfSize);
+        vertices[6].position = glm::vec3(_center.x + halfSize,
+                                         _center.y + halfSize,
+                                         _center.z + halfSize);
+        vertices[7].position = glm::vec3(_center.x - halfSize,
+                                         _center.y + halfSize,
+                                         _center.z + halfSize);
         return vertices;
     }
 
